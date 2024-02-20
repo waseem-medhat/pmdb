@@ -34,6 +34,7 @@ func main() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", s.handleHome)
+	http.HandleFunc("/add-user", s.handleAddUser)
 
 	fmt.Println("PMDb server let's Go! ")
 	if os.Getenv("ENV") == "dev" {
@@ -46,30 +47,45 @@ func main() {
 
 // handleHome is the handler for the home route ("/")
 func (s *service) handleHome(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET":
-		dbUsers, err := s.db.ListUsers(r.Context())
-		if err != nil {
-			log.Fatal(err)
-		}
+	dbUsers, err := s.db.ListUsers(r.Context())
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		tmplData := struct {
-			Users []database.User
-		}{
-			Users: dbUsers,
-		}
+	tmplData := struct {
+		Users []database.User
+	}{
+		Users: dbUsers,
+	}
 
-		tmpl := template.Must(template.ParseFiles("templates/index.html", "templates/fragments.html"))
-		err = tmpl.Execute(w, tmplData)
-		if err != nil {
-			log.Fatal(err)
-		}
+	tmpl := template.Must(template.ParseFiles("templates/index.html", "templates/fragments.html"))
+	err = tmpl.Execute(w, tmplData)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
-	case "POST":
-		newName := r.PostFormValue("name")
-		fmt.Println(newName)
-		s.db.CreateUser(r.Context(), newName)
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
+func (s *service) handleAddUser(w http.ResponseWriter, r *http.Request) {
+	newName := r.PostFormValue("name")
+	_, err := s.db.CreateUser(r.Context(), newName)
+
+	errMsg := ""
+	dbUsers, err := s.db.ListUsers(r.Context())
+	if err != nil {
+		errMsg = "Could not add user :("
+	}
+
+	tmplData := struct {
+		Users        []database.User
+		ErrorMessage string
+	}{
+		Users:        dbUsers,
+		ErrorMessage: errMsg,
+	}
+
+	tmpl := template.Must(template.ParseFiles("templates/users.html"))
+	err = tmpl.Execute(w, tmplData)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

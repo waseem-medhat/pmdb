@@ -22,25 +22,27 @@
         </p>
     </section>
 
-    <h3 class="text-gray-100 text-3xl font-semibold mb-2">
-        Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
-    </h3>
-    <section class="my-5 grid grid-cols-2">
-        <section>
-            <ul class="mb-3">
-                {{ range $index, $user := .Users }}
-                <li>{{ $user.Name }}</li>
-                {{ end }}
-            </ul>
-        </section>
+    <section id="users" class="my-5">
+        <h3 class="text-gray-100 text-3xl font-semibold mb-2">
+            Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
+        </h3>
+        <div class="grid grid-cols-2">
+            <section>
+                <ul class="mb-3">
+                    {{ range $index, $user := .Users }}
+                    <li>{{ $user.Name }}</li>
+                    {{ end }}
+                </ul>
+            </section>
 
-        <section class="my-5">
-            <h4 class="text-gray-100 text-xl font-semibold mb-3">Register your name!</h4>
-            <form method="post" action="/">
-                <input type="text" name="name" value="" class="rounded px-2 py-1 text-gray-900">
-                <button type="submit" class="rounded px-2 py-1 bg-blue-600">+</button>
-            </form>
-        </section>
+            <section class="my-5">
+                <h4 class="text-gray-100 text-xl font-semibold mb-3">Register your name!</h4>
+                <form hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
+                    <input type="text" name="name" value="" class="rounded px-2 py-1 text-gray-900">
+                    <button type="submit" class="rounded px-2 py-1 bg-blue-600">+</button>
+                </form>
+            </section>
+        </div>
     </section>
 </body>
 

@@ -39,8 +39,8 @@ cp ~/.env.example .env
 goose turso "libsql://[DATABASE].turso.io?authToken=[TOKEN]" up
 ```
 
-- Run `air` which will compile (and auto-reload) both the Go server and
-TailwindCSS
+- Run `air` (at the project root) which will compile and auto-reload both the
+Go server and TailwindCSS
 
 ```bash
 air

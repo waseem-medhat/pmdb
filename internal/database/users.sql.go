@@ -11,20 +11,15 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    id, name
+  name
 ) VALUES (
-  ?, ?
+  ?
 )
 RETURNING id, name
 `
 
-type CreateUserParams struct {
-	ID   int64
-	Name string
-}
-
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.ID, arg.Name)
+func (q *Queries) CreateUser(ctx context.Context, name string) (User, error) {
+	row := q.db.QueryRowContext(ctx, createUser, name)
 	var i User
 	err := row.Scan(&i.ID, &i.Name)
 	return i, err

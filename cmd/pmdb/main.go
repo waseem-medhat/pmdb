@@ -46,21 +46,30 @@ func main() {
 
 // handleHome is the handler for the home route ("/")
 func (s *service) handleHome(w http.ResponseWriter, r *http.Request) {
-	// test DB query
-	dbUsers, err := s.db.ListUsers(r.Context())
-	if err != nil {
-		log.Fatal(err)
-	}
+	switch r.Method {
+	case "GET":
+		dbUsers, err := s.db.ListUsers(r.Context())
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	tmplData := struct {
-		Users []database.User
-	}{
-		Users: dbUsers,
-	}
+		tmplData := struct {
+			Users []database.User
+		}{
+			Users: dbUsers,
+		}
 
-	tmpl := template.Must(template.ParseFiles("templates/index.html", "templates/fragments.html"))
-	err = tmpl.Execute(w, tmplData)
-	if err != nil {
-		log.Fatal(err)
+		tmpl := template.Must(template.ParseFiles("templates/index.html", "templates/fragments.html"))
+		err = tmpl.Execute(w, tmplData)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	case "POST":
+		newName := r.PostFormValue("name")
+		fmt.Println(newName)
+		s.db.CreateUser(r.Context(), newName)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }

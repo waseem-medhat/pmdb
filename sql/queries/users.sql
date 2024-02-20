@@ -8,9 +8,9 @@ ORDER BY name;
 
 -- name: CreateUser :one
 INSERT INTO users (
-    id, name
+  name
 ) VALUES (
-  ?, ?
+  ?
 )
 RETURNING *;
 

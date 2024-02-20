@@ -22,17 +22,25 @@
         </p>
     </section>
 
-    <section class="my-5">
-        <h3 class="text-gray-100 text-3xl font-semibold mb-2">Users</h3>
-        <ul>
-            {{ range $index, $user := .Users }}
-            <li>{{ $user.Name }}</li>
-            {{ end }}
-        </ul>
-        <p>
-            Don't see your name here?
-            <a class="text-blue-400" href="/register.html">Register</a>!
-        </p>
+    <h3 class="text-gray-100 text-3xl font-semibold mb-2">
+        Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
+    </h3>
+    <section class="my-5 grid grid-cols-2">
+        <section>
+            <ul class="mb-3">
+                {{ range $index, $user := .Users }}
+                <li>{{ $user.Name }}</li>
+                {{ end }}
+            </ul>
+        </section>
+
+        <section class="my-5">
+            <h4 class="text-gray-100 text-xl font-semibold mb-3">Register your name!</h4>
+            <form method="post" action="/">
+                <input type="text" name="name" value="" class="rounded px-2 py-1 text-gray-900">
+                <button type="submit" class="rounded px-2 py-1 bg-blue-600">+</button>
+            </form>
+        </section>
     </section>
 </body>
 

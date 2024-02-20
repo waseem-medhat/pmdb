@@ -9,26 +9,20 @@ import (
 )
 
 type Movie struct {
-	ID        string
-	Name      string
-	Year      sql.NullInt64
-	CreatedAt interface{}
-	UpdatedAt interface{}
+	ID   int64
+	Name string
+	Year sql.NullInt64
 }
 
 type Review struct {
-	ID        string
-	UserID    string
-	MovieID   string
-	Rating    sql.NullInt64
-	Review    sql.NullString
-	CreatedAt interface{}
-	UpdatedAt interface{}
+	ID      int64
+	UserID  int64
+	MovieID int64
+	Rating  sql.NullInt64
+	Review  sql.NullString
 }
 
 type User struct {
-	ID        string
-	Name      string
-	CreatedAt interface{}
-	UpdatedAt interface{}
+	ID   int64
+	Name string
 }

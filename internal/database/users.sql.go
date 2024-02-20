@@ -11,34 +11,22 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    id, name, created_at, updated_at
+    id, name
 ) VALUES (
-  ?, ?, ?, ?
+  ?, ?
 )
-RETURNING id, name, created_at, updated_at
+RETURNING id, name
 `
 
 type CreateUserParams struct {
-	ID        string
-	Name      string
-	CreatedAt interface{}
-	UpdatedAt interface{}
+	ID   int64
+	Name string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser,
-		arg.ID,
-		arg.Name,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
+	row := q.db.QueryRowContext(ctx, createUser, arg.ID, arg.Name)
 	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
+	err := row.Scan(&i.ID, &i.Name)
 	return i, err
 }
 
@@ -47,30 +35,25 @@ DELETE FROM users
 WHERE id = ?
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id string) error {
+func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteUser, id)
 	return err
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, name, created_at, updated_at FROM users
+SELECT id, name FROM users
 WHERE id = ? LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
+func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUser, id)
 	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
+	err := row.Scan(&i.ID, &i.Name)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, name, created_at, updated_at FROM users
+SELECT id, name FROM users
 ORDER BY name
 `
 
@@ -83,12 +66,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	var items []User
 	for rows.Next() {
 		var i User
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
+		if err := rows.Scan(&i.ID, &i.Name); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

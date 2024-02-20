@@ -1,10 +1,8 @@
 -- +goose Up
 CREATE TABLE movies (
-    id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    year INTEGER,
-    created_at TIME NOT NULL,
-    updated_at TIME NOT NULL
+    year INTEGER
 );
 
 -- +goose Down

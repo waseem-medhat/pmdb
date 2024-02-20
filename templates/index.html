@@ -14,6 +14,26 @@
             for movies you want to watch.
         </p>
     </section>
+
+    <section class="my-5">
+        <h3 class="text-gray-100 text-3xl font-semibold mb-2">Reviews</h3>
+        <p>
+            None (yet).
+        </p>
+    </section>
+
+    <section class="my-5">
+        <h3 class="text-gray-100 text-3xl font-semibold mb-2">Users</h3>
+        <ul>
+            {{ range $index, $user := .Users }}
+            <li>{{ $user.Name }}</li>
+            {{ end }}
+        </ul>
+        <p>
+            Don't see your name here?
+            <a class="text-blue-400" href="/register.html">Register</a>!
+        </p>
+    </section>
 </body>
 
 </html>

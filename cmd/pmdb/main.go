@@ -51,10 +51,15 @@ func (s *service) handleHome(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(dbUsers)
+
+	tmplData := struct {
+		Users []database.User
+	}{
+		Users: dbUsers,
+	}
 
 	tmpl := template.Must(template.ParseFiles("templates/index.html", "templates/fragments.html"))
-	err = tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, tmplData)
 	if err != nil {
 		log.Fatal(err)
 	}

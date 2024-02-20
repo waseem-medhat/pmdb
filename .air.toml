@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "./tmp/main"
-  cmd = "go build -o ./tmp/main ./cmd/pmdb"
+  cmd = "tailwindcss -i ./static/input.css -o ./static/styles.css -m && go build -o ./tmp/main ./cmd/pmdb"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []

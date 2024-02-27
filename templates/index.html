@@ -3,12 +3,12 @@
 
 {{ template "head" "Home // " }}
 
-<body class="bg-gray-900 text-gray-100 m-14">
-    <h1 class="text-amber-400 font-bold text-4xl">PMDb</h1>
-    <h2 class="text-amber-400 font-semibold text-2xl">Your Personal Movie Database</h2>
+<body class="bg-gray-100 text-gray-900 m-14 text-center">
+    <h1 class="text-amber-500 font-semibold text-5xl">PMDb</h1>
+    <h2 class="text-amber-500 text-2xl">Your Personal Movie Database</h2>
 
-    <section class="my-5">
-        <h3 class="text-gray-100 text-3xl font-semibold mb-2">Welcome!</h3>
+    <section class="my-5 bg-gray-100 text-gray-900 p-5 border-y border-y-gray-400">
+        <h3 class="text-2xl font-semibold mb-1">Welcome!</h3>
         <p>
             PMDb is your personal space for movies! Here you can rate and review movies you watched and make watchlists
             for movies you want to watch.
@@ -16,14 +16,14 @@
     </section>
 
     <section class="my-5">
-        <h3 class="text-gray-100 text-3xl font-semibold mb-2">Reviews</h3>
+        <h3 class="text-gray-900 text-3xl font-semibold mb-2">Latest Public Reviews</h3>
         <p>
             None (yet).
         </p>
     </section>
 
     <section id="users" class="my-5">
-        <h3 class="text-gray-100 text-3xl font-semibold mb-2">
+        <h3 class="text-gray-900 text-3xl font-semibold mb-2">
             Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
         </h3>
         <div class="grid grid-cols-2">
@@ -36,9 +36,9 @@
             </section>
 
             <section class="my-5">
-                <h4 class="text-gray-100 text-xl font-semibold mb-3">Register your name!</h4>
+                <h4 class="text-gray-900 text-xl font-semibold mb-3">Register your name!</h4>
                 <form hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
-                    <input type="text" name="name" value="" class="rounded px-2 py-1 text-gray-900">
+                    <input type="text" name="name" value="" class="border rounded px-2 py-1 text-gray-100">
                     <button type="submit" class="rounded px-2 py-1 bg-blue-600">+</button>
                 </form>
             </section>

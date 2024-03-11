@@ -6,7 +6,7 @@
         <section>
             <ul class="mb-3">
                 {{ range $index, $user := .Users }}
-                <li>{{ $user.Name }}</li>
+                <li>{{ $user.DisplayName }} ({{ $user.UserName }})</li>
                 {{ end }}
             </ul>
             {{ if ne .ErrorMessage "" }}

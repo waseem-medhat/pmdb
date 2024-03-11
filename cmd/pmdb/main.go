@@ -9,6 +9,7 @@ import (
 	"os"
 	"text/template"
 
+	"github.com/google/uuid"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"github.com/wipdev-tech/pmdb/internal/database"
 )
@@ -66,15 +67,23 @@ func (s *service) handleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *service) handleAddUser(w http.ResponseWriter, r *http.Request) {
-	newName := r.PostFormValue("name")
-	_, err := s.db.CreateUser(r.Context(), newName)
+	newDisplayName := r.PostFormValue("display-name")
+	newUserName := r.PostFormValue("user-name")
+	_, err := s.db.CreateUser(r.Context(), database.CreateUserParams{
+		ID:          uuid.NewString(),
+		UserName:    newUserName,
+		DisplayName: newDisplayName,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	errMsg := ""
-	dbUsers, err := s.db.ListUsers(r.Context())
 	if err != nil {
 		errMsg = "Could not add user :("
 	}
 
+	dbUsers, err := s.db.ListUsers(r.Context())
 	tmplData := struct {
 		Users        []database.User
 		ErrorMessage string

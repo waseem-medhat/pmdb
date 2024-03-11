@@ -1,7 +1,8 @@
 -- +goose Up
 CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
+    id TEXT PRIMARY KEY,
+    user_name TEXT NOT NULL,
+    display_name text NOT NULL
 );
 
 -- +goose Down

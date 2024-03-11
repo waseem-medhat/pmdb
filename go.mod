@@ -3,6 +3,7 @@ module github.com/wipdev-tech/pmdb
 go 1.21.6
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/tursodatabase/libsql-client-go v0.0.0-20240220085343-4ae0eb9d0898
 )

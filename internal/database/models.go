@@ -23,6 +23,7 @@ type Review struct {
 }
 
 type User struct {
-	ID   int64
-	Name string
+	ID          string
+	UserName    string
+	DisplayName string
 }

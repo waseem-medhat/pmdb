@@ -26,20 +26,29 @@
         <h3 class="text-gray-900 text-3xl font-semibold mb-2">
             Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
         </h3>
-        <div class="grid grid-cols-2">
-            <section>
+        <div class="grid grid-cols-3">
+            <section class="col-span-2">
                 <ul class="mb-3">
                     {{ range $index, $user := .Users }}
-                    <li>{{ $user.Name }}</li>
+                    <li>{{ $user.DisplayName }} ({{ $user.UserName }})</li>
                     {{ end }}
                 </ul>
             </section>
 
             <section class="my-5">
-                <h4 class="text-gray-900 text-xl font-semibold mb-3">Register your name!</h4>
-                <form hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
-                    <input type="text" name="name" value="" class="border rounded px-2 py-1 text-gray-100">
-                    <button type="submit" class="rounded px-2 py-1 bg-blue-600">+</button>
+                <h4 class="text-gray-900 text-xl font-semibold mb-3">Register!</h4>
+                <form class="flex flex-col gap-2" hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
+                    <label for="display-name">
+                        Full Name
+                        <input type="text" name="display-name" value="" class="border rounded px-2 py-1 text-gray-900">
+                    </label>
+                    <label for="user-name">
+                        User Name
+                        <input type="text" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900">
+                    </label>
+                    <button type="submit" class="rounded px-2 py-1 bg-blue-600 text-white">
+                        Let's go!
+                    </button>
                 </form>
             </section>
         </div>

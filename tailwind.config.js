@@ -2,8 +2,11 @@
 export default {
     content: ["./templates/*.html", "./static/*.js"],
     theme: {
-        extend: {},
-        fontFamily: {}
+        extend: {
+            colors: {
+                primary: "#7cdd2c"
+            }
+        },
     },
     plugins: [],
 }

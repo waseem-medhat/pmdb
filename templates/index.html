@@ -1,50 +1,38 @@
 {{ template "top" "Home // " }}
 
-    <section class="my-5 bg-gray-100 text-gray-900 p-5 border-y border-y-gray-400">
+<section class="my-5 text-gray-200 rounded-lg">
+    <blockquote class="pl-5 py-1 border-l-4 border-amber-400">
         <h3 class="text-2xl font-semibold mb-1">Welcome!</h3>
         <p>
             PMDb is your personal space for movies! Here you can rate and review movies you watched and make watchlists
             for movies you want to watch.
         </p>
-    </section>
+    </blockquote>
+</section>
 
-    <section class="my-5">
-        <h3 class="text-gray-900 text-3xl font-semibold mb-2">Latest Public Reviews</h3>
-        <p>
-            None (yet).
-        </p>
-    </section>
+<section class="my-5">
+    <h3 class="text-gray-200 text-3xl font-semibold mb-2">Latest Public Reviews</h3>
+    <p>
+        None (yet).
+    </p>
+</section>
 
-    <section id="users" class="my-5">
-        <h3 class="text-gray-900 text-3xl font-semibold mb-2">
-            Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
-        </h3>
-        <div class="grid grid-cols-3">
-            <section class="col-span-2">
-                <ul class="mb-3">
-                    {{ range $index, $user := .Users }}
-                    <li>{{ $user.DisplayName }} ({{ $user.UserName }})</li>
-                    {{ end }}
-                </ul>
-            </section>
+<section id="users" class="my-5">
+    <h3 class="text-gray-200 text-3xl font-semibold mb-2">
+        Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
+    </h3>
+    <div class="grid grid-cols-3">
+        <section class="col-span-2">
+            <ul class="mb-3">
+                {{ range $index, $user := .Users }}
+                <li>{{ $user.DisplayName }} ({{ $user.UserName }})</li>
+                {{ end }}
+            </ul>
+        </section>
 
-            <section class="my-5">
-                <h4 class="text-gray-900 text-xl font-semibold mb-3">Register!</h4>
-                <form class="flex flex-col gap-2" hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
-                    <label for="display-name">
-                        Full Name
-                        <input type="text" name="display-name" value="" class="border rounded px-2 py-1 text-gray-900">
-                    </label>
-                    <label for="user-name">
-                        User Name
-                        <input type="text" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900">
-                    </label>
-                    <button type="submit" class="rounded px-2 py-1 bg-blue-600 text-white">
-                        Let's go!
-                    </button>
-                </form>
-            </section>
-        </div>
-    </section>
+        <section class="my-5">
+        </section>
+    </div>
+</section>
 
 {{ template "bottom" }}

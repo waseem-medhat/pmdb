@@ -51,6 +51,10 @@ func (s *Service) HandleAddUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dbUsers, err := s.DB.ListUsers(r.Context())
+	if err != nil {
+		log.Fatal("error getting users -- ", err)
+	}
+
 	tmplData := struct {
 		Users        []database.User
 		ErrorMessage string
@@ -61,6 +65,18 @@ func (s *Service) HandleAddUser(w http.ResponseWriter, r *http.Request) {
 
 	tmpl := template.Must(template.ParseFiles("templates/users.html"))
 	err = tmpl.Execute(w, tmplData)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (s *Service) HandleRegister(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles(
+		"templates/register.html",
+		"templates/_top.html",
+		"templates/_bottom.html",
+	))
+	err := tmpl.Execute(w, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

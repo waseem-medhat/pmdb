@@ -1,0 +1,18 @@
+{{ template "top" "Home // " }}
+
+<h4 class="text-gray-900 text-xl font-semibold mb-3">Register!</h4>
+<form class="flex flex-col gap-2" hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
+    <label for="display-name">
+        Full Name
+        <input type="text" name="display-name" value="" class="border rounded px-2 py-1 text-gray-900">
+    </label>
+    <label for="user-name">
+        User Name
+        <input type="text" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900">
+    </label>
+    <button type="submit" class="rounded px-2 py-1 bg-blue-600 text-white">
+        Let's go!
+    </button>
+</form>
+
+{{ template "bottom" }}

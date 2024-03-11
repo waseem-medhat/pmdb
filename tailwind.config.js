@@ -5,6 +5,10 @@ export default {
         extend: {
             colors: {
                 primary: "#7cdd2c"
+            },
+            fontFamily: {
+                title: "'Madimi One', sans-serif",
+                body: "Inter, sans-serif"
             }
         },
     },

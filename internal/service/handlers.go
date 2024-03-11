@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -33,37 +34,31 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Service) HandleAddUser(w http.ResponseWriter, r *http.Request) {
-	newDisplayName := r.PostFormValue("display-name")
-	newUserName := r.PostFormValue("user-name")
-	_, err := s.DB.CreateUser(r.Context(), database.CreateUserParams{
+func (s *Service) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("this fired")
+	displayName := r.PostFormValue("display-name")
+	userName := r.PostFormValue("user-name")
+	password := r.PostFormValue("password")
+	confirmPassword := r.PostFormValue("confirm-password")
+	fmt.Println(displayName)
+	fmt.Println(userName)
+	fmt.Println(password, confirmPassword)
+	dbUser, err := s.DB.CreateUser(r.Context(), database.CreateUserParams{
 		ID:          uuid.NewString(),
-		UserName:    newUserName,
-		DisplayName: newDisplayName,
+		UserName:    userName,
+		DisplayName: displayName,
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	errMsg := ""
-	if err != nil {
-		errMsg = "Could not add user :("
-	}
-
-	dbUsers, err := s.DB.ListUsers(r.Context())
-	if err != nil {
-		log.Fatal("error getting users -- ", err)
-	}
-
 	tmplData := struct {
-		Users        []database.User
-		ErrorMessage string
+		User database.User
 	}{
-		Users:        dbUsers,
-		ErrorMessage: errMsg,
+		User: dbUser,
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/users.html"))
+	tmpl := template.Must(template.ParseFiles("templates/hx_register_success.html"))
 	err = tmpl.Execute(w, tmplData)
 	if err != nil {
 		log.Fatal(err)

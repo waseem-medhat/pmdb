@@ -1,15 +1,20 @@
 {{ template "top" "Home // " }}
 
-<h4 class="text-gray-900 text-xl font-semibold mb-3">Register!</h4>
-<form class="flex flex-col gap-2" hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
-    <label for="display-name">
-        Full Name
+<h3 class="text-2xl font-semibold mb-1">Register!</h3>
+<form hx-post="/add-user" hx-target="#users" hx-swap="outerHTML">
+    <div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
+        <label for="display-name">Full Name</label>
         <input type="text" name="display-name" value="" class="border rounded px-2 py-1 text-gray-900">
-    </label>
-    <label for="user-name">
-        User Name
+
+        <label for="user-name">User Name</label>
         <input type="text" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900">
-    </label>
+
+        <label for="password">Password</label>
+        <input type="password" name="password" value="" class="border rounded px-2 py-1 text-gray-900">
+
+        <label for="confirm-password">Confirm Password</label>
+        <input type="confirm-password" name="password" value="" class="border rounded px-2 py-1 text-gray-900">
+    </div>
     <button type="submit" class="rounded px-2 py-1 bg-blue-600 text-white">
         Let's go!
     </button>

@@ -22,7 +22,11 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 		Users: dbUsers,
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/index.html", "templates/fragments.html"))
+	tmpl := template.Must(template.ParseFiles(
+		"templates/index.html",
+		"templates/_top.html",
+		"templates/_bottom.html",
+	))
 	err = tmpl.Execute(w, tmplData)
 	if err != nil {
 		log.Fatal(err)

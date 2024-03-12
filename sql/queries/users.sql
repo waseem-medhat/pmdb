@@ -7,8 +7,8 @@ SELECT * FROM users
 ORDER BY display_name;
 
 -- name: CreateUser :one
-INSERT INTO users ( id, user_name, display_name )
-VALUES ( ?, ?, ? )
+INSERT INTO users ( id, user_name, display_name, password )
+VALUES ( ?, ?, ?, ? )
 RETURNING *;
 
 -- name: DeleteUser :exec

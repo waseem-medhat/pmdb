@@ -2,7 +2,8 @@
 CREATE TABLE users (
     id TEXT PRIMARY KEY,
     user_name TEXT NOT NULL,
-    display_name text NOT NULL
+    display_name TEXT NOT NULL,
+    password TEXT NOT NULL
 );
 
 -- +goose Down

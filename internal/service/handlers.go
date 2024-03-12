@@ -1,13 +1,13 @@
 package service
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // HandleHome is the handler for the home route ("/")
@@ -35,18 +35,27 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("this fired")
 	displayName := r.PostFormValue("display-name")
 	userName := r.PostFormValue("user-name")
 	password := r.PostFormValue("password")
 	confirmPassword := r.PostFormValue("confirm-password")
-	fmt.Println(displayName)
-	fmt.Println(userName)
-	fmt.Println(password, confirmPassword)
+
+	if password != confirmPassword {
+		log.Fatal("passwords don't match")
+		return
+	}
+
+	hPassword, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if err != nil {
+		log.Fatal("couldn't hash password")
+		return
+	}
+
 	dbUser, err := s.DB.CreateUser(r.Context(), database.CreateUserParams{
 		ID:          uuid.NewString(),
 		UserName:    userName,
 		DisplayName: displayName,
+		Password:    string(hPassword),
 	})
 	if err != nil {
 		log.Fatal(err)

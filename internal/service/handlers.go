@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -36,7 +35,6 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("this fired")
 	displayName := r.PostFormValue("display-name")
 	userName := r.PostFormValue("user-name")
 	password := r.PostFormValue("password")

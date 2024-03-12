@@ -11,7 +11,7 @@ func New(s *service.Service) *http.ServeMux {
 
 	fs := http.FileServer(http.Dir("static"))
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
-	mux.HandleFunc("GET /", s.HandleHome)
+	mux.HandleFunc("GET /{$}", s.HandleHome)
 	mux.HandleFunc("GET /register", s.HandleRegister)
 
 	mux.HandleFunc("POST /create-user", s.HandleCreateUser)

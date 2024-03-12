@@ -1,12 +1,19 @@
 {{ template "top" "Home // " }}
 
-<section class="my-5 text-gray-200 rounded-lg">
-    <blockquote class="pl-5 py-1 border-l-4 border-primary">
-        <h3 class="text-2xl font-semibold mb-1">Welcome!</h3>
-        <p>
+<section class="mt-5 mb-10 text-gray-200 rounded-lg bg-primary bg-opacity-10">
+    <blockquote class="px-5 py-7 my-3 border-l-4 border-primary">
+        <h3 class="text-3xl font-semibold mb-2">Welcome!</h3>
+        <p class="mb-5">
             PMDb is your personal space for movies! Here you can rate and review movies you watched and make watchlists
             for movies you want to watch.
         </p>
+        <div class="flex gap-3 items-center">
+            <a href="/register"
+                class="rounded px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white">Join
+                PMDb</a>
+            or
+            <a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
+        </div>
     </blockquote>
 </section>
 

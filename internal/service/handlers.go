@@ -85,3 +85,23 @@ func (s *Service) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 }
+
+func (s *Service) HandleCheckUserName(w http.ResponseWriter, r *http.Request) {
+	dbUsers, err := s.DB.ListUsers(r.Context())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	inUserName := r.PostFormValue("user-name")
+	for _, u := range dbUsers {
+		if u.UserName == inUserName {
+			tmpl := template.Must(template.ParseFiles("templates/hx_user_name_error.html"))
+			err := tmpl.Execute(w, nil)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

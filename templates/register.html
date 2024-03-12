@@ -9,8 +9,12 @@
             required>
 
         <label for="user-name">User Name</label>
-        <input type="text" id="user-name" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900"
-            required>
+        <div class="flex gap-2">
+            <input type="text" id="user-name" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900"
+                hx-target="#error" hx-swap="innerHTML" hx-trigger="keyup changed delay:300ms" hx-post="/check-user-name"
+                hx-indicator="#user-name-ind" required>
+            <img id="user-name-ind" src="/static/spin.svg" width="20" class="htmx-indicator">
+        </div>
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" value="" class="border rounded px-2 py-1 text-gray-900"
@@ -33,6 +37,7 @@
         Already have an account?
         <a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
     </p>
+    <p id="error"></p>
 </form>
 
 <script src="/static/registerForm.js">

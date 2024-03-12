@@ -1,36 +1,46 @@
 {{ template "top" "Register // " }}
 
-<form hx-post="/create-user" hx-target="this" hx-swap="innerHTML" hx-indicator="#ind" hx-disabled-elt="#submit-btn">
+<form id="register" hx-post="/create-user" hx-target="this" hx-swap="innerHTML" hx-indicator="#ind"
+    hx-disabled-elt="#submit-btn">
     <h3 class="text-2xl font-semibold mb-1">Register</h3>
-    <div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
-        <label for="display-name">Full Name</label>
-        <input type="text" name="display-name" value="" class="border rounded px-2 py-1 text-gray-900" required>
-
-        <label for="user-name">User Name</label>
-        <input type="text" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900" required>
-
-        <label for="password">Password</label>
-        <input type="password" name="password" value="" class="border rounded px-2 py-1 text-gray-900" required>
-
-        <label for="confirm-password">Confirm Password</label>
-        <input type="password" name="confirm-password" value="" class="border rounded px-2 py-1 text-gray-900" required>
-    </div>
-
-    <div class="flex gap-2">
-        <button id="submit-btn" type="submit"
-            class="rounded px-3 py-1 my-2 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white">
-            Let's go!
-        </button>
-        <img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator">
-    </div>
-
     <p>
         Already have an account?
         <a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
     </p>
-</form>
 
-<script src="/static/registerForm.js">
-</script>
+    <div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
+        <label for="display-name">Full Name</label>
+        <input type="text" id="display-name" name="display-name" value="" class="border rounded px-2 py-1 text-gray-900"
+            hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" hx-post="/register/validate"
+            hx-indicator="#ind" required>
+
+        <label for="user-name">User Name</label>
+        <div class="flex gap-2">
+            <input type="text" id="user-name" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900"
+                hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms"
+                hx-post="/register/validate" hx-indicator="#ind" required>
+        </div>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" value="" class="border rounded px-2 py-1 text-gray-900"
+            hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" hx-post="/register/validate"
+            hx-indicator="#ind" required>
+
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" name="confirm-password" value=""
+            class="border rounded px-2 py-1 text-gray-900" hx-target="#check" hx-swap="innerHTML"
+            hx-trigger="keyup changed delay:500ms" hx-post="/register/validate" hx-indicator="#ind" required>
+    </div>
+
+    <div id="check">
+        <div class="flex gap-2">
+            <button id="submit-btn" type="submit" disabled
+                class="rounded px-3 py-1 my-2 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white">
+                Let's go!
+            </button>
+            <img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator">
+        </div>
+    </div>
+</form>
 
 {{ template "bottom" }}

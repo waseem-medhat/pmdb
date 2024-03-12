@@ -19,19 +19,17 @@
             <input type="text" id="user-name" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900"
                 hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms"
                 hx-post="/register/validate" hx-indicator="#ind" required>
-            <img id="user-name-ind" src="/static/spin.svg" width="20" class="htmx-indicator">
         </div>
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" value="" class="border rounded px-2 py-1 text-gray-900"
             hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" hx-post="/register/validate"
-            hx-indicator="#ind" placeholder="at least 8 characters long" required>
+            hx-indicator="#ind" required>
 
         <label for="confirm-password">Confirm Password</label>
         <input type="password" id="confirm-password" name="confirm-password" value=""
-            placeholder="at least 8 characters long" class="border rounded px-2 py-1 text-gray-900" hx-target="#check"
-            hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" hx-post="/register/validate" hx-indicator="#ind"
-            required>
+            class="border rounded px-2 py-1 text-gray-900" hx-target="#check" hx-swap="innerHTML"
+            hx-trigger="keyup changed delay:500ms" hx-post="/register/validate" hx-indicator="#ind" required>
     </div>
 
     <div id="check">
@@ -40,8 +38,8 @@
                 class="rounded px-3 py-1 my-2 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white">
                 Let's go!
             </button>
+            <img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator">
         </div>
-        <img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator">
     </div>
 </form>
 

@@ -12,23 +12,23 @@ import (
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	dbUsers, err := s.DB.ListUsers(r.Context())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	tmplData := struct {
-		Users []database.User
-	}{
-		Users: dbUsers,
-	}
+	// dbUsers, err := s.DB.ListUsers(r.Context())
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	//
+	// tmplData := struct {
+	// 	Users []database.User
+	// }{
+	// 	Users: dbUsers,
+	// }
 
 	tmpl := template.Must(template.ParseFiles(
 		"templates/index.html",
 		"templates/_top.html",
 		"templates/_bottom.html",
 	))
-	err = tmpl.Execute(w, tmplData)
+	err := tmpl.Execute(w, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

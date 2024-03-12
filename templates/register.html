@@ -17,11 +17,17 @@
     </div>
 
     <div class="flex gap-2">
-        <button id="submit-btn" type="submit" class="rounded px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white">
+        <button id="submit-btn" type="submit"
+            class="rounded px-3 py-1 my-2 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white">
             Let's go!
         </button>
         <img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator">
     </div>
+
+    <p>
+        Already have an account?
+        <a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
+    </p>
 </form>
 
 {{ template "bottom" }}

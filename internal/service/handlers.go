@@ -85,3 +85,44 @@ func (s *Service) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 }
+
+func (s *Service) HandleValidateRegisterForm(w http.ResponseWriter, r *http.Request) {
+	errorMsgs := []string{}
+
+	inDisplayName := r.PostFormValue("display-name")
+	if inDisplayName == "" {
+		errorMsgs = append(errorMsgs, "Full name shouldn't be empty.")
+	}
+
+	dbUsers, err := s.DB.ListUsers(r.Context())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	inUserName := r.PostFormValue("user-name")
+	if inUserName == "" {
+		errorMsgs = append(errorMsgs, "User name shouldn't be empty.")
+	}
+
+	inPassword := r.PostFormValue("password")
+	if len(inPassword) < 8 {
+		errorMsgs = append(errorMsgs, "Password must be at least 8 characters long.")
+	}
+
+	inConfirmPassword := r.PostFormValue("confirm-password")
+	if inConfirmPassword != inPassword {
+		errorMsgs = append(errorMsgs, "Passwords should match.")
+	}
+
+	for _, u := range dbUsers {
+		if u.UserName == inUserName {
+			errorMsgs = append(errorMsgs, "User name already exists.")
+		}
+	}
+
+	tmpl := template.Must(template.ParseFiles("templates/hx_register_check.html"))
+	err = tmpl.Execute(w, errorMsgs)
+	if err != nil {
+		log.Fatal(err)
+	}
+}

@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"github.com/wipdev-tech/pmdb/internal/database"
@@ -29,7 +30,10 @@ func main() {
 	s := service.New()
 	s.DB = database.New(db)
 	r := router.New(s)
-	server := http.Server{Handler: r}
+	server := &http.Server{
+		Handler:           r,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
 
 	fmt.Println("PMDb server let's Go! ")
 	if os.Getenv("ENV") == "dev" {

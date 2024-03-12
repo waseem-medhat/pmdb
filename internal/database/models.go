@@ -26,4 +26,5 @@ type User struct {
 	ID          string
 	UserName    string
 	DisplayName string
+	Password    string
 }

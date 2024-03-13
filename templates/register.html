@@ -15,11 +15,9 @@
             hx-indicator="#ind" required>
 
         <label for="user-name">User Name</label>
-        <div class="flex gap-2">
-            <input type="text" id="user-name" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900"
-                hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms"
-                hx-post="/register/validate" hx-indicator="#ind" required>
-        </div>
+        <input type="text" id="user-name" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900"
+            hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" hx-post="/register/validate"
+            hx-indicator="#ind" required>
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" value="" class="border rounded px-2 py-1 text-gray-900"

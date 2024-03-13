@@ -50,19 +50,37 @@ func (q *Queries) DeleteUser(ctx context.Context, id string) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, user_name, display_name, password FROM users
-WHERE id = ? LIMIT 1
+SELECT id, display_name, user_name FROM users
+WHERE user_name = ? LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUser, id)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.UserName,
-		&i.DisplayName,
-		&i.Password,
-	)
+type GetUserRow struct {
+	ID          string
+	DisplayName string
+	UserName    string
+}
+
+func (q *Queries) GetUser(ctx context.Context, userName string) (GetUserRow, error) {
+	row := q.db.QueryRowContext(ctx, getUser, userName)
+	var i GetUserRow
+	err := row.Scan(&i.ID, &i.DisplayName, &i.UserName)
+	return i, err
+}
+
+const getUserForLogin = `-- name: GetUserForLogin :one
+SELECT user_name, password FROM users
+WHERE user_name = ? LIMIT 1
+`
+
+type GetUserForLoginRow struct {
+	UserName string
+	Password string
+}
+
+func (q *Queries) GetUserForLogin(ctx context.Context, userName string) (GetUserForLoginRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserForLogin, userName)
+	var i GetUserForLoginRow
+	err := row.Scan(&i.UserName, &i.Password)
 	return i, err
 }
 

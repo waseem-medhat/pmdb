@@ -1,0 +1,15 @@
+{{ template "top" "Login // " }}
+
+<div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
+    <label for="user-name">User Name</label>
+    <input type="text" id="user-name" name="user-name" value="" class="border rounded px-2 py-1 text-gray-900"
+        hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" hx-post="/register/validate"
+        hx-indicator="#ind" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" value="" class="border rounded px-2 py-1 text-gray-900"
+        hx-target="#check" hx-swap="innerHTML" hx-trigger="keyup changed delay:500ms" hx-post="/register/validate"
+        hx-indicator="#ind" required>
+</div>
+
+{{ template "bottom" }}

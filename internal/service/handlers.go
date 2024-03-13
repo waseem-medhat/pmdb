@@ -126,3 +126,15 @@ func (s *Service) HandleValidateRegisterForm(w http.ResponseWriter, r *http.Requ
 		log.Fatal(err)
 	}
 }
+
+func (s *Service) HandleLogin(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles(
+		"templates/login.html",
+		"templates/blocks/_top.html",
+		"templates/blocks/_bottom.html",
+	))
+	err := tmpl.Execute(w, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+}

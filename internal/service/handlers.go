@@ -25,8 +25,8 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 
 	tmpl := template.Must(template.ParseFiles(
 		"templates/index.html",
-		"templates/_top.html",
-		"templates/_bottom.html",
+		"templates/blocks/_top.html",
+		"templates/blocks/_bottom.html",
 	))
 	err := tmpl.Execute(w, nil)
 	if err != nil {
@@ -67,7 +67,7 @@ func (s *Service) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
 		User: dbUser,
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/hx_register_success.html"))
+	tmpl := template.Must(template.ParseFiles("templates/htmx/hx_register_success.html"))
 	err = tmpl.Execute(w, tmplData)
 	if err != nil {
 		log.Fatal(err)
@@ -77,8 +77,8 @@ func (s *Service) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
 func (s *Service) HandleRegister(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles(
 		"templates/register.html",
-		"templates/_top.html",
-		"templates/_bottom.html",
+		"templates/blocks/_top.html",
+		"templates/blocks/_bottom.html",
 	))
 	err := tmpl.Execute(w, nil)
 	if err != nil {
@@ -120,7 +120,7 @@ func (s *Service) HandleValidateRegisterForm(w http.ResponseWriter, r *http.Requ
 		}
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/hx_register_check.html"))
+	tmpl := template.Must(template.ParseFiles("templates/htmx/hx_register_check.html"))
 	err = tmpl.Execute(w, errorMsgs)
 	if err != nil {
 		log.Fatal(err)

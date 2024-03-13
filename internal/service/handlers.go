@@ -1,11 +1,13 @@
 package service
 
 import (
-	"database/sql"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 
+	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/wipdev-tech/pmdb/internal/database"
 	"golang.org/x/crypto/bcrypt"
@@ -13,23 +15,37 @@ import (
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	// dbUsers, err := s.DB.ListUsers(r.Context())
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	//
-	// tmplData := struct {
-	// 	Users []database.User
-	// }{
-	// 	Users: dbUsers,
-	// }
+	claims := &jwt.RegisteredClaims{}
+	keyfunc := func(toke *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	}
+
+	accessCookie, _ := r.Cookie("jwt-access")
+	bearer := accessCookie.Value
+
+	token, err := jwt.ParseWithClaims(bearer, claims, keyfunc)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	userName, err := token.Claims.GetSubject()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dbUser, err := s.DB.GetUser(r.Context(), userName)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(dbUser.DisplayName)
 
 	tmpl := template.Must(template.ParseFiles(
 		"templates/index.html",
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
 	))
-	err := tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -126,48 +142,4 @@ func (s *Service) HandleValidateRegisterForm(w http.ResponseWriter, r *http.Requ
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func (s *Service) HandleLogin(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles(
-		"templates/login.html",
-		"templates/blocks/_top.html",
-		"templates/blocks/_bottom.html",
-	))
-	err := tmpl.Execute(w, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (s *Service) HandleUserLogin(w http.ResponseWriter, r *http.Request) {
-	userName := r.FormValue("user-name")
-	password := r.FormValue("password")
-
-	dbUser, err := s.DB.GetUserForLogin(r.Context(), userName)
-	if err == sql.ErrNoRows {
-		tmpl := template.Must(template.ParseFiles("templates/htmx/hx_login_error.html"))
-		err := tmpl.Execute(w, nil)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(password))
-	if err != nil {
-		tmpl := template.Must(template.ParseFiles("templates/htmx/hx_login_error.html"))
-		err := tmpl.Execute(w, nil)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return
-	}
-
-	w.Header().Set("HX-Redirect", "/")
-	w.WriteHeader(http.StatusFound)
 }

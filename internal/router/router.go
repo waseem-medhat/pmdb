@@ -13,11 +13,11 @@ func New(s *service.Service) *http.ServeMux {
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("GET /{$}", s.HandleHome)
 	mux.HandleFunc("GET /register", s.HandleRegister)
-	mux.HandleFunc("GET /login", s.HandleLogin)
+	mux.HandleFunc("GET /login", s.HandleLoginGet)
 
 	mux.HandleFunc("POST /create-user", s.HandleCreateUser)
 	mux.HandleFunc("POST /register/validate", s.HandleValidateRegisterForm)
-	mux.HandleFunc("POST /login", s.HandleUserLogin)
+	mux.HandleFunc("POST /login", s.HandleLoginPost)
 
 	return mux
 }

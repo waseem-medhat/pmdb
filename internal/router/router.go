@@ -17,6 +17,7 @@ func New(s *service.Service) *http.ServeMux {
 
 	mux.HandleFunc("POST /create-user", s.HandleCreateUser)
 	mux.HandleFunc("POST /register/validate", s.HandleValidateRegisterForm)
+	mux.HandleFunc("POST /login", s.HandleUserLogin)
 
 	return mux
 }

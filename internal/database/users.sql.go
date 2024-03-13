@@ -49,20 +49,20 @@ func (q *Queries) DeleteUser(ctx context.Context, id string) error {
 	return err
 }
 
-const getUser = `-- name: GetUser :one
-SELECT id, user_name, display_name, password FROM users
-WHERE id = ? LIMIT 1
+const getUserForLogin = `-- name: GetUserForLogin :one
+SELECT user_name, password FROM users
+WHERE user_name = ? LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUser, id)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.UserName,
-		&i.DisplayName,
-		&i.Password,
-	)
+type GetUserForLoginRow struct {
+	UserName string
+	Password string
+}
+
+func (q *Queries) GetUserForLogin(ctx context.Context, userName string) (GetUserForLoginRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserForLogin, userName)
+	var i GetUserForLoginRow
+	err := row.Scan(&i.UserName, &i.Password)
 	return i, err
 }
 

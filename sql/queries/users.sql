@@ -1,6 +1,6 @@
--- name: GetUser :one
-SELECT * FROM users
-WHERE id = ? LIMIT 1;
+-- name: GetUserForLogin :one
+SELECT user_name, password FROM users
+WHERE user_name = ? LIMIT 1;
 
 -- name: ListUsers :many
 SELECT * FROM users

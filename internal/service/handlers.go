@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"html/template"
 	"log"
 	"net/http"
@@ -137,4 +138,36 @@ func (s *Service) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (s *Service) HandleUserLogin(w http.ResponseWriter, r *http.Request) {
+	userName := r.FormValue("user-name")
+	password := r.FormValue("password")
+
+	dbUser, err := s.DB.GetUserForLogin(r.Context(), userName)
+	if err == sql.ErrNoRows {
+		tmpl := template.Must(template.ParseFiles("templates/htmx/hx_login_error.html"))
+		err := tmpl.Execute(w, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(password))
+	if err != nil {
+		tmpl := template.Must(template.ParseFiles("templates/htmx/hx_login_error.html"))
+		err := tmpl.Execute(w, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
+
+	w.Header().Set("HX-Redirect", "/")
+	w.WriteHeader(http.StatusFound)
 }

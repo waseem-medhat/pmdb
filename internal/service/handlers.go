@@ -20,22 +20,26 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	}
 
-	accessCookie, _ := r.Cookie("jwt-access")
-	bearer := accessCookie.Value
+	accessCookie, err := r.Cookie("jwt-access")
 
-	token, err := jwt.ParseWithClaims(bearer, claims, keyfunc)
-	if err != nil {
-		log.Fatal(err)
-	}
+	dbUser := database.GetUserRow{}
+	if err == nil {
+		bearer := accessCookie.Value
 
-	userName, err := token.Claims.GetSubject()
-	if err != nil {
-		log.Fatal(err)
-	}
+		token, err := jwt.ParseWithClaims(bearer, claims, keyfunc)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	dbUser, err := s.DB.GetUser(r.Context(), userName)
-	if err != nil {
-		log.Fatal(err)
+		userName, err := token.Claims.GetSubject()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		dbUser, err = s.DB.GetUser(r.Context(), userName)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	fmt.Println(dbUser.DisplayName)

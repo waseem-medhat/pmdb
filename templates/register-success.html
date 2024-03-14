@@ -1,0 +1,15 @@
+{{ block "register-success" . }}
+{{ template "top" "Register // " }}
+
+{{ block "register-success-main" . }}
+<h3 class="text-2xl font-semibold mb-1">Success!</h3>
+
+<p>Welcome aboard, {{ .DisplayName }}!</p>
+<p>
+    You can now
+    <a href="/login" class="text-blue-500 hover:text-blue-400">log in</a>.
+</p>
+{{ end }}
+
+{{ template "bottom" }}
+{{ end }}

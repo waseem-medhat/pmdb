@@ -19,7 +19,7 @@ func (s *Service) HandleLoginGet(w http.ResponseWriter, r *http.Request) {
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
 	))
-	err := tmpl.Execute(w, nil)
+	err := tmpl.Execute(w, struct{ LoginError bool }{LoginError: false})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,8 +31,8 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 
 	dbUser, err := s.DB.GetUserForLogin(r.Context(), userName)
 	if err == sql.ErrNoRows {
-		tmpl := template.Must(template.ParseFiles("templates/htmx/hx_login_error.html"))
-		err := tmpl.Execute(w, nil)
+		tmpl := template.Must(template.ParseFiles("templates/login.html"))
+		err := tmpl.ExecuteTemplate(w, "login-error", struct{ LoginError bool }{LoginError: true})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -45,8 +45,8 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 
 	err = bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(password))
 	if err != nil {
-		tmpl := template.Must(template.ParseFiles("templates/htmx/hx_login_error.html"))
-		err := tmpl.Execute(w, nil)
+		tmpl := template.Must(template.ParseFiles("templates/login.html"))
+		err := tmpl.ExecuteTemplate(w, "login-error", struct{ LoginError bool }{LoginError: true})
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -1,3 +1,4 @@
+{{ block "login" . }}
 {{ template "top" "Login // " }}
 
 <form hx-post="/login" hx-target="#response" hx-swap="innerHTML">
@@ -18,8 +19,15 @@
             </button>
             <img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator">
         </div>
-        <div id="response"></div>
+        {{ block "login-error" . }}
+        <div id="response">
+            {{ if .LoginError }}
+            <i class="text-red-400">Invalid credentials</i>
+            {{ end }}
+        </div>
+        {{ end }}
     </div>
 </form>
 
 {{ template "bottom" }}
+{{ end }}

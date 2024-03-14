@@ -101,7 +101,7 @@ func (s *Service) HandleRegister(w http.ResponseWriter, r *http.Request) {
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
 	))
-	err := tmpl.Execute(w, nil)
+	err := tmpl.Execute(w, struct{ ErrorMsgs []string }{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -141,8 +141,8 @@ func (s *Service) HandleValidateRegisterForm(w http.ResponseWriter, r *http.Requ
 		}
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/htmx/hx_register_check.html"))
-	err = tmpl.Execute(w, errorMsgs)
+	tmpl := template.Must(template.ParseFiles("templates/register.html"))
+	err = tmpl.ExecuteTemplate(w, "check", struct{ ErrorMsgs []string }{ErrorMsgs: errorMsgs})
 	if err != nil {
 		log.Fatal(err)
 	}

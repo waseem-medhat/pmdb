@@ -11,12 +11,12 @@ import (
 )
 
 func (s *Service) HandleRegisterGet(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles(
+	err := template.Must(template.ParseFiles(
 		"templates/register.html",
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
-	))
-	err := tmpl.Execute(w, struct{ ErrorMsgs []string }{})
+	)).Execute(w, struct{ ErrorMsgs []string }{})
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,8 +55,10 @@ func (s *Service) HandleRegisterPost(w http.ResponseWriter, r *http.Request) {
 		DisplayName: dbUser.DisplayName,
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/register-success.html"))
-	err = tmpl.ExecuteTemplate(w, "register-success-main", tmplData)
+	err = template.Must(template.ParseFiles(
+		"templates/register-success.html",
+	)).ExecuteTemplate(w, "register-success-main", tmplData)
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -96,8 +98,10 @@ func (s *Service) HandleRegisterValidate(w http.ResponseWriter, r *http.Request)
 		}
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/register.html"))
-	err = tmpl.ExecuteTemplate(w, "check", struct{ ErrorMsgs []string }{ErrorMsgs: errorMsgs})
+	err = template.Must(template.ParseFiles(
+		"templates/register.html",
+	)).ExecuteTemplate(w, "check", struct{ ErrorMsgs []string }{ErrorMsgs: errorMsgs})
+
 	if err != nil {
 		log.Fatal(err)
 	}

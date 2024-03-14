@@ -25,15 +25,18 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	tmpl := template.Must(template.ParseFiles(
+	err = template.Must(template.ParseFiles(
 		"templates/index.html",
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
-	))
-	err = tmpl.Execute(w, tmplData)
+	)).Execute(w, tmplData)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (s *Service) HandleProfileGet(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.PathValue("userName"))
 }
 
 func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {

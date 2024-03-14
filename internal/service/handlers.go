@@ -13,34 +13,11 @@ import (
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	claims := &jwt.RegisteredClaims{}
-	keyfunc := func(toke *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
+	dbUser, err := s.authJWTCookie(r)
+
+	if err != nil {
+		fmt.Println(dbUser.DisplayName)
 	}
-
-	accessCookie, err := r.Cookie("jwt-access")
-
-	dbUser := database.GetUserRow{}
-	if err == nil {
-		bearer := accessCookie.Value
-
-		token, err := jwt.ParseWithClaims(bearer, claims, keyfunc)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		userName, err := token.Claims.GetSubject()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		dbUser, err = s.DB.GetUser(r.Context(), userName)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	fmt.Println(dbUser.DisplayName)
 
 	tmpl := template.Must(template.ParseFiles(
 		"templates/index.html",
@@ -51,4 +28,34 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {
+	dbUser := database.GetUserRow{}
+	claims := &jwt.RegisteredClaims{}
+	keyfunc := func(toke *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	}
+
+	accessCookie, err := r.Cookie("jwt-access")
+	if err != nil {
+		return dbUser, fmt.Errorf("couldn't get cookie - %v", err)
+	}
+	bearer := accessCookie.Value
+	token, err := jwt.ParseWithClaims(bearer, claims, keyfunc)
+	if err != nil {
+		return dbUser, fmt.Errorf("couldn't parse jwt - %v", err)
+	}
+
+	userName, err := token.Claims.GetSubject()
+	if err != nil {
+		return dbUser, fmt.Errorf("couldn't get jwt subject - %v", err)
+	}
+
+	dbUser, err = s.DB.GetUser(r.Context(), userName)
+	if err != nil {
+		return dbUser, fmt.Errorf("couldn't query user - %v", err)
+	}
+
+	return dbUser, err
 }

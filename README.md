@@ -1,5 +1,7 @@
 # PMDb (work in progress)
 
+![PMDb banner](https://i.imgur.com/TLD2Sty.png)
+
 **Personal Movie Database**
 
 PMDb is your personal space for movies! Here you can rate and review movies you

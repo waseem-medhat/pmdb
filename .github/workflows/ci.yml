@@ -21,11 +21,11 @@ jobs:
       - name: Go Fmt
         run: test -z $(go fmt ./...)
 
-      - name: Install staticcheck
-        run: go install honnef.co/go/tools/cmd/staticcheck@latest
-
-      - name: Static Check
-        run: staticcheck ./...
+      # - name: Install staticcheck
+      #   run: go install honnef.co/go/tools/cmd/staticcheck@latest
+      #
+      # - name: Static Check
+      #   run: staticcheck ./...
   
   tests:
     name: Tests

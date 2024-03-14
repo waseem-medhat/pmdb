@@ -63,6 +63,8 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 		Value:    access,
 		Secure:   true,
 		HttpOnly: true,
+		MaxAge:   60,
+		SameSite: http.SameSiteStrictMode,
 	}
 
 	http.SetCookie(w, cookie)
@@ -87,4 +89,19 @@ func generateJWTAccess(userName string) (string, error) {
 	}
 
 	return accessStr, err
+}
+
+func (s *Service) HandleLogoutPost(w http.ResponseWriter, r *http.Request) {
+	cookie := &http.Cookie{
+		Name:     "jwt-access",
+		Value:    "",
+		Secure:   true,
+		HttpOnly: true,
+		MaxAge:   -1,
+		SameSite: http.SameSiteStrictMode,
+	}
+	http.SetCookie(w, cookie)
+
+	w.Header().Set("HX-Redirect", "/")
+	w.WriteHeader(http.StatusFound)
 }

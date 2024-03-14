@@ -1,7 +1,7 @@
 {{ block "register" . }}
 {{ template "top" "Register // " }}
 
-<form id="register" hx-post="/register" hx-target="this" hx-swap="innerHTML" hx-indicator="#ind"
+<form id="register" hx-post="/register" hx-target="this" hx-swap="outerHTML" hx-indicator="#ind"
     hx-disabled-elt="#submit-btn">
     <h3 class="text-2xl font-semibold mb-1">Register</h3>
     <p>

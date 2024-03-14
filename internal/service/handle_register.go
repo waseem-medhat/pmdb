@@ -50,13 +50,13 @@ func (s *Service) HandleRegisterPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmplData := struct {
-		User database.User
+		DisplayName string
 	}{
-		User: dbUser,
+		DisplayName: dbUser.DisplayName,
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/htmx/hx_register_success.html"))
-	err = tmpl.Execute(w, tmplData)
+	tmpl := template.Must(template.ParseFiles("templates/register-success.html"))
+	err = tmpl.ExecuteTemplate(w, "register-success-main", tmplData)
 	if err != nil {
 		log.Fatal(err)
 	}

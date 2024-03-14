@@ -13,10 +13,16 @@ import (
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	dbUser, err := s.authJWTCookie(r)
+	tmplData := struct {
+		LoggedIn bool
+		User     database.GetUserRow
+	}{}
 
+	dbUser, err := s.authJWTCookie(r)
+	tmplData.User = dbUser
+	tmplData.LoggedIn = err == nil
 	if err != nil {
-		fmt.Println(dbUser.DisplayName)
+		fmt.Println(err)
 	}
 
 	tmpl := template.Must(template.ParseFiles(
@@ -24,7 +30,7 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
 	))
-	err = tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, tmplData)
 	if err != nil {
 		log.Fatal(err)
 	}

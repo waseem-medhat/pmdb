@@ -3,18 +3,27 @@
 
 <section class="mt-5 mb-10 text-gray-200 rounded-lg bg-primary bg-opacity-10">
     <blockquote class="px-5 py-7 my-3 border-l-4 border-primary">
+
+        {{ if .LoggedIn }}
+        <h3 class="text-3xl font-semibold mb-2">Welcome, {{ .User.DisplayName }}!</h3>
+        {{ else }}
         <h3 class="text-3xl font-semibold mb-2">Welcome!</h3>
-        <p class="mb-5">
+        {{ end }}
+
+        <p>
             PMDb is your personal space for movies! Here you can rate and review movies you watched and make watchlists
             for movies you want to watch.
         </p>
-        <div class="flex gap-3 items-center">
+
+        {{ if not .LoggedIn }}
+        <div class="flex gap-3 items-center mt-5">
             <a href="/register"
                 class="rounded px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white">Join
                 PMDb</a>
             or
             <a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
         </div>
+        {{ end }}
     </blockquote>
 </section>
 
@@ -24,26 +33,6 @@
         None (yet).
     </p>
 </section>
-
-{{/*
-<section id="users" class="my-5">
-    <h3 class="text-gray-200 text-3xl font-semibold mb-2">
-        Users <span class="text-2xl ml-2 font-normal">{{ len .Users }} so far</span>
-    </h3>
-    <div class="grid grid-cols-3">
-        <section class="col-span-2">
-            <ul class="mb-3">
-                {{ range $index, $user := .Users }}
-                <li>{{ $user.DisplayName }} ({{ $user.UserName }})</li>
-                {{ end }}
-            </ul>
-        </section>
-
-        <section class="my-5">
-        </section>
-    </div>
-</section>
-*/}}
 
 {{ template "bottom" }}
 {{ end }}

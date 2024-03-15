@@ -36,7 +36,20 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) HandleProfileGet(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.PathValue("userName"))
+	userName := r.PathValue("userName")
+	dbUser, err := s.DB.GetUser(r.Context(), userName)
+	if err != nil {
+		log.Fatal("couldn't get user - ", err)
+	}
+
+	err = template.Must(template.ParseFiles(
+		"templates/profile.html",
+		"templates/blocks/_top.html",
+		"templates/blocks/_bottom.html",
+	)).Execute(w, struct{ User database.GetUserRow }{dbUser})
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {

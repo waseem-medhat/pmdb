@@ -1,0 +1,10 @@
+{{ block "register" . }}
+{{ template "top"  print .User.DisplayName " // "  }}
+
+<div class="flex gap-4 items-end">
+    <h1 class="text-4xl font-title font-semibold mb-1">{{ .User.DisplayName }}</h1>
+    <h2 class="text-2xl mb-1">{{ .User.UserName }}</h2>
+</div>
+
+{{ template "bottom" }}
+{{ end }}

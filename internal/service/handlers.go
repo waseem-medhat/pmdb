@@ -25,12 +25,28 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	tmpl := template.Must(template.ParseFiles(
+	err = template.Must(template.ParseFiles(
 		"templates/index.html",
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
-	))
-	err = tmpl.Execute(w, tmplData)
+	)).Execute(w, tmplData)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (s *Service) HandleProfileGet(w http.ResponseWriter, r *http.Request) {
+	userName := r.PathValue("userName")
+	dbUser, err := s.DB.GetUser(r.Context(), userName)
+	if err != nil {
+		log.Fatal("couldn't get user - ", err)
+	}
+
+	err = template.Must(template.ParseFiles(
+		"templates/profile.html",
+		"templates/blocks/_top.html",
+		"templates/blocks/_bottom.html",
+	)).Execute(w, struct{ User database.GetUserRow }{dbUser})
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -12,7 +12,7 @@ import (
 const createUser = `-- name: CreateUser :one
 INSERT INTO users ( id, user_name, display_name, password )
 VALUES ( ?, ?, ?, ? )
-RETURNING id, user_name, display_name, password
+RETURNING id, user_name, display_name, password, bio
 `
 
 type CreateUserParams struct {
@@ -35,6 +35,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.UserName,
 		&i.DisplayName,
 		&i.Password,
+		&i.Bio,
 	)
 	return i, err
 }
@@ -50,7 +51,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id string) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, display_name, user_name FROM users
+SELECT id, display_name, user_name, bio FROM users
 WHERE user_name = ? LIMIT 1
 `
 
@@ -58,12 +59,18 @@ type GetUserRow struct {
 	ID          string
 	DisplayName string
 	UserName    string
+	Bio         string
 }
 
 func (q *Queries) GetUser(ctx context.Context, userName string) (GetUserRow, error) {
 	row := q.db.QueryRowContext(ctx, getUser, userName)
 	var i GetUserRow
-	err := row.Scan(&i.ID, &i.DisplayName, &i.UserName)
+	err := row.Scan(
+		&i.ID,
+		&i.DisplayName,
+		&i.UserName,
+		&i.Bio,
+	)
 	return i, err
 }
 
@@ -85,7 +92,7 @@ func (q *Queries) GetUserForLogin(ctx context.Context, userName string) (GetUser
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, user_name, display_name, password FROM users
+SELECT id, user_name, display_name, password, bio FROM users
 ORDER BY display_name
 `
 
@@ -103,6 +110,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.UserName,
 			&i.DisplayName,
 			&i.Password,
+			&i.Bio,
 		); err != nil {
 			return nil, err
 		}

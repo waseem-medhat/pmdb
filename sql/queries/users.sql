@@ -1,5 +1,5 @@
 -- name: GetUser :one
-SELECT id, display_name, user_name FROM users
+SELECT id, display_name, user_name, bio FROM users
 WHERE user_name = ? LIMIT 1;
 
 -- name: GetUserForLogin :one

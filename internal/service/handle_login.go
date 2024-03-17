@@ -67,7 +67,7 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 		Value:    access,
 		Secure:   true,
 		HttpOnly: true,
-		MaxAge:   60,
+		MaxAge:   3600,
 		SameSite: http.SameSiteStrictMode,
 	}
 

@@ -9,6 +9,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
 // HandleHome is the handler for the home route ("/")
@@ -16,8 +17,10 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	tmplData := struct {
 		LoggedIn bool
 		User     database.GetUserRow
+		TopRated []tmdbapi.TopRatedMovie
 	}{}
 
+	tmplData.TopRated = tmdbapi.GetTopRated().Results
 	dbUser, err := s.authJWTCookie(r)
 	tmplData.User = dbUser
 	tmplData.LoggedIn = err == nil

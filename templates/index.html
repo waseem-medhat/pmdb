@@ -5,7 +5,10 @@
     <blockquote class="px-5 py-7 my-3 border-l-4 border-primary">
 
         {{ if .LoggedIn }}
-        <h3 class="text-3xl font-semibold mb-2">Welcome, {{ .User.DisplayName }}!</h3>
+        <h3 class="text-3xl font-semibold mb-2">
+            Welcome,
+            <a class="text-primary" href="/profile/{{ .User.UserName }}">{{ .User.DisplayName }}</a>!
+        </h3>
         {{ else }}
         <h3 class="text-3xl font-semibold mb-2">Welcome!</h3>
         {{ end }}
@@ -35,6 +38,15 @@
     <p>
         None (yet).
     </p>
+</section>
+
+<section class="my-5">
+    <h3 class="text-gray-200 text-3xl font-semibold mb-2">Now Playing</h3>
+    <ul>
+        {{ range $i, $movie := .TopRated }}
+        <li>{{ $movie.Title }}</li>
+        {{ end }}
+    </ul>
 </section>
 
 {{ template "bottom" }}

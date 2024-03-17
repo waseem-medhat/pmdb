@@ -40,5 +40,14 @@
     </p>
 </section>
 
+<section class="my-5">
+    <h3 class="text-gray-200 text-3xl font-semibold mb-2">Now Playing</h3>
+    <ul>
+        {{ range $i, $movie := .TopRated }}
+        <li>{{ $movie.Title }}</li>
+        {{ end }}
+    </ul>
+</section>
+
 {{ template "bottom" }}
 {{ end }}

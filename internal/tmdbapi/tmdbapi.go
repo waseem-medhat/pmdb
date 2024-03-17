@@ -47,7 +47,10 @@ func GetTopRated() TopRatedRes {
 
 	body, _ := io.ReadAll(res.Body)
 	topRated := TopRatedRes{}
-	json.Unmarshal(body, &topRated)
+	err = json.Unmarshal(body, &topRated)
+	if err != nil {
+		log.Fatal("couldn't unmarshal top rated - ", err)
+	}
 
 	return topRated
 }

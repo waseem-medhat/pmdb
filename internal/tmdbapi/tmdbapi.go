@@ -8,14 +8,14 @@ import (
 	"os"
 )
 
-type TopRatedRes struct {
-	Page         int             `json:"page"`
-	Results      []TopRatedMovie `json:"results"`
-	TotalPages   int             `json:"total_pages"`
-	TotalResults int             `json:"total_results"`
+type NowPlayingRes struct {
+	Page         int               `json:"page"`
+	Results      []NowPlayingMovie `json:"results"`
+	TotalPages   int               `json:"total_pages"`
+	TotalResults int               `json:"total_results"`
 }
 
-type TopRatedMovie struct {
+type NowPlayingMovie struct {
 	Adult            bool   `json:"adult"`
 	BackdropPath     string `json:"backdrop_path"`
 	GenreIds         []int  `json:"genre_ids"`
@@ -32,7 +32,7 @@ type TopRatedMovie struct {
 	VoteCount   int     `json:"vote_count"`
 }
 
-func GetTopRated() TopRatedRes {
+func GetNowPlaying() NowPlayingRes {
 	url := "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
 	req, _ := http.NewRequest("GET", url, nil)
 
@@ -41,16 +41,16 @@ func GetTopRated() TopRatedRes {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatal("couldn't fetch top rated - ", err)
+		log.Fatal("couldn't fetch now playing - ", err)
 	}
 	defer res.Body.Close()
 
 	body, _ := io.ReadAll(res.Body)
-	topRated := TopRatedRes{}
-	err = json.Unmarshal(body, &topRated)
+	nowPlaying := NowPlayingRes{}
+	err = json.Unmarshal(body, &nowPlaying)
 	if err != nil {
-		log.Fatal("couldn't unmarshal top rated - ", err)
+		log.Fatal("couldn't unmarshal now playing - ", err)
 	}
 
-	return topRated
+	return nowPlaying
 }

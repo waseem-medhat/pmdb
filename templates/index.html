@@ -54,9 +54,12 @@
         </svg>
         Now Playing
     </h3>
-    <ul>
-        {{ range $i, $movie := .TopRated }}
-        <li>{{ $movie.Title }}</li>
+    <ul class="grid md:grid-cols-5 gap-5 items-end justify-center">
+        {{ range $i, $movie := .NowPlaying }}
+        <li class="flex flex-col items-center">
+            <h4 class="font-semibold text-center mb-2 flex-grow h-full">{{ $movie.Title }}</h4>
+            <img class="rounded" width="200" src="https://image.tmdb.org/t/p/w500{{ $movie.PosterPath }}" alt="poster_path">
+        </li>
         {{ end }}
     </ul>
 </section>

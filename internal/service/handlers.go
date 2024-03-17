@@ -15,12 +15,12 @@ import (
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	tmplData := struct {
-		LoggedIn bool
-		User     database.GetUserRow
-		TopRated []tmdbapi.TopRatedMovie
+		LoggedIn   bool
+		User       database.GetUserRow
+		NowPlaying []tmdbapi.NowPlayingMovie
 	}{}
 
-	tmplData.TopRated = tmdbapi.GetTopRated().Results
+	tmplData.NowPlaying = tmdbapi.GetNowPlaying().Results
 	dbUser, err := s.authJWTCookie(r)
 	tmplData.User = dbUser
 	tmplData.LoggedIn = err == nil

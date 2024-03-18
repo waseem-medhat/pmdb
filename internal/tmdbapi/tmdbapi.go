@@ -2,7 +2,6 @@ package tmdbapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -56,9 +55,6 @@ func GetNowPlaying() []NowPlayingMovie {
 
 	results := nowPlaying.Results
 	slices.SortFunc(results, sortByPopularity)
-	for _, npm := range results {
-		fmt.Println(npm.Title, npm.Popularity)
-	}
 	return results
 }
 

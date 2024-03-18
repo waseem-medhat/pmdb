@@ -34,20 +34,20 @@
 </section>
 
 <section class="my-5">
-    <h3 class="text-primary text-3xl font-bold mb-2 flex gap-2 items-center">
+    <h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
             <path fill="currentColor"
                 d="M3 20.077V4.615q0-.69.463-1.152Q3.925 3 4.615 3h14.77q.69 0 1.152.463q.463.462.463 1.152v10.77q0 .69-.462 1.153q-.463.462-1.153.462H6.077zm6.517-6.404L12 12.167l2.483 1.506l-.66-2.825l2.196-1.885l-2.886-.255L12 6.058l-1.133 2.65l-2.886.255l2.196 1.885z" />
         </svg>
         Latest Public Reviews
     </h3>
-    <p>
+    <p class="h-48">
         None (yet).
     </p>
 </section>
 
 <section class="my-5">
-    <h3 class="text-primary text-3xl font-bold mb-2 flex gap-2 items-center">
+    <h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
             <path fill="currentColor"
                 d="M10 15.577L15.577 12L10 8.423zM4.615 19q-.69 0-1.152-.462Q3 18.075 3 17.385V6.615q0-.69.463-1.152Q3.925 5 4.615 5h14.77q.69 0 1.152.463q.463.462.463 1.152v10.77q0 .69-.462 1.152q-.463.463-1.153.463z" />
@@ -55,7 +55,7 @@
         Now Playing
     </h3>
     <p>The most popular movies are shown first.</p>
-    <ul class="grid md:grid-cols-5 gap-5 items-end justify-center">
+    <ul class="grid md:grid-cols-5 gap-8 items-end justify-center">
         {{ range $i, $movie := .NowPlaying }}
         <li class="flex flex-col items-center">
             <h4 class="font-semibold text-center mb-2 flex-grow h-full">{{ $movie.Title }}</h4>

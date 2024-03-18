@@ -38,7 +38,7 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Service) HandleProfileGet(w http.ResponseWriter, r *http.Request) {
+func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
 	userName := r.PathValue("userName")
 	dbUser, err := s.DB.GetUser(r.Context(), userName)
 	if err != nil {
@@ -50,6 +50,20 @@ func (s *Service) HandleProfileGet(w http.ResponseWriter, r *http.Request) {
 		"templates/blocks/_top.html",
 		"templates/blocks/_bottom.html",
 	)).Execute(w, struct{ User database.GetUserRow }{dbUser})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
+	movieID := r.PathValue("movieID")
+	movieDetails := tmdbapi.GetMovieDetails(movieID)
+
+	err := template.Must(template.ParseFiles(
+		"templates/movie.html",
+		"templates/blocks/_top.html",
+		"templates/blocks/_bottom.html",
+	)).Execute(w, movieDetails)
 	if err != nil {
 		log.Fatal(err)
 	}

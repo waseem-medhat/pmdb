@@ -21,7 +21,8 @@ func New(s *service.Service) *http.ServeMux {
 	mux.HandleFunc("POST /login", s.HandleLoginPost)
 	mux.HandleFunc("GET /logout", s.HandleLogoutPost)
 
-	mux.HandleFunc("GET /profile/{userName}", s.HandleProfileGet)
+	mux.HandleFunc("GET /profiles/{userName}", s.HandleProfilesGet)
+	mux.HandleFunc("GET /movies/{movieID}", s.HandleMoviesGet)
 
 	return mux
 }

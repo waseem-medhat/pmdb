@@ -2,10 +2,12 @@ package tmdbapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"slices"
 )
 
 type NowPlayingRes struct {
@@ -23,16 +25,16 @@ type NowPlayingMovie struct {
 	OriginalLanguage string `json:"original_language"`
 	OriginalTitle    string `json:"original_title"`
 	// Overview         string  `json:"overview"`
-	// Popularity  float64 `json:"popularity"`
-	PosterPath  string `json:"poster_path"`
-	ReleaseDate string `json:"release_date"`
-	Title       string `json:"title"`
+	Popularity  float64 `json:"popularity"`
+	PosterPath  string  `json:"poster_path"`
+	ReleaseDate string  `json:"release_date"`
+	Title       string  `json:"title"`
 	// Video            bool    `json:"video"`
 	VoteAverage float64 `json:"vote_average"`
 	VoteCount   int     `json:"vote_count"`
 }
 
-func GetNowPlaying() NowPlayingRes {
+func GetNowPlaying() []NowPlayingMovie {
 	url := "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
 	req, _ := http.NewRequest("GET", url, nil)
 
@@ -52,5 +54,20 @@ func GetNowPlaying() NowPlayingRes {
 		log.Fatal("couldn't unmarshal now playing - ", err)
 	}
 
-	return nowPlaying
+	results := nowPlaying.Results
+	slices.SortFunc(results, sortByPopularity)
+	for _, npm := range results {
+		fmt.Println(npm.Title, npm.Popularity)
+	}
+	return results
+}
+
+func sortByPopularity(a, b NowPlayingMovie) int {
+	if a.Popularity < b.Popularity {
+		return 1
+	}
+	if a.Popularity > b.Popularity {
+		return -1
+	}
+	return 0
 }

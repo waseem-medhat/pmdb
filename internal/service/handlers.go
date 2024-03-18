@@ -20,7 +20,7 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 		NowPlaying []tmdbapi.NowPlayingMovie
 	}{}
 
-	tmplData.NowPlaying = tmdbapi.GetNowPlaying().Results
+	tmplData.NowPlaying = tmdbapi.GetNowPlaying()
 	dbUser, err := s.authJWTCookie(r)
 	tmplData.User = dbUser
 	tmplData.LoggedIn = err == nil

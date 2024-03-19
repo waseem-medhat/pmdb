@@ -15,30 +15,21 @@ import (
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	tmplData := struct {
-		LoggedIn   bool
-		User       database.GetUserRow
-		NowPlaying []tmdbapi.NowPlayingMovie
-	}{}
-
-	tmplData.NowPlaying = tmdbapi.GetNowPlaying()
 	dbUser, err := s.authJWTCookie(r)
-	tmplData.User = dbUser
-	tmplData.LoggedIn = err == nil
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	// err = template.Must(template.ParseFiles(
-	// 	"templates/index.html",
-	// 	"templates/blocks/_top.html",
-	// 	"templates/blocks/_bottom.html",
-	// )).Execute(w, tmplData)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	c := templs.Index(tmplData)
-	c.Render(r.Context(), w)
+	tmplData := templs.IndexData{
+		LoggedIn:   err == nil,
+		User:       dbUser,
+		NowPlaying: tmdbapi.GetNowPlaying(),
+	}
+
+	err = templs.Index(tmplData).Render(r.Context(), w)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
@@ -62,11 +53,7 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	movieID := r.PathValue("movieID")
 	movieDetails := tmdbapi.GetMovieDetails(movieID)
 
-	err := template.Must(template.ParseFiles(
-		"templates/movie.html",
-		"templates/blocks/_top.html",
-		"templates/blocks/_bottom.html",
-	)).Execute(w, movieDetails)
+	err := templs.Movie(movieDetails).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}

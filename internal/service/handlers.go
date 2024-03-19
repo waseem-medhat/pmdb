@@ -9,6 +9,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
@@ -28,14 +29,16 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	err = template.Must(template.ParseFiles(
-		"templates/index.html",
-		"templates/blocks/_top.html",
-		"templates/blocks/_bottom.html",
-	)).Execute(w, tmplData)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err = template.Must(template.ParseFiles(
+	// 	"templates/index.html",
+	// 	"templates/blocks/_top.html",
+	// 	"templates/blocks/_bottom.html",
+	// )).Execute(w, tmplData)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	c := templs.Index(tmplData)
+	c.Render(r.Context(), w)
 }
 
 func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {

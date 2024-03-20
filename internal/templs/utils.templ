@@ -1,0 +1,63 @@
+package templs
+
+templ Page(title string) {
+	<!DOCTYPE html>
+	<html lang="en" class="h-full">
+		<head>
+			<title>{ title + " //" } PMDb</title>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<link rel="stylesheet" type="text/css" href="/static/styles.css"/>
+			<script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link
+				href="https://fonts.googleapis.com/css2?family=Madimi+One&family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+				rel="stylesheet"
+			/>
+		</head>
+		<body class="bg-gray-950 text-gray-100 p-14 pb-2 max-w-7xl mx-auto font-body min-h-full flex flex-col">
+			<a href="/" class="flex flex-col md:flex-row md:items-end gap-3 text-primary mb-8">
+				@iconClapperboard()
+				<h1 class="font-title text-5xl">PMDb</h1>
+				<h2 class="font-title text-2xl">Your Personal Movie Database</h2>
+			</a>
+			<main class="flex-grow">
+				{ children... }
+			</main>
+			<footer class="my-5">
+				Brought to you by
+				<a href="https://github.com/wipdev-tech" class="text-blue-500 hover:text-blue-400" target="_blank">Waseem</a>
+				with the help of
+				<a href="https://developer.themoviedb.org/docs/getting-started" class="text-blue-500 hover:text-blue-400" target="_blank">TMDB</a>
+			</footer>
+		</body>
+	</html>
+}
+
+templ iconClapperboard() {
+	<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24">
+		<path
+			fill="currentColor"
+			d="M4 11h12c1.886 0 2.828 0 3.414.586C20 12.172 20 13.114 20 15v1c0 2.828 0 4.243-.879 5.121C18.243 22 16.828 22 14 22h-4c-2.828 0-4.243 0-5.121-.879C4 20.243 4 18.828 4 16zm9.918-7.834L9.15 4.444a.748.748 0 0 1 .017.269l-.604 5.064l4.779-1.28a.748.748 0 0 1-.024-.297zm.923 4.929l3.408-.913c.224-.06.336-.09.425-.134a1 1 0 0 0 .555-.962c-.006-.098-.036-.21-.096-.435c-.18-.673-.271-1.01-.402-1.275a3 3 0 0 0-2.887-1.666a2.837 2.837 0 0 0-.413.062c.02.083.025.17.014.258zM7.063 10.18a.748.748 0 0 1-.023-.298l.6-5.034l-.103.028C5.73 5.36 4.829 5.602 4.26 6.17a3 3 0 0 0-.776 1.345C3.276 8.29 3.517 9.195 4 11z"
+		></path>
+	</svg>
+}
+
+templ iconReview() {
+	<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
+		<path
+			fill="currentColor"
+			d="M3 20.077V4.615q0-.69.463-1.152Q3.925 3 4.615 3h14.77q.69 0 1.152.463q.463.462.463 1.152v10.77q0 .69-.462 1.153q-.463.462-1.153.462H6.077zm6.517-6.404L12 12.167l2.483 1.506l-.66-2.825l2.196-1.885l-2.886-.255L12 6.058l-1.133 2.65l-2.886.255l2.196 1.885z"
+		></path>
+	</svg>
+}
+
+templ iconPlay() {
+	<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
+		<path
+			fill="currentColor"
+			d="M10 15.577L15.577 12L10 8.423zM4.615 19q-.69 0-1.152-.462Q3 18.075 3 17.385V6.615q0-.69.463-1.152Q3.925 5 4.615 5h14.77q.69 0 1.152.463q.463.462.463 1.152v10.77q0 .69-.462 1.152q-.463.463-1.153.463z"
+		></path>
+	</svg>
+}

@@ -18,6 +18,7 @@ installed:
 - Node.js (for TailwindCSS) either [directly](https://nodejs.org/en) or with
 [NVM](https://github.com/nvm-sh/nvm)
 - [TailwindCSS](https://tailwindcss.com/docs/installation)
+- [Templ](https://templ.guide/quick-start/installation)
 - [Goose](https://github.com/pressly/goose?tab=readme-ov-file#install)
 - [SQLC](https://docs.sqlc.dev/en/latest/overview/install.html)
 - [Air](https://github.com/cosmtrek/air) (optional but highly recommended)
@@ -41,8 +42,8 @@ cp ~/.env.example .env
 goose turso "libsql://[DATABASE].turso.io?authToken=[TOKEN]" up
 ```
 
-- Run `air` (at the project root) which will compile and auto-reload both the
-Go server and TailwindCSS
+- Run `air` (at the project root) which will compile and auto-reload the Go
+server, TailwindCSS, and Templ components.
 
 ```bash
 air
@@ -50,13 +51,21 @@ air
 
 ## Tech Stack
 
-- **Go**: backend + templating
+Application code:
+
+- **Go**: backend
+- **Templ**: templating
 - **TailwindCSS**: styling Go templates
 - **HTMX**: UI interactivity
 - **Turso**: database
 - **Goose**: SQL migration tool
 - **SQLC**: SQL-to-Go code generation tool
 - **Air**: live reloading
+
+External dependencies:
+
+- **Icônes**: SVG icons
+- **TMDB**: API for movie information
 
 ## Contributing
 

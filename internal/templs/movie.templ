@@ -1,0 +1,32 @@
+package templs
+
+import (
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
+	"fmt"
+	t "github.com/a-h/templ"
+)
+
+templ Movie(data tmdbapi.MovieDetails) {
+	@Page(data.Title) {
+		<div class="grid grid-cols-[1fr_2fr] gap-10">
+			<section>
+				<img
+					class="w-full"
+					src={ string(t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", data.PosterPath))) }
+					alt={ data.Title }
+				/>
+			</section>
+			<section>
+				<div class="mb-8">
+					<h1 class="text-4xl font-semibold mb-2">{ data.Title }</h1>
+					<ul class="flex gap-2">
+						for _, genre := range data.Genres {
+							<li class="px-2 border border-primary text-primary rounded-lg text-sm">{ genre.Name }</li>
+						}
+					</ul>
+				</div>
+				<p>{ data.Overview }</p>
+			</section>
+		</div>
+	}
+}

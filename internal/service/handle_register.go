@@ -1,22 +1,17 @@
 package service
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/templs"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (s *Service) HandleRegisterGet(w http.ResponseWriter, r *http.Request) {
-	err := template.Must(template.ParseFiles(
-		"templates/register.html",
-		"templates/blocks/_top.html",
-		"templates/blocks/_bottom.html",
-	)).Execute(w, struct{ ErrorMsgs []string }{})
-
+	err := templs.Register(templs.RegisterData{ErrorMsgs: []string{}}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,16 +44,9 @@ func (s *Service) HandleRegisterPost(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	tmplData := struct {
-		DisplayName string
-	}{
+	err = templs.RegisterSuccess(templs.RegisterSuccessData{
 		DisplayName: dbUser.DisplayName,
-	}
-
-	err = template.Must(template.ParseFiles(
-		"templates/register-success.html",
-	)).ExecuteTemplate(w, "register-success-main", tmplData)
-
+	}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,10 +86,7 @@ func (s *Service) HandleRegisterValidate(w http.ResponseWriter, r *http.Request)
 		}
 	}
 
-	err = template.Must(template.ParseFiles(
-		"templates/register.html",
-	)).ExecuteTemplate(w, "check", struct{ ErrorMsgs []string }{ErrorMsgs: errorMsgs})
-
+	err = templs.RegisterErrors(templs.RegisterData{ErrorMsgs: errorMsgs}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}

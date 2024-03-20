@@ -1,0 +1,53 @@
+package templs
+
+type LoginData struct {
+	LoginError bool
+}
+
+templ Login(data LoginData) {
+	@Page("Login") {
+		<form hx-post="/login" hx-target="#response" hx-swap="innerHTML">
+			<div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
+				<label for="user-name">User Name</label>
+				<input
+					type="text"
+					id="user-name"
+					name="user-name"
+					value=""
+					class="border rounded px-2 py-1 text-gray-900"
+					required
+				/>
+				<label for="password">Password</label>
+				<input
+					type="password"
+					id="password"
+					name="password"
+					value=""
+					class="border rounded px-2 py-1 text-gray-900"
+					required
+				/>
+			</div>
+			<div id="check">
+				<div class="flex gap-2">
+					<button
+						id="submit-btn"
+						type="submit"
+						class="rounded px-3 py-1 my-2 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white"
+					>
+						Let's go!
+					</button>
+					<img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator"/>
+				</div>
+				@ErrorAlert(data)
+			</div>
+		</form>
+	}
+}
+
+templ ErrorAlert(data LoginData) {
+	<div id="response">
+		if data.LoginError {
+			<i class="text-red-400">Invalid credentials</i>
+		}
+	</div>
+}

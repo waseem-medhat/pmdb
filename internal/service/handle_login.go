@@ -3,23 +3,18 @@ package service
 import (
 	"database/sql"
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/wipdev-tech/pmdb/internal/templs"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (s *Service) HandleLoginGet(w http.ResponseWriter, r *http.Request) {
-	err := template.Must(template.ParseFiles(
-		"templates/login.html",
-		"templates/blocks/_top.html",
-		"templates/blocks/_bottom.html",
-	)).Execute(w, struct{ LoginError bool }{LoginError: false})
-
+	err := templs.Login(templs.LoginData{LoginError: false}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,10 +26,7 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 
 	dbUser, err := s.DB.GetUserForLogin(r.Context(), userName)
 	if err == sql.ErrNoRows {
-		err := template.Must(template.ParseFiles(
-			"templates/login.html",
-		)).ExecuteTemplate(w, "login-error", struct{ LoginError bool }{LoginError: true})
-
+		err := templs.ErrorAlert(templs.LoginData{LoginError: true}).Render(r.Context(), w)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -47,10 +39,7 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 
 	err = bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(password))
 	if err != nil {
-		err := template.Must(template.ParseFiles(
-			"templates/login.html",
-		)).ExecuteTemplate(w, "login-error", struct{ LoginError bool }{LoginError: true})
-
+		err := templs.ErrorAlert(templs.LoginData{LoginError: true}).Render(r.Context(), w)
 		if err != nil {
 			log.Fatal(err)
 		}

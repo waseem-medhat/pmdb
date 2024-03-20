@@ -1,0 +1,95 @@
+package templs
+
+import (
+	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
+	t "github.com/a-h/templ"
+	"fmt"
+)
+
+type IndexData struct {
+	LoggedIn   bool
+	User       database.GetUserRow
+	NowPlaying []tmdbapi.NowPlayingMovie
+}
+
+templ Index(data IndexData) {
+	@Page("Home") {
+		@WelcomeMessage(data)
+		@LatestReviews()
+		@NowPlaying(data.NowPlaying)
+	}
+}
+
+templ WelcomeMessage(data IndexData) {
+	<section class="mt-5 mb-10 text-gray-200 rounded-lg bg-sky-800 bg-opacity-10">
+		<blockquote class="px-5 py-7 my-3 border-l-4 border-sky-400">
+			if data.LoggedIn {
+				<h3 class="text-3xl font-semibold mb-2">
+					Welcome,
+					<a class="text-primary" href={ t.URL(fmt.Sprintf("/profiles/%v", data.User.UserName)) }>
+						{ data.User.DisplayName }
+					</a>!
+				</h3>
+			} else {
+				<h3 class="text-3xl font-semibold mb-2">Welcome!</h3>
+			}
+			<p>
+				PMDb is your personal space for movies! Here you can rate and review movies you watched and make watchlists for movies you want to watch.
+			</p>
+			<div class="flex gap-3 items-center mt-5">
+				if data.LoggedIn {
+					<button hx-get="/logout" hx-confirm="Are you sure to log out?" class="text-blue-500 hover:text-blue-400">
+						Log
+						Out
+					</button>
+				} else {
+					<a
+						href="/register"
+						class="rounded px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white"
+					>Join PMDb</a> or
+					<a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
+				}
+			</div>
+		</blockquote>
+	</section>
+}
+
+templ LatestReviews() {
+	<section class="my-5">
+		<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
+			@iconReview()
+			Latest Public Reviews
+		</h3>
+		<p class="h-48">
+			None (yet).
+		</p>
+	</section>
+}
+
+templ NowPlaying(movies []tmdbapi.NowPlayingMovie) {
+	<section class="my-5">
+		<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
+			@iconPlay()
+			Now Playing
+		</h3>
+		<p>The most popular movies are shown first.</p>
+		<ul class="grid md:grid-cols-5 gap-8 items-end justify-center">
+			for _, movie := range movies {
+				<a href={ t.URL(fmt.Sprintf("/movies/%v", movie.ID)) }>
+					<li class="flex flex-col items-center">
+						<h4 class="font-semibold text-center mb-2 flex-grow h-full">
+							{ movie.Title }
+						</h4>
+						<img
+							class="rounded"
+							width="200"
+							src={ string(t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", movie.PosterPath))) }
+							alt="poster_path"
+						/>
+					</li>
+				</a>
+			}
+		</ul>
+	</section>
+}

@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -39,11 +38,7 @@ func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("couldn't get user - ", err)
 	}
 
-	err = template.Must(template.ParseFiles(
-		"templates/profile.html",
-		"templates/blocks/_top.html",
-		"templates/blocks/_bottom.html",
-	)).Execute(w, struct{ User database.GetUserRow }{dbUser})
+	templs.Profile(templs.ProfileData{User: dbUser}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}

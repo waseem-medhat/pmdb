@@ -91,7 +91,7 @@ func WelcomeMessage(data IndexData) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"mt-5 mb-10 text-gray-200 rounded-lg bg-primary bg-opacity-10\"><blockquote class=\"px-5 py-7 my-3 border-l-4 border-primary\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"mt-5 mb-10 text-gray-200 rounded-lg bg-sky-800 bg-opacity-10\"><blockquote class=\"px-5 py-7 my-3 border-l-4 border-sky-400\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

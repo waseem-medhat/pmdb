@@ -1,0 +1,97 @@
+package templs
+
+type RegisterData struct {
+	ErrorMsgs []string
+}
+
+type RegisterSuccessData struct {
+	DisplayName string
+}
+
+templ Register(data RegisterData) {
+	@Page("Register") {
+		<form
+			id="register"
+			hx-post="/register"
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-indicator="#ind"
+			hx-disabled-elt="#submit-btn"
+		>
+			<h3 class="text-2xl font-semibold mb-1">Register</h3>
+			<p>
+				Already have an account?
+				<a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
+			</p>
+			<div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
+				<label for="display-name">Full Name</label>
+				@registerInput("text", "display-name")
+				<label for="user-name">User Name</label>
+				@registerInput("text", "user-name")
+				<label for="password">Password</label>
+				@registerInput("password", "password")
+				<label for="confirm-password">Confirm Password</label>
+				@registerInput("password", "confirm-password")
+			</div>
+			@RegisterErrors(data)
+		</form>
+	}
+}
+
+templ RegisterErrors(data RegisterData) {
+	<div id="check">
+		if len(data.ErrorMsgs) > 0 {
+			<div class="flex gap-2">
+				<button
+					id="submit-btn"
+					type="submit"
+					disabled
+					class="rounded px-3 py-1 my-2 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white"
+				>
+					Let's go!
+				</button>
+				<img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator"/>
+			</div>
+			for _, msg := range data.ErrorMsgs {
+				<i class="text-red-400">{ msg }</i>
+				<br/>
+			}
+		} else {
+			<div class="flex gap-2">
+				<button
+					id="submit-btn"
+					type="submit"
+					class="rounded px-3 py-1 my-2 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white"
+				>
+					Let's go!
+				</button>
+				<img id="ind" src="/static/spin.svg" width="20" class="htmx-indicator"/>
+			</div>
+		}
+	</div>
+}
+
+templ RegisterSuccess(data RegisterSuccessData) {
+	<h3 class="text-2xl font-semibold mb-1">Success!</h3>
+	<p>Welcome aboard, { data.DisplayName }!</p>
+	<p>
+		You can now
+		<a href="/login" class="text-blue-500 hover:text-blue-400">log in</a>.
+	</p>
+}
+
+templ registerInput(inputType, inputName string) {
+	<input
+		type={ inputType }
+		id={ inputName }
+		name={ inputName }
+		value=""
+		class="border rounded px-2 py-1 text-gray-900"
+		hx-target="#check"
+		hx-swap="innerHTML"
+		hx-trigger="keyup changed delay:500ms"
+		hx-post="/register/validate"
+		hx-indicator="#ind"
+		required
+	/>
+}

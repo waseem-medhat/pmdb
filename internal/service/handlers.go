@@ -38,7 +38,7 @@ func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("couldn't get user - ", err)
 	}
 
-	templs.Profile(templs.ProfileData{User: dbUser}).Render(r.Context(), w)
+	err = templs.Profile(templs.ProfileData{User: dbUser}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}

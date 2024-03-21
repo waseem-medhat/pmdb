@@ -15,13 +15,13 @@ type IndexData struct {
 
 templ Index(data IndexData) {
 	@Page("Home") {
-		@sectWelcomeMessage(data)
-		@sectLatestReviews()
-		@sectNowPlaying(data.NowPlaying)
+		@indexWelcomeMessage(data)
+		@indexLatestReviews()
+		@indexNowPlaying(data.NowPlaying)
 	}
 }
 
-templ sectWelcomeMessage(data IndexData) {
+templ indexWelcomeMessage(data IndexData) {
 	<section class="mt-5 mb-10 text-gray-200 rounded-lg bg-sky-800 bg-opacity-10">
 		<blockquote class="px-5 py-7 my-3 border-l-4 border-sky-400">
 			if data.LoggedIn {
@@ -55,7 +55,7 @@ templ sectWelcomeMessage(data IndexData) {
 	</section>
 }
 
-templ sectLatestReviews() {
+templ indexLatestReviews() {
 	<section class="my-5">
 		<a href="/review-feed">
 			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
@@ -72,7 +72,7 @@ templ sectLatestReviews() {
 	</section>
 }
 
-templ sectNowPlaying(movies []tmdbapi.NowPlayingMovie) {
+templ indexNowPlaying(movies []tmdbapi.NowPlayingMovie) {
 	<section class="my-5">
 		<a href="/now-playing">
 			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">

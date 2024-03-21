@@ -14,31 +14,38 @@ templ NowPlaying(data NowPlayingData) {
 	@Page("Now Playing") {
 		<ul class="flex flex-col gap-8">
 			for _, movie := range data.NowPlaying {
-				<a href={ t.URL(fmt.Sprintf("/movies/%v", movie.ID)) }>
-					<div class="grid md:grid-cols-[15rem_1fr] gap-10 p-10">
-						<section>
-							<img
-								class="rounded"
-								src={ buildPosterURL(movie.PosterPath) }
-								alt={ movie.Title }
-							/>
-						</section>
-						<section>
-							<div class="mb-8">
-								<h1 class="text-4xl font-semibold mb-2">{ movie.Title }</h1>
-								<ul class="flex gap-2">
-									for _, genreId := range movie.GenreIds {
-										<li class="px-2 border border-primary text-primary rounded-lg text-sm">
-											{ tmdbapi.GenreMap[genreId] }
-										</li>
-									}
-								</ul>
-							</div>
-							<p>{ movie.Overview }</p>
-						</section>
-					</div>
-				</a>
+				@nowPlayingCard(movie)
 			}
 		</ul>
 	}
+}
+
+templ nowPlayingCard(movie tmdbapi.NowPlayingMovie) {
+	<a
+		class="bg-white bg-opacity-10 rounded-xl hover:bg-opacity-15 transition"
+		href={ t.URL(fmt.Sprintf("/movies/%v", movie.ID)) }
+	>
+		<div class="grid md:grid-cols-[15rem_1fr] gap-10 p-10 items-center">
+			<section>
+				<img
+					class="rounded"
+					src={ buildPosterURL(movie.PosterPath) }
+					alt={ movie.Title }
+				/>
+			</section>
+			<section>
+				<div class="mb-8">
+					<h1 class="text-5xl font-semibold mb-4">{ movie.Title }</h1>
+					<ul class="flex gap-2">
+						for _, genreId := range movie.GenreIds {
+							<li class="px-2 border border-primary text-primary rounded-lg text-sm">
+								{ tmdbapi.GenreMap[genreId] }
+							</li>
+						}
+					</ul>
+				</div>
+				<p>{ movie.Overview }</p>
+			</section>
+		</div>
+	</a>
 }

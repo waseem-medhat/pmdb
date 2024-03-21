@@ -42,7 +42,7 @@ func Index(data IndexData) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			templ_7745c5c3_Err = sectWelcomeMessage(data).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = indexWelcomeMessage(data).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -50,7 +50,7 @@ func Index(data IndexData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = sectLatestReviews().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = indexLatestReviews().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -58,7 +58,7 @@ func Index(data IndexData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = sectNowPlaying(data.NowPlaying).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = indexNowPlaying(data.NowPlaying).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -78,7 +78,7 @@ func Index(data IndexData) templ.Component {
 	})
 }
 
-func sectWelcomeMessage(data IndexData) templ.Component {
+func indexWelcomeMessage(data IndexData) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -154,7 +154,7 @@ func sectWelcomeMessage(data IndexData) templ.Component {
 	})
 }
 
-func sectLatestReviews() templ.Component {
+func indexLatestReviews() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -186,7 +186,7 @@ func sectLatestReviews() templ.Component {
 	})
 }
 
-func sectNowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
+func indexNowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {

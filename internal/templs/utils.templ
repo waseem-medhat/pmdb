@@ -1,5 +1,15 @@
 package templs
 
+import (
+	t "github.com/a-h/templ"
+	"fmt"
+)
+
+func buildPosterURL(posterPath string) string {
+	url := t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", posterPath))
+	return string(url)
+}
+
 templ Page(title string) {
 	<!DOCTYPE html>
 	<html lang="en" class="h-full">

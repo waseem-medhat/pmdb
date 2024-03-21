@@ -18,13 +18,21 @@ templ NowPlaying(data NowPlayingData) {
 					<div class="grid md:grid-cols-[15rem_1fr] gap-10 p-10">
 						<section>
 							<img
-								src={ string(t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", movie.PosterPath))) }
+								class="rounded"
+								src={ buildPosterURL(movie.PosterPath) }
 								alt={ movie.Title }
 							/>
 						</section>
 						<section>
 							<div class="mb-8">
 								<h1 class="text-4xl font-semibold mb-2">{ movie.Title }</h1>
+								<ul class="flex gap-2">
+									for _, genreId := range movie.GenreIds {
+										<li class="px-2 border border-primary text-primary rounded-lg text-sm">
+											{ tmdbapi.GenreMap[genreId] }
+										</li>
+									}
+								</ul>
 							</div>
 							<p>{ movie.Overview }</p>
 						</section>

@@ -93,7 +93,7 @@ templ sectNowPlaying(movies []tmdbapi.NowPlayingMovie) {
 						<img
 							class="rounded"
 							width="200"
-							src={ string(t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", movie.PosterPath))) }
+							src={ buildPosterURL(movie.PosterPath) }
 							alt="poster_path"
 						/>
 					</li>

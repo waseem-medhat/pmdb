@@ -57,10 +57,15 @@ templ sectWelcomeMessage(data IndexData) {
 
 templ sectLatestReviews() {
 	<section class="my-5">
-		<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
-			@iconReview()
-			Latest Public Reviews
-		</h3>
+		<a href="/review-feed">
+			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
+				<div class="flex gap-2 items-center">
+				@iconReview()
+				Latest Public Reviews
+                </div>
+				<p class="text-sm">Open the Feed</p>
+			</h3>
+		</a>
 		<p class="h-48">
 			None (yet).
 		</p>
@@ -70,10 +75,12 @@ templ sectLatestReviews() {
 templ sectNowPlaying(movies []tmdbapi.NowPlayingMovie) {
 	<section class="my-5">
 		<a href="/now-playing">
-			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
-				@iconPlay()
-				Now Playing
-				<p class="text-sm">Showing top 5 - click here to see all.</p>
+			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
+				<div class="flex gap-2 items-center">
+					@iconPlay()
+					Now Playing
+				</div>
+				<p class="text-sm">See All</p>
 			</h3>
 		</a>
 		<ul class="grid md:grid-cols-5 gap-8 items-end justify-center">

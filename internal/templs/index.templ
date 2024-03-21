@@ -15,13 +15,13 @@ type IndexData struct {
 
 templ Index(data IndexData) {
 	@Page("Home") {
-		@WelcomeMessage(data)
-		@LatestReviews()
-		@NowPlaying(data.NowPlaying)
+		@sectWelcomeMessage(data)
+		@sectLatestReviews()
+		@sectNowPlaying(data.NowPlaying)
 	}
 }
 
-templ WelcomeMessage(data IndexData) {
+templ sectWelcomeMessage(data IndexData) {
 	<section class="mt-5 mb-10 text-gray-200 rounded-lg bg-sky-800 bg-opacity-10">
 		<blockquote class="px-5 py-7 my-3 border-l-4 border-sky-400">
 			if data.LoggedIn {
@@ -55,7 +55,7 @@ templ WelcomeMessage(data IndexData) {
 	</section>
 }
 
-templ LatestReviews() {
+templ sectLatestReviews() {
 	<section class="my-5">
 		<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
 			@iconReview()
@@ -67,13 +67,15 @@ templ LatestReviews() {
 	</section>
 }
 
-templ NowPlaying(movies []tmdbapi.NowPlayingMovie) {
+templ sectNowPlaying(movies []tmdbapi.NowPlayingMovie) {
 	<section class="my-5">
-		<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
-			@iconPlay()
-			Now Playing
-		</h3>
-		<p>The most popular movies are shown first.</p>
+		<a href="/now-playing">
+			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
+				@iconPlay()
+				Now Playing
+				<p class="text-sm">Showing top 5 - click here to see all.</p>
+			</h3>
+		</a>
 		<ul class="grid md:grid-cols-5 gap-8 items-end justify-center">
 			for _, movie := range movies {
 				<a href={ t.URL(fmt.Sprintf("/movies/%v", movie.ID)) }>

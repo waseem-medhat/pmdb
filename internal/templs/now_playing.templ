@@ -1,0 +1,36 @@
+package templs
+
+import (
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
+	t "github.com/a-h/templ"
+	"fmt"
+)
+
+type NowPlayingData struct {
+	NowPlaying []tmdbapi.NowPlayingMovie
+}
+
+templ NowPlaying(data NowPlayingData) {
+	@Page("Now Playing") {
+		<ul class="flex flex-col gap-8">
+			for _, movie := range data.NowPlaying {
+				<a href={ t.URL(fmt.Sprintf("/movies/%v", movie.ID)) }>
+					<div class="grid md:grid-cols-[15rem_1fr] gap-10 p-10">
+						<section>
+							<img
+								src={ string(t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", movie.PosterPath))) }
+								alt={ movie.Title }
+							/>
+						</section>
+						<section>
+							<div class="mb-8">
+								<h1 class="text-4xl font-semibold mb-2">{ movie.Title }</h1>
+							</div>
+							<p>{ movie.Overview }</p>
+						</section>
+					</div>
+				</a>
+			}
+		</ul>
+	}
+}

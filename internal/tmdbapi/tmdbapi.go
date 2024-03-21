@@ -23,12 +23,12 @@ type NowPlayingMovie struct {
 	PosterPath  string  `json:"poster_path"`
 	ReleaseDate string  `json:"release_date"`
 	Title       string  `json:"title"`
+	Overview    string  `json:"overview"`
 	// Adult        bool   `json:"adult"`
 	// BackdropPath string `json:"backdrop_path"`
 	// GenreIds     []int  `json:"genre_ids"`
 	// OriginalLanguage string `json:"original_language"`
 	// OriginalTitle    string `json:"original_title"`
-	// Overview         string  `json:"overview"`
 	// Video            bool    `json:"video"`
 	// VoteAverage float64 `json:"vote_average"`
 	// VoteCount   int     `json:"vote_count"`
@@ -77,7 +77,7 @@ type MovieDetails struct {
 	// VoteCount   int     `json:"vote_count"`
 }
 
-func GetNowPlaying() []NowPlayingMovie {
+func GetNowPlaying(n int) []NowPlayingMovie {
 	url := "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
 	responseBody, err := callAPI(url)
 	if err != nil {
@@ -92,6 +92,11 @@ func GetNowPlaying() []NowPlayingMovie {
 
 	results := nowPlaying.Results
 	slices.SortFunc(results, sortByPopularity)
+
+	if n > 0 {
+		results = results[:n]
+	}
+
 	return results
 }
 

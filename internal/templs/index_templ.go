@@ -42,7 +42,7 @@ func Index(data IndexData) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			templ_7745c5c3_Err = WelcomeMessage(data).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = sectWelcomeMessage(data).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -50,7 +50,7 @@ func Index(data IndexData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = LatestReviews().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = sectLatestReviews().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -58,7 +58,7 @@ func Index(data IndexData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = NowPlaying(data.NowPlaying).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = sectNowPlaying(data.NowPlaying).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -78,7 +78,7 @@ func Index(data IndexData) templ.Component {
 	})
 }
 
-func WelcomeMessage(data IndexData) templ.Component {
+func sectWelcomeMessage(data IndexData) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -154,7 +154,7 @@ func WelcomeMessage(data IndexData) templ.Component {
 	})
 }
 
-func LatestReviews() templ.Component {
+func sectLatestReviews() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -186,7 +186,7 @@ func LatestReviews() templ.Component {
 	})
 }
 
-func NowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
+func sectNowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -199,7 +199,7 @@ func NowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"my-5\"><h3 class=\"bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<section class=\"my-5\"><a href=\"/now-playing\"><h3 class=\"bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -207,7 +207,7 @@ func NowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Now Playing</h3><p>The most popular movies are shown first.</p><ul class=\"grid md:grid-cols-5 gap-8 items-end justify-center\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Now Playing<p class=\"text-sm\">Showing top 5 - click here to see all.</p></h3></a><ul class=\"grid md:grid-cols-5 gap-8 items-end justify-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -228,7 +228,7 @@ func NowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(movie.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 82, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 84, Col: 20}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -241,7 +241,7 @@ func NowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(string(t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", movie.PosterPath))))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 87, Col: 94}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 89, Col: 94}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {

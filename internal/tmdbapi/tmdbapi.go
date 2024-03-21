@@ -1,115 +1,39 @@
 package tmdbapi
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
-	"slices"
 )
 
-type NowPlayingRes struct {
-	Page         int               `json:"page"`
-	Results      []NowPlayingMovie `json:"results"`
-	TotalPages   int               `json:"total_pages"`
-	TotalResults int               `json:"total_results"`
+// GenreMap maps from genre ID to genre name. This was hard-coded based on a
+// call to the TMDB movie genre list endpoint
+// (https://developer.themoviedb.org/reference/genre-movie-list)
+var GenreMap = map[int]string{
+	28:    "Action",
+	12:    "Adventure",
+	16:    "Animation",
+	35:    "Comedy",
+	80:    "Crime",
+	99:    "Documentary",
+	18:    "Drama",
+	10751: "Family",
+	14:    "Fantasy",
+	36:    "History",
+	27:    "Horror",
+	10402: "Music",
+	9648:  "Mystery",
+	10749: "Romance",
+	878:   "Science Fiction",
+	10770: "TV Movie",
+	53:    "Thriller",
+	10752: "War",
+	37:    "Western",
 }
 
-type NowPlayingMovie struct {
-	ID          int     `json:"id"`
-	Popularity  float64 `json:"popularity"`
-	PosterPath  string  `json:"poster_path"`
-	ReleaseDate string  `json:"release_date"`
-	Title       string  `json:"title"`
-	// Adult        bool   `json:"adult"`
-	// BackdropPath string `json:"backdrop_path"`
-	// GenreIds     []int  `json:"genre_ids"`
-	// OriginalLanguage string `json:"original_language"`
-	// OriginalTitle    string `json:"original_title"`
-	// Overview         string  `json:"overview"`
-	// Video            bool    `json:"video"`
-	// VoteAverage float64 `json:"vote_average"`
-	// VoteCount   int     `json:"vote_count"`
-}
-
-type MovieDetails struct {
-	// Adult               bool   `json:"adult"`
-	// BackdropPath        string `json:"backdrop_path"`
-	// BelongsToCollection any    `json:"belongs_to_collection"`
-	// Budget              int    `json:"budget"`
-	ID          int     `json:"id"`
-	ImdbID      string  `json:"imdb_id"`
-	Overview    string  `json:"overview"`
-	Popularity  float64 `json:"popularity"`
-	PosterPath  string  `json:"poster_path"`
-	ReleaseDate string  `json:"release_date"`
-	Revenue     int     `json:"revenue"`
-	Runtime     int     `json:"runtime"`
-	Tagline     string  `json:"tagline"`
-	Title       string  `json:"title"`
-	Video       bool    `json:"video"`
-	Genres      []struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	} `json:"genres"`
-	// Homepage            string `json:"homepage"`
-	// OriginalLanguage    string `json:"original_language"`
-	// OriginalTitle       string `json:"original_title"`
-	// ProductionCompanies []struct {
-	// 	ID            int    `json:"id"`
-	// 	LogoPath      string `json:"logo_path"`
-	// 	Name          string `json:"name"`
-	// 	OriginCountry string `json:"origin_country"`
-	// } `json:"production_companies"`
-	// ProductionCountries []struct {
-	// 	Iso31661 string `json:"iso_3166_1"`
-	// 	Name     string `json:"name"`
-	// } `json:"production_countries"`
-	// SpokenLanguages []struct {
-	// 	EnglishName string `json:"english_name"`
-	// 	Iso6391     string `json:"iso_639_1"`
-	// 	Name        string `json:"name"`
-	// } `json:"spoken_languages"`
-	// Status      string  `json:"status"`
-	// VoteAverage float64 `json:"vote_average"`
-	// VoteCount   int     `json:"vote_count"`
-}
-
-func GetNowPlaying() []NowPlayingMovie {
-	url := "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
-	responseBody, err := callAPI(url)
-	if err != nil {
-		log.Fatal("error calling API - ", err)
-	}
-
-	nowPlaying := NowPlayingRes{}
-	err = json.Unmarshal(responseBody, &nowPlaying)
-	if err != nil {
-		log.Fatal("couldn't unmarshal now playing - ", err)
-	}
-
-	results := nowPlaying.Results
-	slices.SortFunc(results, sortByPopularity)
-	return results
-}
-
-func GetMovieDetails(movieID string) MovieDetails {
-	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s?language=en-US", movieID)
-	responseBody, err := callAPI(url)
-	if err != nil {
-		log.Fatal("error calling API - ", err)
-	}
-
-	movieDetails := MovieDetails{}
-	err = json.Unmarshal(responseBody, &movieDetails)
-	if err != nil {
-		log.Fatal("couldn't unmarshal movie details - ", err)
-	}
-	return movieDetails
-}
-
+// callAPI wraps around the boilerplate needed to make an HTTP call to the TMDB
+// api, including the addition of auth headers and error handling
 func callAPI(url string) ([]byte, error) {
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("accept", "application/json")
@@ -129,6 +53,7 @@ func callAPI(url string) ([]byte, error) {
 	return body, err
 }
 
+// sortByPopularity is a sortFunc used to order movies by descending popularity
 func sortByPopularity(a, b NowPlayingMovie) int {
 	if a.Popularity < b.Popularity {
 		return 1

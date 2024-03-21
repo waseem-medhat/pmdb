@@ -23,6 +23,7 @@ func New(s *service.Service) *http.ServeMux {
 
 	mux.HandleFunc("GET /profiles/{userName}", s.HandleProfilesGet)
 	mux.HandleFunc("GET /movies/{movieID}", s.HandleMoviesGet)
+	mux.HandleFunc("GET /now-playing", s.HandleNowPlayingGet)
 
 	return mux
 }

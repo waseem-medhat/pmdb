@@ -22,7 +22,7 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	tmplData := templs.IndexData{
 		LoggedIn:   err == nil,
 		User:       dbUser,
-		NowPlaying: tmdbapi.GetNowPlaying(),
+		NowPlaying: tmdbapi.GetNowPlaying(5),
 	}
 
 	err = templs.Index(tmplData).Render(r.Context(), w)
@@ -49,6 +49,17 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	movieDetails := tmdbapi.GetMovieDetails(movieID)
 
 	err := templs.Movie(movieDetails).Render(r.Context(), w)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (s *Service) HandleNowPlayingGet(w http.ResponseWriter, r *http.Request) {
+	templData := templs.NowPlayingData{
+		NowPlaying: tmdbapi.GetNowPlaying(-1),
+	}
+
+	err := templs.NowPlaying(templData).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}

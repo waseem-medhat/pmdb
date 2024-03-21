@@ -10,6 +10,16 @@ import "context"
 import "io"
 import "bytes"
 
+import (
+	"fmt"
+	t "github.com/a-h/templ"
+)
+
+func buildPosterURL(posterPath string) string {
+	url := t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", posterPath))
+	return string(url)
+}
+
 func Page(title string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -30,7 +40,7 @@ func Page(title string) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title + " //")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/utils.templ`, Line: 7, Col: 25}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/utils.templ`, Line: 17, Col: 25}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

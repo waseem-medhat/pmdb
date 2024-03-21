@@ -4,7 +4,7 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: "#7cdd2c"
+                primary: "#8282d8"
             },
             fontFamily: {
                 title: "'Madimi One', sans-serif",

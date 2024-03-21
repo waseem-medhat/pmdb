@@ -15,13 +15,13 @@ type IndexData struct {
 
 templ Index(data IndexData) {
 	@Page("Home") {
-		@WelcomeMessage(data)
-		@LatestReviews()
-		@NowPlaying(data.NowPlaying)
+		@indexWelcomeMessage(data)
+		@indexLatestReviews()
+		@indexNowPlaying(data.NowPlaying)
 	}
 }
 
-templ WelcomeMessage(data IndexData) {
+templ indexWelcomeMessage(data IndexData) {
 	<section class="mt-5 mb-10 text-gray-200 rounded-lg bg-sky-800 bg-opacity-10">
 		<blockquote class="px-5 py-7 my-3 border-l-4 border-sky-400">
 			if data.LoggedIn {
@@ -55,25 +55,34 @@ templ WelcomeMessage(data IndexData) {
 	</section>
 }
 
-templ LatestReviews() {
+templ indexLatestReviews() {
 	<section class="my-5">
-		<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
-			@iconReview()
-			Latest Public Reviews
-		</h3>
+		<a href="/review-feed">
+			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
+				<div class="flex gap-2 items-center">
+				@iconReview()
+				Latest Public Reviews
+                </div>
+				<p class="text-sm">Open the Feed</p>
+			</h3>
+		</a>
 		<p class="h-48">
 			None (yet).
 		</p>
 	</section>
 }
 
-templ NowPlaying(movies []tmdbapi.NowPlayingMovie) {
+templ indexNowPlaying(movies []tmdbapi.NowPlayingMovie) {
 	<section class="my-5">
-		<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-2 flex gap-2 items-center">
-			@iconPlay()
-			Now Playing
-		</h3>
-		<p>The most popular movies are shown first.</p>
+		<a href="/now-playing">
+			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
+				<div class="flex gap-2 items-center">
+					@iconPlay()
+					Now Playing
+				</div>
+				<p class="text-sm">See All</p>
+			</h3>
+		</a>
 		<ul class="grid md:grid-cols-5 gap-8 items-end justify-center">
 			for _, movie := range movies {
 				<a href={ t.URL(fmt.Sprintf("/movies/%v", movie.ID)) }>
@@ -84,7 +93,7 @@ templ NowPlaying(movies []tmdbapi.NowPlayingMovie) {
 						<img
 							class="rounded"
 							width="200"
-							src={ string(t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", movie.PosterPath))) }
+							src={ buildPosterURL(movie.PosterPath) }
 							alt="poster_path"
 						/>
 					</li>

@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/wipdev-tech/pmdb/internal/database"
@@ -46,14 +47,22 @@ func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
 
 func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	movieID := r.PathValue("movieID")
-	movieDetails := tmdbapi.GetMovieDetails(movieID)
-	movieCast := tmdbapi.GetMovieCast(movieID)
+	templData := templs.MovieData{}
 
-	templData := templs.MovieData{
-		Details: movieDetails,
-		Cast:    movieCast,
-	}
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
 
+	go func() {
+		templData.Details = tmdbapi.GetMovieDetails(movieID)
+		wg.Done()
+	}()
+
+	go func() {
+		templData.Cast = tmdbapi.GetMovieCast(movieID)
+		wg.Done()
+	}()
+
+	wg.Wait()
 	err := templs.Movie(templData).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)

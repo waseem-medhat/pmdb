@@ -47,8 +47,14 @@ func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
 func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	movieID := r.PathValue("movieID")
 	movieDetails := tmdbapi.GetMovieDetails(movieID)
+	movieCast := tmdbapi.GetMovieCast(movieID)
 
-	err := templs.Movie(movieDetails).Render(r.Context(), w)
+	templData := templs.MovieData{
+		Details: movieDetails,
+		Cast:    movieCast,
+	}
+
+	err := templs.Movie(templData).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}

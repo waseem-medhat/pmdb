@@ -3,7 +3,6 @@ package tmdbapi
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 )
 
 // MovieDetails matches the JSON response coming from a call to the Movie
@@ -85,33 +84,34 @@ type MovieCast struct {
 }
 
 // GetMovieDetails makes the call to the Movie Details API
-func GetMovieDetails(movieID string) MovieDetails {
+func GetMovieDetails(movieID string) (MovieDetails, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s?language=en-US", movieID)
 	responseBody, err := callAPI(url)
 	if err != nil {
-		log.Fatal("error calling API - ", err)
+		return MovieDetails{}, fmt.Errorf("error calling API - %v", err)
 	}
 
 	movieDetails := MovieDetails{}
 	err = json.Unmarshal(responseBody, &movieDetails)
 	if err != nil {
-		log.Fatal("couldn't unmarshal movie details - ", err)
+		return MovieDetails{}, fmt.Errorf("error unmarshaling movie details - %v", err)
 	}
-	return movieDetails
+	return movieDetails, err
 }
 
 // GetMovieCast makes the call to the Movie Credits API
-func GetMovieCast(movieID string) []MovieCast {
+func GetMovieCast(movieID string) ([]MovieCast, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s/credits", movieID)
 	responseBody, err := callAPI(url)
 	if err != nil {
-		log.Fatal("error calling API - ", err)
+		return []MovieCast{}, fmt.Errorf("error calling API - %v", err)
 	}
 
 	movieCredits := MovieCredits{}
 	err = json.Unmarshal(responseBody, &movieCredits)
 	if err != nil {
-		log.Fatal("couldn't unmarshal movie details - ", err)
+		return []MovieCast{}, fmt.Errorf("error unmarshaling movie cast - %v", err)
 	}
-	return movieCredits.Cast[:10]
+
+	return movieCredits.Cast[:10], err
 }

@@ -15,16 +15,20 @@ import (
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	dbUser, err := s.authJWTCookie(r)
-	if err != nil {
-		fmt.Println(err)
-	}
+	tmplData := templs.IndexData{}
 
-	tmplData := templs.IndexData{
-		LoggedIn:   err == nil,
-		User:       dbUser,
-		NowPlaying: tmdbapi.GetNowPlaying(5),
+	dbUser, err := s.authJWTCookie(r)
+	if err != nil && err != http.ErrNoCookie {
+		log.Fatal(err)
 	}
+	tmplData.LoggedIn = err == nil
+	tmplData.User = dbUser
+
+	nowPlaying, err := tmdbapi.GetNowPlaying(5)
+	if err != nil {
+		log.Fatal(err)
+	}
+	tmplData.NowPlaying = nowPlaying
 
 	err = templs.Index(tmplData).Render(r.Context(), w)
 	if err != nil {
@@ -53,12 +57,22 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	wg.Add(2)
 
 	go func() {
-		templData.Details = tmdbapi.GetMovieDetails(movieID)
+		movieDetails, err := tmdbapi.GetMovieDetails(movieID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		templData.Details = movieDetails
 		wg.Done()
 	}()
 
 	go func() {
-		templData.Cast = tmdbapi.GetMovieCast(movieID)
+		movieCast, err := tmdbapi.GetMovieCast(movieID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		templData.Cast = movieCast
 		wg.Done()
 	}()
 
@@ -70,11 +84,16 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) HandleNowPlayingGet(w http.ResponseWriter, r *http.Request) {
-	templData := templs.NowPlayingData{
-		NowPlaying: tmdbapi.GetNowPlaying(-1),
+	nowPlaying, err := tmdbapi.GetNowPlaying(-1)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	err := templs.NowPlaying(templData).Render(r.Context(), w)
+	templData := templs.NowPlayingData{
+		NowPlaying: nowPlaying,
+	}
+
+	err = templs.NowPlaying(templData).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,9 +107,12 @@ func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {
 	}
 
 	accessCookie, err := r.Cookie("jwt-access")
-	if err != nil {
+	if err == http.ErrNoCookie {
+		return dbUser, err
+	} else if err != nil {
 		return dbUser, fmt.Errorf("couldn't get cookie - %v", err)
 	}
+
 	bearer := accessCookie.Value
 	token, err := jwt.ParseWithClaims(bearer, claims, keyfunc)
 	if err != nil {

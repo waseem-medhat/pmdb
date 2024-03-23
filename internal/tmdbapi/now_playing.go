@@ -2,7 +2,7 @@ package tmdbapi
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"slices"
 )
 
@@ -36,17 +36,17 @@ type NowPlayingMovie struct {
 
 // GetNowPlaying makes the call to the Now Playing API endpoint and sorts them
 // by descending popularity
-func GetNowPlaying(n int) []NowPlayingMovie {
+func GetNowPlaying(n int) ([]NowPlayingMovie, error) {
 	url := "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
 	responseBody, err := callAPI(url)
 	if err != nil {
-		log.Fatal("error calling API - ", err)
+		return []NowPlayingMovie{}, fmt.Errorf("error calling API - %v", err)
 	}
 
 	nowPlaying := NowPlayingRes{}
 	err = json.Unmarshal(responseBody, &nowPlaying)
 	if err != nil {
-		log.Fatal("couldn't unmarshal now playing - ", err)
+		return nowPlaying.Results, fmt.Errorf("error unmarshaling now playing - %v", err)
 	}
 
 	results := nowPlaying.Results
@@ -56,5 +56,5 @@ func GetNowPlaying(n int) []NowPlayingMovie {
 		results = results[:n]
 	}
 
-	return results
+	return results, err
 }

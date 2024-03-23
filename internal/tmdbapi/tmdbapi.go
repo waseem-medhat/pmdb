@@ -41,13 +41,13 @@ func callAPI(url string) ([]byte, error) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return []byte{}, fmt.Errorf("couldn't fetch now playing - %v", err)
+		return []byte{}, fmt.Errorf("error fetching now playing - %v", err)
 	}
 	defer res.Body.Close()
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return []byte{}, fmt.Errorf("couldn't read body - %v", err)
+		return []byte{}, fmt.Errorf("error reading body - %v", err)
 	}
 
 	return body, err

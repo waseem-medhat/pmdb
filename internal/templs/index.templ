@@ -47,7 +47,10 @@ templ indexWelcomeMessage(data IndexData) {
 					<a
 						href="/register"
 						class="rounded px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white"
-					>Join PMDb</a> or
+					>
+						Join PMDb
+					</a>
+					or
 					<a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
 				}
 			</div>
@@ -56,26 +59,35 @@ templ indexWelcomeMessage(data IndexData) {
 }
 
 templ indexLatestReviews() {
-	<section class="my-5">
-		<a href="/review-feed">
-			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
+	<section class="my-10">
+		<a href="/reviews">
+			<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
 				<div class="flex gap-2 items-center">
-				@iconReview()
-				Latest Public Reviews
-                </div>
+					@iconReview()
+					Latest Public Reviews
+				</div>
 				<p class="text-sm">Open the Feed</p>
 			</h3>
 		</a>
 		<p class="h-48">
 			None (yet).
 		</p>
+		<a
+			href="/reviews/new"
+			class="rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max"
+		>
+			<div class="flex gap-2 items-center">
+				@iconAddReview()
+				Add a Review
+			</div>
+		</a>
 	</section>
 }
 
 templ indexNowPlaying(movies []tmdbapi.NowPlayingMovie) {
-	<section class="my-5">
+	<section class="my-10">
 		<a href="/now-playing">
-			<h3 class="bg-primary text-gray-950 px-4 py-2 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
+			<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
 				<div class="flex gap-2 items-center">
 					@iconPlay()
 					Now Playing

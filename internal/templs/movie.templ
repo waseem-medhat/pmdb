@@ -1,6 +1,10 @@
 package templs
 
-import "github.com/wipdev-tech/pmdb/internal/tmdbapi"
+import (
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
+	t "github.com/a-h/templ"
+	"fmt"
+)
 
 type MovieData struct {
 	Details tmdbapi.MovieDetails
@@ -9,7 +13,7 @@ type MovieData struct {
 
 templ Movie(data MovieData) {
 	@Page(data.Details.Title) {
-		<div class="grid grid-cols-[1fr_2fr] gap-10">
+		<div class="grid grid-cols-[1fr_2fr] gap-10 my-10">
 			<section>
 				<img
 					class="w-full"
@@ -18,25 +22,41 @@ templ Movie(data MovieData) {
 				/>
 			</section>
 			<section>
-				<div class="mb-8">
-					<h1 class="text-4xl font-semibold mb-2">{ data.Details.Title }</h1>
-					<ul class="flex gap-2">
-						for _, genre := range data.Details.Genres {
-							<li class="px-2 border border-primary text-primary rounded-lg text-sm">{ genre.Name }</li>
-						}
-					</ul>
-				</div>
-				<p>{ data.Details.Overview }</p>
-				<h1 class="text-3xl font-semibold mt-6 mb-3">Top Cast</h1>
+				<h1 class="text-5xl font-bold mb-3 text-primary">{ data.Details.Title }</h1>
+				<ul class="flex gap-2">
+					for _, genre := range data.Details.Genres {
+						<li class="px-2 border border-primary text-primary rounded-lg text-sm">{ genre.Name }</li>
+					}
+				</ul>
+				<p class="my-8">{ data.Details.Overview }</p>
+				<h1 class="text-3xl font-semibold mb-3">Top Cast</h1>
 				<ul class="space-y-2">
 					for _, cast := range data.Cast {
 						<li>
 							<span class="text-primary font-bold">{ cast.Name }</span> &mdash;
-								{ cast.Character }
+							{ cast.Character }
 						</li>
 					}
 				</ul>
 			</section>
 		</div>
+		<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
+			<div class="flex gap-2 items-center">
+				@iconReview()
+				PMDb Reviews
+			</div>
+		</h3>
+		<p class="h-48">
+			None (yet).
+		</p>
+		<a
+			href={ t.URL(fmt.Sprintf("/reviews/new?movieId=%v", data.Details.ID)) }
+			class="rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max"
+		>
+			<div class="flex gap-2 items-center">
+				@iconAddReview()
+				Add a Review for { data.Details.Title }
+			</div>
+		</a>
 	}
 }

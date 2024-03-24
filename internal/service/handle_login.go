@@ -51,15 +51,7 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	cookie := &http.Cookie{
-		Name:     "pmdb-jwt-access",
-		Value:    access,
-		Secure:   true,
-		HttpOnly: true,
-		MaxAge:   3600,
-		SameSite: http.SameSiteStrictMode,
-		Path:     "/",
-	}
+	cookie := createCookie("pmdb-jwt-access", access, "/", 3600)
 	http.SetCookie(w, cookie)
 
 	redirectCookie, err := r.Cookie("pmdb-requested-url")
@@ -70,15 +62,7 @@ func (s *Service) HandleLoginPost(w http.ResponseWriter, r *http.Request) {
 		redirectTo = redirectCookie.Value
 	}
 
-	newRedirectCookie := &http.Cookie{
-		Name:     "pmdb-requested-url",
-		Value:    "",
-		Secure:   true,
-		HttpOnly: true,
-		MaxAge:   -1,
-		SameSite: http.SameSiteStrictMode,
-		Path:     "/login",
-	}
+	newRedirectCookie := createCookie("pmdb-requested-url", "", "/login", -1)
 	http.SetCookie(w, newRedirectCookie)
 	w.Header().Set("HX-Redirect", redirectTo)
 	w.WriteHeader(http.StatusFound)
@@ -104,15 +88,7 @@ func generateJWTAccess(userName string) (string, error) {
 }
 
 func (s *Service) HandleLogoutPost(w http.ResponseWriter, r *http.Request) {
-	cookie := &http.Cookie{
-		Name:     "pmdb-jwt-access",
-		Value:    "",
-		Secure:   true,
-		HttpOnly: true,
-		MaxAge:   -1,
-		SameSite: http.SameSiteStrictMode,
-		Path:     "/",
-	}
+	cookie := createCookie("pmdb-jwt-access", "", "/", -1)
 	http.SetCookie(w, cookie)
 
 	w.Header().Set("HX-Redirect", "/")

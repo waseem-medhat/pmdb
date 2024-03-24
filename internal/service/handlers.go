@@ -106,7 +106,7 @@ func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	}
 
-	accessCookie, err := r.Cookie("jwt-access")
+	accessCookie, err := r.Cookie("pmdb-jwt-access")
 	if err == http.ErrNoCookie {
 		return dbUser, err
 	} else if err != nil {

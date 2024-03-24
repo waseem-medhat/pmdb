@@ -144,3 +144,27 @@ func iconPlay() templ.Component {
 		return templ_7745c5c3_Err
 	})
 }
+
+func iconAddReview() templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"30\" height=\"30\" viewBox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"M7 14h1.65q.2 0 .388-.075t.337-.225L14.05 9q.225-.225.338-.513t.112-.562q0-.275-.112-.537t-.313-.488l-.925-.95q-.225-.225-.5-.337t-.575-.113q-.275 0-.55.113t-.5.337L6.3 10.625q-.15.15-.225.338T6 11.35V13q0 .425.288.713T7 14m5.05-5.1l-.95-.925l.975-.975l.925.95zM11.2 14H17q.425 0 .713-.288T18 13q0-.425-.288-.712T17 12h-3.8zM6 18l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18z\"></path></svg>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}

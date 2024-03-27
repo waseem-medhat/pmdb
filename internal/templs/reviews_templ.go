@@ -87,7 +87,15 @@ func NewReview(data NewReviewData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Back to movie page</a></div></div><div class=\"flex flex-col gap-2\"><label>How was the movie?</label><div class=\"text-2xl font-bold text-primary\"><input type=\"number\" min=\"0\" max=\"10\" value=\"5\" class=\"border border-primary rounded px-2 py-1 w-20 bg-transparent text-center\"> / 10</div><label>Write your Review</label> <textarea class=\"border border-primary rounded px-3 py-2 text-gray-50 min-h-48 bg-transparent\"></textarea></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Back to movie page</a></div></div><form><div class=\"flex flex-col gap-2\"><label>How was the movie?</label><div class=\"text-2xl font-bold text-primary\"><input type=\"number\" min=\"0\" max=\"10\" value=\"5\" class=\"border border-primary rounded px-2 py-1 w-20 bg-transparent text-center\"> / 10</div><label>Write your Review</label> <textarea class=\"border border-primary rounded px-3 py-2 text-gray-50 min-h-48 bg-transparent\"></textarea></div><label class=\"flex items-center gap-2 my-3\"><input type=\"checkbox\" id=\"public\" name=\"public\"> Public Review</label> <button type=\"submit\" class=\"rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = iconAddReview().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Done</button></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

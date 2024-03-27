@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"sync"
@@ -14,7 +15,7 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	tmplData := templs.IndexData{}
 
 	dbUser, err := s.authJWTCookie(r)
-	if err != nil && err != http.ErrNoCookie {
+	if err != nil && err != http.ErrNoCookie && err != sql.ErrNoRows {
 		log.Fatal(err)
 	}
 	tmplData.LoggedIn = err == nil

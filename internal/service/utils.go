@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
@@ -52,6 +53,10 @@ func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {
 	}
 
 	dbUser, err = s.DB.GetUser(r.Context(), userName)
+	if err == sql.ErrNoRows {
+		return dbUser, err
+	}
+
 	if err != nil {
 		return dbUser, fmt.Errorf("couldn't query user - %v", err)
 	}

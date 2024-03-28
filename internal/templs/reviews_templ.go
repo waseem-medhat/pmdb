@@ -87,7 +87,28 @@ func NewReview(data NewReviewData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Back to movie page</a></div></div><div class=\"flex flex-col gap-2\"><label>How was the movie?</label><div class=\"text-2xl font-bold text-primary\"><input type=\"number\" min=\"0\" max=\"10\" value=\"5\" class=\"border border-primary rounded px-2 py-1 w-20 bg-transparent text-center\"> / 10</div><label>Write your Review</label> <textarea class=\"border border-primary rounded px-3 py-2 text-gray-50 min-h-48 bg-transparent\"></textarea></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Back to movie page</a></div></div><form hx-post=\"/reviews/new\" hx-swap=\"none\" hx-vals=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 string
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{\"movieID\": %v}", data.Movie.ID))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/reviews.templ`, Line: 32, Col: 103}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><div class=\"flex flex-col gap-2\"><label>How was the movie?</label><div class=\"text-2xl font-bold text-primary\"><input id=\"rating\" name=\"rating\" type=\"number\" min=\"0\" max=\"10\" value=\"5\" class=\"border border-primary rounded px-2 py-1 w-20 bg-transparent text-center\"> / 10</div><label>Write your Review</label> <textarea class=\"border border-primary rounded px-3 py-2 text-gray-50 min-h-48 bg-transparent\" id=\"review\" name=\"review\"></textarea></div><label class=\"flex items-center gap-2 my-3\"><input type=\"checkbox\" id=\"public-review\" name=\"public-review\"> Public Review</label> <button type=\"submit\" class=\"rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = iconAddReview().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Done</button></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

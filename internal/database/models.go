@@ -4,22 +4,15 @@
 
 package database
 
-import (
-	"database/sql"
-)
-
-type Movie struct {
-	ID   int64
-	Name string
-	Year sql.NullInt64
-}
+import ()
 
 type Review struct {
-	ID      int64
-	UserID  int64
-	MovieID int64
-	Rating  sql.NullInt64
-	Review  sql.NullString
+	ID           string
+	UserID       string
+	MovieTmdbID  string
+	Rating       int64
+	Review       string
+	PublicReview int64
 }
 
 type User struct {

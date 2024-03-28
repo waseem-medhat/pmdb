@@ -175,15 +175,7 @@ func indexLatestReviews() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Latest Public Reviews</div><p class=\"text-sm\">Open the Feed</p></h3></a><p class=\"h-48\">None (yet).</p><a href=\"/reviews/new\" class=\"rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max\"><div class=\"flex gap-2 items-center\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = iconAddReview().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Add a Review</div></a></section>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Latest Public Reviews</div><p class=\"text-sm\">Open the Feed</p></h3></a><p class=\"h-48\">None (yet).</p></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -236,7 +228,7 @@ func indexNowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(movie.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 103, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 94, Col: 20}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
@@ -249,7 +241,7 @@ func indexNowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(buildPosterURL(movie.PosterPath))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 108, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 99, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {

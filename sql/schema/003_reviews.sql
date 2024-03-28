@@ -1,12 +1,12 @@
 -- +goose Up
 CREATE TABLE reviews (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
-  movie_id INTEGER NOT NULL,
-  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
-  review TEXT,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (movie_id) REFERENCES movies(id)
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  movie_tmdb_id TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK (rating >= 0 AND rating <= 10),
+  review TEXT NOT NULL,
+  public_review INTEGER NOT NULL CHECK (public_review IN (0, 1)),
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 

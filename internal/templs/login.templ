@@ -8,6 +8,10 @@ templ Login(data LoginData) {
 	@Page("Login") {
 		<form hx-post="/login" hx-target="#response" hx-swap="innerHTML">
 			<h3 class="text-2xl font-semibold mb-1">Log In</h3>
+			<p>
+				Don't have an account?
+				<a href="/register" class="text-blue-500 hover:text-blue-400">Register</a>
+			</p>
 			<div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
 				<label for="user-name">User Name</label>
 				<input

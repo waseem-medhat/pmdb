@@ -29,11 +29,13 @@ templ NewReview(data NewReviewData) {
 				</a>
 			</div>
 		</div>
-		<form>
+		<form hx-post="/reviews/new" hx-swap="none" hx-vals={ fmt.Sprintf("{\"movieID\": %v}", data.Movie.ID) }>
 			<div class="flex flex-col gap-2">
 				<label>How was the movie?</label>
 				<div class="text-2xl font-bold text-primary">
 					<input
+						id="rating"
+						name="rating"
 						type="number"
 						min="0"
 						max="10"
@@ -44,10 +46,12 @@ templ NewReview(data NewReviewData) {
 				<label>Write your Review</label>
 				<textarea
 					class="border border-primary rounded px-3 py-2 text-gray-50 min-h-48 bg-transparent"
+					id="review"
+					name="review"
 				></textarea>
 			</div>
 			<label class="flex items-center gap-2 my-3">
-				<input type="checkbox" id="public" name="public"/>
+				<input type="checkbox" id="public-review" name="public-review"/>
 				Public Review
 			</label>
 			<button

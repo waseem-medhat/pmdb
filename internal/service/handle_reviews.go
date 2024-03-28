@@ -1,9 +1,13 @@
 package service
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
+	"github.com/google/uuid"
+	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
@@ -33,4 +37,35 @@ func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request) {
+	dbUser, err := s.authJWTCookie(r)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rating, err := strconv.Atoi(r.FormValue("rating"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var publicReview int64
+	if r.FormValue("public-review") == "on" {
+		publicReview = 1
+	}
+
+	_, err = s.DB.CreateReview(r.Context(), database.CreateReviewParams{
+		ID:           uuid.NewString(),
+		UserID:       dbUser.ID,
+		MovieTmdbID:  r.FormValue("movieID"),
+		Rating:       int64(rating),
+		Review:       r.FormValue("review"),
+		PublicReview: publicReview,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Review saved!")
 }

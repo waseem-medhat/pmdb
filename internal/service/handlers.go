@@ -27,6 +27,12 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	}
 	tmplData.NowPlaying = nowPlaying
 
+	reviews, err := s.DB.GetReviews(r.Context())
+	if err != nil {
+		log.Fatal(err)
+	}
+	tmplData.Reviews = reviews
+
 	err = templs.Index(tmplData).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)

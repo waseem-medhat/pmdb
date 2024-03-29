@@ -44,3 +44,47 @@ func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Rev
 	)
 	return i, err
 }
+
+const getReviews = `-- name: GetReviews :many
+SELECT  id, user_id, movie_tmdb_id, rating, review 
+FROM reviews
+WHERE public_review = 1
+LIMIT 5
+`
+
+type GetReviewsRow struct {
+	ID          string
+	UserID      string
+	MovieTmdbID string
+	Rating      int64
+	Review      string
+}
+
+func (q *Queries) GetReviews(ctx context.Context) ([]GetReviewsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getReviews)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetReviewsRow
+	for rows.Next() {
+		var i GetReviewsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.MovieTmdbID,
+			&i.Rating,
+			&i.Review,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

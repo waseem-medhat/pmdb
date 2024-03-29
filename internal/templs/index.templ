@@ -11,12 +11,13 @@ type IndexData struct {
 	LoggedIn   bool
 	User       database.GetUserRow
 	NowPlaying []tmdbapi.NowPlayingMovie
+	Reviews    []database.GetReviewsRow
 }
 
 templ Index(data IndexData) {
 	@Page("Home") {
 		@indexWelcomeMessage(data)
-		@indexLatestReviews()
+		@indexLatestReviews(data.Reviews)
 		@indexNowPlaying(data.NowPlaying)
 	}
 }
@@ -58,7 +59,7 @@ templ indexWelcomeMessage(data IndexData) {
 	</section>
 }
 
-templ indexLatestReviews() {
+templ indexLatestReviews(reviews []database.GetReviewsRow) {
 	<section class="my-10">
 		<a href="/reviews">
 			<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
@@ -69,9 +70,10 @@ templ indexLatestReviews() {
 				<p class="text-sm">Open the Feed</p>
 			</h3>
 		</a>
-		<p class="h-48">
-			None (yet).
-		</p>
+		for _, r := range reviews {
+			<p>{ r.MovieTmdbID }</p>
+			<p>{ fmt.Sprint(r.Rating) }/10</p>
+		}
 	</section>
 }
 

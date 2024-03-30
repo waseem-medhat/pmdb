@@ -87,9 +87,10 @@ templ latestReviewCard(r tmdbapi.Review) {
 			<div class="w-48 h-full">
 				<p class="text-2xl font-bold">{ r.Title }</p>
 				<p class="text-lg">
-					<span class="text-primary font-bold text-xl">{ fmt.Sprint(r.Rating) }</span><span>/10</span>
+					<span class="text-primary font-bold text-2xl">{ fmt.Sprint(r.Rating) }</span><span>/10</span>
 				</p>
-				<i>"{ fmt.Sprint(r.Review) }"</i>
+				<i class="line-clamp-2" >{ fmt.Sprint(r.Review) }</i>
+                <p class="text-gray-500 mt-5 text-right">~ {r.UserName}</p>
 			</div>
 		</li>
 	</a>

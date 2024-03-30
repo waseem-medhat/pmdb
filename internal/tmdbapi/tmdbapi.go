@@ -5,7 +5,17 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/wipdev-tech/pmdb/internal/database"
 )
+
+// Review is a type  that extends the DB review data by adding the external
+// TMDB API data needed before rendering.
+type Review struct {
+	database.GetReviewsRow
+	Title      string
+	PosterPath string
+}
 
 // GenreMap maps from genre ID to genre name. This was hard-coded based on a
 // call to the TMDB movie genre list endpoint

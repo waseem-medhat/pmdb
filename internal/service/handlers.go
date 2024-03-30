@@ -2,7 +2,6 @@ package service
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -28,13 +27,12 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(getReviewData(reviews))
 
 	templData := templs.IndexData{
 		LoggedIn:   loggedIn,
 		User:       dbUser,
 		NowPlaying: nowPlaying,
-		Reviews:    reviews,
+		Reviews:    getReviewData(reviews),
 	}
 
 	err = templs.Index(templData).Render(r.Context(), w)

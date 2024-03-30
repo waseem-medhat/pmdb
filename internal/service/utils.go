@@ -3,12 +3,20 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
+
+type Review struct {
+	database.GetReviewsRow
+	Title      string
+	PosterPath string
+}
 
 // createCookie is a wrapper that makes it easier and more concise to create a
 // *http.Cookie. Some cookie attributes are pre-set to make it secure,
@@ -62,4 +70,43 @@ func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {
 	}
 
 	return dbUser, err
+}
+
+// getReviewData takes a slice of DB reviews and attached the TMDB data to
+// them.
+func getReviewData(reviews []database.GetReviewsRow) []Review {
+	type newDetails struct {
+		title      string
+		posterPath string
+	}
+
+	tmdbData := map[string]newDetails{}
+	for _, r := range reviews {
+		if _, ok := tmdbData[r.MovieTmdbID]; ok {
+			continue
+		}
+
+		details, err := tmdbapi.GetMovieDetails(r.MovieTmdbID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		tmdbData[r.MovieTmdbID] = newDetails{
+			title:      details.Title,
+			posterPath: details.PosterPath,
+		}
+	}
+
+	newReviews := make([]Review, 0, len(reviews))
+	for _, r := range reviews {
+		details := tmdbData[r.MovieTmdbID]
+		newReview := Review{
+			GetReviewsRow: r,
+			Title:         details.title,
+			PosterPath:    details.posterPath,
+		}
+		newReviews = append(newReviews, newReview)
+	}
+
+	return newReviews
 }

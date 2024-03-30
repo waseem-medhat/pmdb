@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -12,28 +13,31 @@ import (
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	tmplData := templs.IndexData{}
-
 	dbUser, err := s.authJWTCookie(r)
 	if err != nil && err != http.ErrNoCookie && err != sql.ErrNoRows {
 		log.Fatal(err)
 	}
-	tmplData.LoggedIn = err == nil
-	tmplData.User = dbUser
+	loggedIn := err == nil
 
 	nowPlaying, err := tmdbapi.GetNowPlaying(5)
 	if err != nil {
 		log.Fatal(err)
 	}
-	tmplData.NowPlaying = nowPlaying
 
 	reviews, err := s.DB.GetReviews(r.Context())
 	if err != nil {
 		log.Fatal(err)
 	}
-	tmplData.Reviews = reviews
+	fmt.Println(getReviewData(reviews))
 
-	err = templs.Index(tmplData).Render(r.Context(), w)
+	templData := templs.IndexData{
+		LoggedIn:   loggedIn,
+		User:       dbUser,
+		NowPlaying: nowPlaying,
+		Reviews:    reviews,
+	}
+
+	err = templs.Index(templData).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -12,12 +12,6 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
-type Review struct {
-	database.GetReviewsRow
-	Title      string
-	PosterPath string
-}
-
 // createCookie is a wrapper that makes it easier and more concise to create a
 // *http.Cookie. Some cookie attributes are pre-set to make it secure,
 // HTTP-only, with a "Strict" same-site mode.
@@ -74,7 +68,7 @@ func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {
 
 // getReviewData takes a slice of DB reviews and attached the TMDB data to
 // them.
-func getReviewData(reviews []database.GetReviewsRow) []Review {
+func getReviewData(reviews []database.GetReviewsRow) []tmdbapi.Review {
 	type newDetails struct {
 		title      string
 		posterPath string
@@ -97,10 +91,10 @@ func getReviewData(reviews []database.GetReviewsRow) []Review {
 		}
 	}
 
-	newReviews := make([]Review, 0, len(reviews))
+	newReviews := make([]tmdbapi.Review, 0, len(reviews))
 	for _, r := range reviews {
 		details := tmdbData[r.MovieTmdbID]
-		newReview := Review{
+		newReview := tmdbapi.Review{
 			GetReviewsRow: r,
 			Title:         details.title,
 			PosterPath:    details.posterPath,

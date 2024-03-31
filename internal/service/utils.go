@@ -109,7 +109,10 @@ func getReviewData(reviews []database.GetReviewsRow) []tmdbapi.Review {
 
 func renderError(w http.ResponseWriter, statusCode int) {
 	w.WriteHeader(statusCode)
-	templs.ErrorPage(statusCode).Render(context.Background(), w)
+	err := templs.ErrorPage(statusCode).Render(context.Background(), w)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (s *Service) MiddlewareAuth(h func(http.ResponseWriter, *http.Request, database.GetUserRow)) http.HandlerFunc {

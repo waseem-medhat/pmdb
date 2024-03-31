@@ -42,6 +42,10 @@ var GenreMap = map[int]string{
 	37:    "Western",
 }
 
+func IsNotFound(err error) bool {
+	return err != nil && err.Error() == "not found"
+}
+
 // callAPI wraps around the boilerplate needed to make an HTTP call to the TMDB
 // api, including the addition of auth headers and error handling
 func callAPI(url string) ([]byte, error) {
@@ -54,6 +58,10 @@ func callAPI(url string) ([]byte, error) {
 		return []byte{}, fmt.Errorf("error fetching now playing - %v", err)
 	}
 	defer res.Body.Close()
+
+	if res.StatusCode == 404 {
+		return []byte{}, fmt.Errorf("not found")
+	}
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {

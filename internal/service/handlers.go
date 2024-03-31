@@ -78,12 +78,12 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
 
+	var fetchErr error
 	go func() {
 		movieDetails, err := tmdbapi.GetMovieDetails(movieID)
 		if err != nil {
-			log.Fatal(err)
+			fetchErr = err
 		}
-
 		templData.Details = movieDetails
 		wg.Done()
 	}()
@@ -91,17 +91,27 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	go func() {
 		movieCast, err := tmdbapi.GetMovieCast(movieID)
 		if err != nil {
-			log.Fatal(err)
+			fetchErr = err
 		}
-
 		templData.Cast = movieCast
 		wg.Done()
 	}()
 
 	wg.Wait()
+	if tmdbapi.IsNotFound(fetchErr) {
+		renderError(w, http.StatusNotFound)
+		return
+	}
+	if fetchErr != nil {
+		fmt.Println(fetchErr)
+		renderError(w, http.StatusInternalServerError)
+		return
+	}
+
 	err := templs.Movie(templData).Render(r.Context(), w)
 	if err != nil {
-		log.Fatal(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 }
 

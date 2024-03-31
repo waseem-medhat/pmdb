@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -9,6 +10,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
@@ -103,4 +105,9 @@ func getReviewData(reviews []database.GetReviewsRow) []tmdbapi.Review {
 	}
 
 	return newReviews
+}
+
+func renderError(w http.ResponseWriter, statusCode int) {
+	w.WriteHeader(statusCode)
+	templs.ErrorPage(statusCode).Render(context.Background(), w)
 }

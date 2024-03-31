@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -14,18 +15,23 @@ import (
 func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 	dbUser, err := s.authJWTCookie(r)
 	if err != nil && err != http.ErrNoCookie && err != sql.ErrNoRows {
-		log.Fatal(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 	loggedIn := err == nil
 
 	nowPlaying, err := tmdbapi.GetNowPlaying(5)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 
 	reviews, err := s.DB.GetReviews(r.Context())
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 
 	templData := templs.IndexData{
@@ -37,7 +43,9 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 
 	err = templs.Index(templData).Render(r.Context(), w)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 }
 

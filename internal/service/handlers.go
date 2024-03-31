@@ -3,7 +3,6 @@ package service
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"sync"
 
@@ -118,7 +117,8 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 func (s *Service) HandleNowPlayingGet(w http.ResponseWriter, r *http.Request) {
 	nowPlaying, err := tmdbapi.GetNowPlaying(-1)
 	if err != nil {
-		log.Fatal(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 
 	templData := templs.NowPlayingData{
@@ -127,6 +127,7 @@ func (s *Service) HandleNowPlayingGet(w http.ResponseWriter, r *http.Request) {
 
 	err = templs.NowPlaying(templData).Render(r.Context(), w)
 	if err != nil {
-		log.Fatal(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 }

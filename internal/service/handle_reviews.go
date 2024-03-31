@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -35,19 +33,24 @@ func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request) {
 
 	err = templs.NewReview(templs.NewReviewData{Movie: movieDetails}).Render(r.Context(), w)
 	if err != nil {
-		log.Fatal(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 }
 
 func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request) {
 	dbUser, err := s.authJWTCookie(r)
 	if err != nil {
-		log.Fatal(err)
+		cookie := createCookie("pmdb-requested-url", r.URL.String(), "/login", 3600)
+		http.SetCookie(w, cookie)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
 	rating, err := strconv.Atoi(r.FormValue("rating"))
 	if err != nil {
-		log.Fatal(err)
+		renderError(w, http.StatusBadRequest)
+		return
 	}
 
 	var publicReview int64
@@ -64,8 +67,9 @@ func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request) {
 		PublicReview: publicReview,
 	})
 	if err != nil {
-		log.Fatal(err)
+		renderError(w, http.StatusBadRequest)
+		return
 	}
 
-	fmt.Println("Review saved!")
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }

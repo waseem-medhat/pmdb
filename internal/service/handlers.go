@@ -52,13 +52,22 @@ func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
 func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
 	userName := r.PathValue("userName")
 	dbUser, err := s.DB.GetUser(r.Context(), userName)
+	if err == sql.ErrNoRows {
+		renderError(w, http.StatusNotFound)
+		return
+	}
+
 	if err != nil {
-		log.Fatal("couldn't get user - ", err)
+		fmt.Println("couldn't get user - ", err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 
 	err = templs.Profile(templs.ProfileData{User: dbUser}).Render(r.Context(), w)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		renderError(w, http.StatusInternalServerError)
+		return
 	}
 }
 

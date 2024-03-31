@@ -87,6 +87,9 @@ type MovieCast struct {
 func GetMovieDetails(movieID string) (MovieDetails, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s?language=en-US", movieID)
 	responseBody, err := callAPI(url)
+	if IsNotFound(err) {
+		return MovieDetails{}, err
+	}
 	if err != nil {
 		return MovieDetails{}, fmt.Errorf("error calling API - %v", err)
 	}
@@ -103,6 +106,9 @@ func GetMovieDetails(movieID string) (MovieDetails, error) {
 func GetMovieCast(movieID string) ([]MovieCast, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s/credits", movieID)
 	responseBody, err := callAPI(url)
+	if IsNotFound(err) {
+		return []MovieCast{}, err
+	}
 	if err != nil {
 		return []MovieCast{}, fmt.Errorf("error calling API - %v", err)
 	}

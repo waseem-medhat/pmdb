@@ -10,15 +10,7 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
-func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request) {
-	_, err := s.authJWTCookie(r)
-	if err != nil {
-		cookie := createCookie("pmdb-requested-url", r.URL.String(), "/login", 3600)
-		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
-		return
-	}
-
+func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ database.GetUserRow) {
 	movieId := r.URL.Query().Get("movieId")
 	if movieId == "" {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
@@ -38,15 +30,7 @@ func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request) {
-	dbUser, err := s.authJWTCookie(r)
-	if err != nil {
-		cookie := createCookie("pmdb-requested-url", r.URL.String(), "/login", 3600)
-		http.SetCookie(w, cookie)
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
-		return
-	}
-
+func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request, dbUser database.GetUserRow) {
 	rating, err := strconv.Atoi(r.FormValue("rating"))
 	if err != nil {
 		renderError(w, http.StatusBadRequest)

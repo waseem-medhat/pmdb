@@ -25,8 +25,8 @@ func New(s *service.Service) *http.ServeMux {
 	mux.HandleFunc("GET /movies/{movieID}", s.HandleMoviesGet)
 	mux.HandleFunc("GET /now-playing", s.HandleNowPlayingGet)
 
-	mux.HandleFunc("GET /reviews/new", s.HandleReviewsNewGet)
-	mux.HandleFunc("POST /reviews/new", s.HandleReviewsNewPost)
+	mux.HandleFunc("GET /reviews/new", s.MiddlewareAuth(s.HandleReviewsNewGet))
+	mux.HandleFunc("POST /reviews/new", s.MiddlewareAuth(s.HandleReviewsNewPost))
 
 	return mux
 }

@@ -10,13 +10,24 @@ import (
 )
 
 const createReview = `-- name: CreateReview :one
-INSERT INTO reviews ( id, user_id, movie_tmdb_id, rating, review, public_review )
-VALUES ( ?, ?, ?, ?, ?, ? )
-RETURNING id, user_id, movie_tmdb_id, rating, review, public_review
+INSERT INTO reviews (
+    id,
+    created_at,
+    updated_at,
+    user_id,
+    movie_tmdb_id,
+    rating,
+    review,
+    public_review
+)
+VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )
+RETURNING id, created_at, updated_at, user_id, movie_tmdb_id, rating, review, public_review
 `
 
 type CreateReviewParams struct {
 	ID           string
+	CreatedAt    string
+	UpdatedAt    string
 	UserID       string
 	MovieTmdbID  string
 	Rating       int64
@@ -27,6 +38,8 @@ type CreateReviewParams struct {
 func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Review, error) {
 	row := q.db.QueryRowContext(ctx, createReview,
 		arg.ID,
+		arg.CreatedAt,
+		arg.UpdatedAt,
 		arg.UserID,
 		arg.MovieTmdbID,
 		arg.Rating,
@@ -36,6 +49,8 @@ func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Rev
 	var i Review
 	err := row.Scan(
 		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 		&i.UserID,
 		&i.MovieTmdbID,
 		&i.Rating,
@@ -49,6 +64,8 @@ const getReviews = `-- name: GetReviews :many
 SELECT
     r.id,
     r.user_id,
+    r.created_at,
+    r.updated_at,
     u.display_name as user_name,
     r.movie_tmdb_id,
     r.rating,
@@ -63,6 +80,8 @@ LIMIT 5
 type GetReviewsRow struct {
 	ID          string
 	UserID      string
+	CreatedAt   string
+	UpdatedAt   string
 	UserName    string
 	MovieTmdbID string
 	Rating      int64
@@ -81,6 +100,8 @@ func (q *Queries) GetReviews(ctx context.Context) ([]GetReviewsRow, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.UserName,
 			&i.MovieTmdbID,
 			&i.Rating,

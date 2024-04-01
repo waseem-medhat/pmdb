@@ -6,6 +6,8 @@ package database
 
 type Review struct {
 	ID           string
+	CreatedAt    string
+	UpdatedAt    string
 	UserID       string
 	MovieTmdbID  string
 	Rating       int64

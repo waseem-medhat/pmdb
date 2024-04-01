@@ -3,12 +3,15 @@ package service
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
+
+var timeLayout = "2 Jan 2006 - 03:04 PM"
 
 func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ database.GetUserRow) {
 	movieId := r.URL.Query().Get("movieId")
@@ -28,6 +31,7 @@ func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ 
 		renderError(w, http.StatusInternalServerError)
 		return
 	}
+
 }
 
 func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request, dbUser database.GetUserRow) {
@@ -44,6 +48,8 @@ func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 
 	_, err = s.DB.CreateReview(r.Context(), database.CreateReviewParams{
 		ID:           uuid.NewString(),
+		CreatedAt:    time.Now().Format(timeLayout),
+		UpdatedAt:    time.Now().Format(timeLayout),
 		UserID:       dbUser.ID,
 		MovieTmdbID:  r.FormValue("movieID"),
 		Rating:       int64(rating),
@@ -55,5 +61,5 @@ func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		return
 	}
 
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

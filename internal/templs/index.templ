@@ -91,6 +91,7 @@ templ latestReviewCard(r tmdbapi.Review) {
 				</p>
 				<i class="line-clamp-2" >{ fmt.Sprint(r.Review) }</i>
                 <p class="text-gray-500 mt-5 text-right">~ {r.UserName}</p>
+                <p class="text-gray-500 text-right">{r.CreatedAt}</p>
 			</div>
 		</li>
 	</a>

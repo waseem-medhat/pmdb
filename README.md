@@ -70,10 +70,11 @@ Application code:
 - **SQLC**: SQL-to-Go code generation tool
 - **Air**: live reloading
 
-External dependencies:
+External resources:
 
-- **Icônes**: SVG icons
-- **TMDB**: API for movie information
+- [**Icônes**](https://icones.js.org/): SVG icons
+- [**TMDB**](https://developer.themoviedb.org/docs/getting-started): API for
+movie information
 
 ## Contributing
 

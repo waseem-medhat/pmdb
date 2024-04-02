@@ -42,8 +42,16 @@ cp ~/.env.example .env
 goose turso "libsql://[DATABASE].turso.io?authToken=[TOKEN]" up
 ```
 
+- Compile the Tailwind CSS by running the `tw-build` NPM script. If you want to
+run the Tailwind watcher, you'll have to run the `tw-watch` script in a
+separate terminal.
+
+```bash
+npm run tw-build
+```
+
 - Run `air` (at the project root) which will compile and auto-reload the Go
-server, TailwindCSS, and Templ components.
+server and Templ components.
 
 ```bash
 air

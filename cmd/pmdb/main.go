@@ -10,9 +10,8 @@ import (
 	"time"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
+	"github.com/wipdev-tech/pmdb/internal/auth"
 	"github.com/wipdev-tech/pmdb/internal/database"
-	"github.com/wipdev-tech/pmdb/internal/router"
-	"github.com/wipdev-tech/pmdb/internal/service"
 )
 
 func main() {
@@ -27,9 +26,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	s := service.New()
-	s.DB = database.New(db)
-	r := router.New(s)
+	dbConn := database.New(db)
+
+	authService := auth.NewService(dbConn)
+	authMux := authService.NewRouter()
+
+	r := http.NewServeMux()
+	r.Handle("/users/", http.StripPrefix("/users", authMux))
 	server := &http.Server{
 		Handler:           r,
 		ReadHeaderTimeout: 5 * time.Second,

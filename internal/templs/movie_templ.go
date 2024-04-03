@@ -45,7 +45,7 @@ func Movie(data MovieData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(buildPosterURL(data.Details.PosterPath))
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(BuildPosterURL(data.Details.PosterPath))
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/movie.templ`, Line: 20, Col: 50}
 			}

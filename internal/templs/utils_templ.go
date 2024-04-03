@@ -15,7 +15,7 @@ import (
 	t "github.com/a-h/templ"
 )
 
-func buildPosterURL(posterPath string) string {
+func BuildPosterURL(posterPath string) string {
 	url := t.URL(fmt.Sprintf("https://image.tmdb.org/t/p/w500%v", posterPath))
 	return string(url)
 }

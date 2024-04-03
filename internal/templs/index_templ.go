@@ -224,7 +224,7 @@ func latestReviewCard(r tmdbapi.Review) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 string
-		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(buildPosterURL(r.PosterPath))
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(BuildPosterURL(r.PosterPath))
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 85, Col: 59}
 		}
@@ -361,7 +361,7 @@ func indexNowPlaying(movies []tmdbapi.NowPlayingMovie) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var18 string
-			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(buildPosterURL(movie.PosterPath))
+			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(BuildPosterURL(movie.PosterPath))
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templs/index.templ`, Line: 121, Col: 45}
 			}

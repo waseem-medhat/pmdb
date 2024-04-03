@@ -12,6 +12,7 @@ import (
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"github.com/wipdev-tech/pmdb/internal/auth"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/nowplaying"
 )
 
 func main() {
@@ -29,12 +30,13 @@ func main() {
 	dbConn := database.New(db)
 
 	authService := auth.NewService(dbConn)
-	authMux := authService.NewRouter()
+	nowPlayingService := nowplaying.NewService()
 
 	r := http.NewServeMux()
 	fs := http.FileServer(http.Dir("static"))
 	r.Handle("GET /static/", http.StripPrefix("/static/", fs))
-	r.Handle("/users/", http.StripPrefix("/users", authMux))
+	r.Handle("/users/", http.StripPrefix("/users", authService.NewRouter()))
+	r.Handle("/now-playing/", http.StripPrefix("/now-playing", nowPlayingService.NewRouter()))
 
 	server := &http.Server{
 		Handler:           r,

@@ -13,7 +13,6 @@ func New(s *service.Service) *http.ServeMux {
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("GET /{$}", s.HandleHome)
 
-	mux.HandleFunc("GET /profiles/{userName}", s.HandleProfilesGet)
 	mux.HandleFunc("GET /movies/{movieID}", s.HandleMoviesGet)
 
 	mux.HandleFunc("GET /reviews/new", s.MiddlewareAuth(s.HandleReviewsNewGet))

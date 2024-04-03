@@ -28,5 +28,7 @@ func (s *Service) NewRouter() *http.ServeMux {
 	mux.HandleFunc("POST /register", logger.Middleware(s.HandleRegisterPost, ""))
 	mux.HandleFunc("POST /register/validate", logger.Middleware(s.HandleRegisterValidate, "Register validator handler"))
 
+	mux.HandleFunc("GET /{userName}", s.HandleProfilesGet)
+
 	return mux
 }

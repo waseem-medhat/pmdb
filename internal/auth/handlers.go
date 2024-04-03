@@ -2,11 +2,13 @@ package auth
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -152,5 +154,27 @@ func (s *Service) HandleRegisterValidate(w http.ResponseWriter, r *http.Request)
 	err = RegisterErrors(RegisterData{ErrorMsgs: errorMsgs}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
+	userName := r.PathValue("userName")
+	dbUser, err := s.DB.GetUser(r.Context(), userName)
+	if err == sql.ErrNoRows {
+		errors.Render(w, http.StatusNotFound)
+		return
+	}
+
+	if err != nil {
+		fmt.Println("couldn't get user - ", err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+
+	err = Profile(ProfileData{User: dbUser}).Render(r.Context(), w)
+	if err != nil {
+		fmt.Println(err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
 	}
 }

@@ -113,21 +113,3 @@ func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-func (s *Service) HandleNowPlayingGet(w http.ResponseWriter, r *http.Request) {
-	nowPlaying, err := tmdbapi.GetNowPlaying(-1)
-	if err != nil {
-		renderError(w, http.StatusInternalServerError)
-		return
-	}
-
-	templData := templs.NowPlayingData{
-		NowPlaying: nowPlaying,
-	}
-
-	err = templs.NowPlaying(templData).Render(r.Context(), w)
-	if err != nil {
-		renderError(w, http.StatusInternalServerError)
-		return
-	}
-}

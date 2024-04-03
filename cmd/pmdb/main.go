@@ -32,7 +32,10 @@ func main() {
 	authMux := authService.NewRouter()
 
 	r := http.NewServeMux()
+	fs := http.FileServer(http.Dir("static"))
+	r.Handle("GET /static/", http.StripPrefix("/static/", fs))
 	r.Handle("/users/", http.StripPrefix("/users", authMux))
+
 	server := &http.Server{
 		Handler:           r,
 		ReadHeaderTimeout: 5 * time.Second,

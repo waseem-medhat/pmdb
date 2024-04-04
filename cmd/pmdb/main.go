@@ -2,15 +2,12 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
-	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"github.com/wipdev-tech/pmdb/internal/auth"
-	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/home"
 	"github.com/wipdev-tech/pmdb/internal/movies"
 	"github.com/wipdev-tech/pmdb/internal/nowplaying"
@@ -23,14 +20,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	connURL := fmt.Sprintf("%s?authToken=%s", env.dbURL, env.dbToken)
-	db, err := sql.Open("libsql", connURL)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dbConn := database.New(db)
-
+	dbConn := initDB(env.dbURL, env.dbToken)
 	authService := auth.NewService(dbConn, env.jwtSecret)
 	tmdbService := tmdbapi.NewService(env.tmdbToken)
 	nowPlayingService := nowplaying.NewService(tmdbService)

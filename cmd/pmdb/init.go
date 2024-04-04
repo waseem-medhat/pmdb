@@ -1,10 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
+	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
 type Env struct {
@@ -58,4 +62,14 @@ func loadEnv() (Env, error) {
 	}
 
 	return env, err
+}
+
+func initDB(dbURL, dbToken string) *database.Queries {
+	connURL := fmt.Sprintf("%s?authToken=%s", dbURL, dbToken)
+	db, err := sql.Open("libsql", connURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return database.New(db)
 }

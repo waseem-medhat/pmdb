@@ -10,9 +10,11 @@ import (
 	"time"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
+	"github.com/wipdev-tech/pmdb/internal/auth"
 	"github.com/wipdev-tech/pmdb/internal/database"
-	"github.com/wipdev-tech/pmdb/internal/router"
-	"github.com/wipdev-tech/pmdb/internal/service"
+	"github.com/wipdev-tech/pmdb/internal/home"
+	"github.com/wipdev-tech/pmdb/internal/movies"
+	"github.com/wipdev-tech/pmdb/internal/nowplaying"
 )
 
 func main() {
@@ -27,9 +29,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	s := service.New()
-	s.DB = database.New(db)
-	r := router.New(s)
+	dbConn := database.New(db)
+
+	authService := auth.NewService(dbConn)
+	nowPlayingService := nowplaying.NewService()
+	homeService := home.NewService(authService, dbConn)
+	movieService := movies.NewService(authService, dbConn)
+
+	r := http.NewServeMux()
+	fs := http.FileServer(http.Dir("static"))
+	r.Handle("GET /static/", http.StripPrefix("/static/", fs))
+	r.Handle("/", homeService.NewRouter())
+	r.Handle("/users/", http.StripPrefix("/users", authService.NewRouter()))
+	r.Handle("/now-playing/", http.StripPrefix("/now-playing", nowPlayingService.NewRouter()))
+	r.Handle("/movies/", http.StripPrefix("/movies", movieService.NewRouter()))
+
 	server := &http.Server{
 		Handler:           r,
 		ReadHeaderTimeout: 5 * time.Second,

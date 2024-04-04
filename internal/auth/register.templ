@@ -1,4 +1,6 @@
-package templs
+package auth
+
+import "github.com/wipdev-tech/pmdb/internal/templs"
 
 type RegisterData struct {
 	ErrorMsgs []string
@@ -9,10 +11,10 @@ type RegisterSuccessData struct {
 }
 
 templ Register(data RegisterData) {
-	@Page("Register") {
+	@templs.Page("Register") {
 		<form
 			id="register"
-			hx-post="/register"
+			hx-post="/users/register"
 			hx-target="this"
 			hx-swap="outerHTML"
 			hx-indicator="#ind"
@@ -21,14 +23,12 @@ templ Register(data RegisterData) {
 			<h3 class="text-2xl font-semibold mb-1">Register</h3>
 			<p>
 				Already have an account?
-				<a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
+				<a href="/users/login" class="text-blue-500 hover:text-blue-400">Log In</a>
 			</p>
 			<div class="grid md:grid-cols-[9rem_1fr] gap-2 max-w-xl my-5">
 				<label for="display-name">Full Name</label>
 				@registerInput("text", "display-name")
-				<label for="user-name">User Name</label>
-				@registerInput("text", "user-name")
-				<label for="password">Password</label>
+				<label for="user-name">User Name</label> @registerInput("text", "user-name") <label for="password">Password</label>
 				@registerInput("password", "password")
 				<label for="confirm-password">Confirm Password</label>
 				@registerInput("password", "confirm-password")
@@ -71,12 +71,12 @@ templ RegisterErrors(data RegisterData) {
 	</div>
 }
 
-templ RegisterSuccess(data RegisterSuccessData) {
+templ RegisterSuccessHX(data RegisterSuccessData) {
 	<h3 class="text-2xl font-semibold mb-1">Success!</h3>
 	<p>Welcome aboard, { data.DisplayName }!</p>
 	<p>
 		You can now
-		<a href="/login" class="text-blue-500 hover:text-blue-400">log in</a>.
+		<a href="/users/login" class="text-blue-500 hover:text-blue-400">log in</a>.
 	</p>
 }
 
@@ -90,7 +90,7 @@ templ registerInput(inputType, inputName string) {
 		hx-target="#check"
 		hx-swap="innerHTML"
 		hx-trigger="keyup changed delay:500ms"
-		hx-post="/register/validate"
+		hx-post="/users/register/validate"
 		hx-indicator="#ind"
 		required
 	/>

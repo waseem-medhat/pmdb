@@ -1,23 +1,24 @@
-package templs
+package movies
 
 import (
+	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 	t "github.com/a-h/templ"
 	"fmt"
 )
 
-type MovieData struct {
+type MoviePageData struct {
 	Details tmdbapi.MovieDetails
 	Cast    []tmdbapi.MovieCast
 }
 
-templ Movie(data MovieData) {
-	@Page(data.Details.Title) {
+templ MoviePage(data MoviePageData) {
+	@templs.Page(data.Details.Title) {
 		<div class="grid grid-cols-[1fr_2fr] gap-10 my-10">
 			<section>
 				<img
 					class="w-full"
-					src={ buildPosterURL(data.Details.PosterPath) }
+					src={ templs.BuildPosterURL(data.Details.PosterPath) }
 					alt={ data.Details.Title }
 				/>
 			</section>
@@ -42,7 +43,7 @@ templ Movie(data MovieData) {
 		</div>
 		<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
 			<div class="flex gap-2 items-center">
-				@iconReview()
+				@templs.IconReview()
 				PMDb Reviews
 			</div>
 		</h3>
@@ -50,11 +51,11 @@ templ Movie(data MovieData) {
 			None (yet).
 		</p>
 		<a
-			href={ t.URL(fmt.Sprintf("/reviews/new?movieId=%v", data.Details.ID)) }
+			href={ t.URL(fmt.Sprintf("/movies/%v/reviews/new", data.Details.ID)) }
 			class="rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max"
 		>
 			<div class="flex gap-2 items-center">
-				@iconAddReview()
+				@templs.IconAddReview()
 				Add a Review for { data.Details.Title }
 			</div>
 		</a>

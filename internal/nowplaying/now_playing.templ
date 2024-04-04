@@ -1,4 +1,6 @@
-package templs
+package nowplaying
+
+import "github.com/wipdev-tech/pmdb/internal/templs"
 
 import (
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
@@ -11,7 +13,7 @@ type NowPlayingData struct {
 }
 
 templ NowPlaying(data NowPlayingData) {
-	@Page("Now Playing") {
+	@templs.Page("Now Playing") {
 		<ul class="flex flex-col gap-8">
 			for _, movie := range data.NowPlaying {
 				@nowPlayingCard(movie)
@@ -29,7 +31,7 @@ templ nowPlayingCard(movie tmdbapi.NowPlayingMovie) {
 			<section>
 				<img
 					class="rounded"
-					src={ buildPosterURL(movie.PosterPath) }
+					src={ templs.BuildPosterURL(movie.PosterPath) }
 					alt={ movie.Title }
 				/>
 			</section>

@@ -1,28 +1,29 @@
-package templs
+package home
 
 import (
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 	t "github.com/a-h/templ"
 	"fmt"
 )
 
-type IndexData struct {
+type IndexPageData struct {
 	LoggedIn   bool
 	User       database.GetUserRow
 	NowPlaying []tmdbapi.NowPlayingMovie
 	Reviews    []tmdbapi.Review
 }
 
-templ Index(data IndexData) {
-	@Page("Home") {
+templ IndexPage(data IndexPageData) {
+	@templs.Page("Home") {
 		@indexWelcomeMessage(data)
 		@indexLatestReviews(data.Reviews)
 		@indexNowPlaying(data.NowPlaying)
 	}
 }
 
-templ indexWelcomeMessage(data IndexData) {
+templ indexWelcomeMessage(data IndexPageData) {
 	<section class="mt-5 mb-10 text-gray-200 rounded-lg bg-sky-800 bg-opacity-10">
 		<blockquote class="px-5 py-7 my-3 border-l-4 border-sky-400">
 			if data.LoggedIn {
@@ -46,13 +47,13 @@ templ indexWelcomeMessage(data IndexData) {
 					</button>
 				} else {
 					<a
-						href="/register"
+						href="/users/register"
 						class="rounded px-3 py-1 bg-blue-600 disabled:opacity-50 hover:bg-blue-500 text-white"
 					>
 						Join PMDb
 					</a>
 					or
-					<a href="/login" class="text-blue-500 hover:text-blue-400">Log In</a>
+					<a href="/users/login" class="text-blue-500 hover:text-blue-400">Log In</a>
 				}
 			</div>
 		</blockquote>
@@ -64,7 +65,7 @@ templ indexLatestReviews(reviews []tmdbapi.Review) {
 		<a href="/reviews">
 			<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
 				<div class="flex gap-2 items-center">
-					@iconReview()
+					@templs.IconReview()
 					Latest Public Reviews
 				</div>
 				<p class="text-sm">Open the Feed</p>
@@ -82,16 +83,16 @@ templ latestReviewCard(r tmdbapi.Review) {
 	<a href={ t.SafeURL(fmt.Sprintf("/reviews/%v", r.ID)) }>
 		<li class="rounded-lg bg-white bg-opacity-10 hover:bg-opacity-15 transition p-5 flex gap-5 items-center h-48">
 			<div class="w-24">
-				<img class="rounded" src={ buildPosterURL(r.PosterPath) }/>
+				<img class="rounded" src={ templs.BuildPosterURL(r.PosterPath) }/>
 			</div>
 			<div class="w-48 h-full">
 				<p class="text-2xl font-bold">{ r.Title }</p>
 				<p class="text-lg">
 					<span class="text-primary font-bold text-2xl">{ fmt.Sprint(r.Rating) }</span><span>/10</span>
 				</p>
-				<i class="line-clamp-2" >{ fmt.Sprint(r.Review) }</i>
-                <p class="text-gray-500 mt-5 text-right">~ {r.UserName}</p>
-                <p class="text-gray-500 text-right">{r.CreatedAt}</p>
+				<i class="line-clamp-2">{ fmt.Sprint(r.Review) }</i>
+				<p class="text-gray-500 mt-5 text-right">~ { r.UserName }</p>
+				<p class="text-gray-500 text-right">{ r.CreatedAt }</p>
 			</div>
 		</li>
 	</a>
@@ -118,7 +119,7 @@ templ indexNowPlaying(movies []tmdbapi.NowPlayingMovie) {
 						<img
 							class="rounded"
 							width="200"
-							src={ buildPosterURL(movie.PosterPath) }
+							src={ templs.BuildPosterURL(movie.PosterPath) }
 							alt="poster_path"
 						/>
 					</li>
@@ -126,4 +127,13 @@ templ indexNowPlaying(movies []tmdbapi.NowPlayingMovie) {
 			}
 		</ul>
 	</section>
+}
+
+templ iconPlay() {
+	<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
+		<path
+			fill="currentColor"
+			d="M10 15.577L15.577 12L10 8.423zM4.615 19q-.69 0-1.152-.462Q3 18.075 3 17.385V6.615q0-.69.463-1.152Q3.925 5 4.615 5h14.77q.69 0 1.152.463q.463.462.463 1.152v10.77q0 .69-.462 1.152q-.463.463-1.153.463z"
+		></path>
+	</svg>
 }

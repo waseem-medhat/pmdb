@@ -1,7 +1,6 @@
 package service
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 	"sync"
@@ -9,44 +8,6 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
-
-// HandleHome is the handler for the home route ("/")
-func (s *Service) HandleHome(w http.ResponseWriter, r *http.Request) {
-	dbUser, err := s.authJWTCookie(r)
-	if err != nil && err != http.ErrNoCookie && err != sql.ErrNoRows {
-		renderError(w, http.StatusInternalServerError)
-		return
-	}
-	loggedIn := err == nil
-
-	nowPlaying, err := tmdbapi.GetNowPlaying(5)
-	if err != nil {
-		fmt.Println(err)
-		renderError(w, http.StatusInternalServerError)
-		return
-	}
-
-	reviews, err := s.DB.GetReviews(r.Context())
-	if err != nil {
-		fmt.Println(err)
-		renderError(w, http.StatusInternalServerError)
-		return
-	}
-
-	templData := templs.IndexData{
-		LoggedIn:   loggedIn,
-		User:       dbUser,
-		NowPlaying: nowPlaying,
-		Reviews:    getReviewData(reviews),
-	}
-
-	err = templs.Index(templData).Render(r.Context(), w)
-	if err != nil {
-		fmt.Println(err)
-		renderError(w, http.StatusInternalServerError)
-		return
-	}
-}
 
 func (s *Service) HandleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	movieID := r.PathValue("movieID")

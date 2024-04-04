@@ -45,9 +45,9 @@ func createCookie(name, val, path string, maxAgeSec int) *http.Cookie {
 	}
 }
 
-// authJWTCookie checks the request's cookies for an access token and tries to
+// AuthJWTCookie checks the request's cookies for an access token and tries to
 // authenticate the user who owns the JWT.
-func (s *Service) authJWTCookie(r *http.Request) (database.GetUserRow, error) {
+func (s *Service) AuthJWTCookie(r *http.Request) (database.GetUserRow, error) {
 	dbUser := database.GetUserRow{}
 	claims := &jwt.RegisteredClaims{}
 	keyfunc := func(toke *jwt.Token) (interface{}, error) {

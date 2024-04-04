@@ -3,6 +3,7 @@ package tmdbapi
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -80,4 +81,43 @@ func sortByPopularity(a, b NowPlayingMovie) int {
 		return -1
 	}
 	return 0
+}
+
+// GetReviewMovieDetails takes a slice of DB reviews and attached the TMDB data
+// to them.
+func GetReviewMovieDetails(reviews []database.GetReviewsRow) []Review {
+	type newDetails struct {
+		title      string
+		posterPath string
+	}
+
+	tmdbData := map[string]newDetails{}
+	for _, r := range reviews {
+		if _, ok := tmdbData[r.MovieTmdbID]; ok {
+			continue
+		}
+
+		details, err := GetMovieDetails(r.MovieTmdbID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		tmdbData[r.MovieTmdbID] = newDetails{
+			title:      details.Title,
+			posterPath: details.PosterPath,
+		}
+	}
+
+	newReviews := make([]Review, 0, len(reviews))
+	for _, r := range reviews {
+		details := tmdbData[r.MovieTmdbID]
+		newReview := Review{
+			GetReviewsRow: r,
+			Title:         details.title,
+			PosterPath:    details.posterPath,
+		}
+		newReviews = append(newReviews, newReview)
+	}
+
+	return newReviews
 }

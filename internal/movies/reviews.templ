@@ -30,7 +30,7 @@ templ NewReviewPage(data NewReviewPageData) {
 				</a>
 			</div>
 		</div>
-		<form hx-post="/reviews/new" hx-swap="none">
+		<form hx-post={ fmt.Sprintf("/movies/%v/reviews/new", data.Movie.ID) } hx-swap="none">
 			<div class="flex flex-col gap-2">
 				<label>How was the movie?</label>
 				<div class="text-2xl font-bold text-primary">

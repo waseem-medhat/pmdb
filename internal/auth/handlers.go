@@ -45,7 +45,7 @@ func (s *Service) handleLoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	access, err := generateJWTAccess(userName)
+	access, err := s.generateJWTAccess(userName)
 	if err != nil {
 		log.Fatal(err)
 	}

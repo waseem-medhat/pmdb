@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
@@ -18,12 +17,12 @@ import (
 )
 
 func main() {
-	dbURL, dbToken, err := getDBEnv()
+	env, err := loadEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	connURL := fmt.Sprintf("%s?authToken=%s", dbURL, dbToken)
+	connURL := fmt.Sprintf("%s?authToken=%s", env.dbURL, env.dbToken)
 	db, err := sql.Open("libsql", connURL)
 	if err != nil {
 		log.Fatal(err)
@@ -31,7 +30,7 @@ func main() {
 
 	dbConn := database.New(db)
 
-	authService := auth.NewService(dbConn)
+	authService := auth.NewService(dbConn, env.jwtSecret)
 	nowPlayingService := nowplaying.NewService()
 	homeService := home.NewService(authService, dbConn)
 	movieService := movies.NewService(authService, dbConn)
@@ -50,12 +49,12 @@ func main() {
 	}
 
 	fmt.Println("PMDb server let's Go! ")
-	if os.Getenv("ENV") == "dev" {
-		fmt.Println("Dev server started and running at http://localhost:8080")
-		server.Addr = "localhost:8080"
+	if env.dev {
+		fmt.Println("Dev server started and running at http://localhost:" + env.port)
+		server.Addr = "localhost:" + env.port
 	} else {
 		fmt.Println("Server started and running")
-		server.Addr = "0.0.0.0:" + os.Getenv("PORT")
+		server.Addr = "0.0.0.0:" + env.port
 	}
 	log.Fatal(server.ListenAndServe())
 }

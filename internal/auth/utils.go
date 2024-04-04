@@ -4,14 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
-func generateJWTAccess(userName string) (string, error) {
+func (s *Service) generateJWTAccess(userName string) (string, error) {
 	access := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
 		jwt.RegisteredClaims{
@@ -22,7 +21,7 @@ func generateJWTAccess(userName string) (string, error) {
 		},
 	)
 
-	accessStr, err := access.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	accessStr, err := access.SignedString([]byte(s.jwtSecretEnv))
 	if err != nil {
 		return accessStr, fmt.Errorf("couldn't sign access jwt - %v", err)
 	}
@@ -51,7 +50,7 @@ func (s *Service) AuthJWTCookie(r *http.Request) (database.GetUserRow, error) {
 	dbUser := database.GetUserRow{}
 	claims := &jwt.RegisteredClaims{}
 	keyfunc := func(toke *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
+		return []byte(s.jwtSecretEnv), nil
 	}
 
 	accessCookie, err := r.Cookie("pmdb-jwt-access")

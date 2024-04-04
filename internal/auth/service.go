@@ -8,12 +8,14 @@ import (
 )
 
 type Service struct {
-	db *database.Queries
+	db           *database.Queries
+	jwtSecretEnv string
 }
 
-func NewService(db *database.Queries) *Service {
+func NewService(db *database.Queries, jwtSecret string) *Service {
 	return &Service{
-		db: db,
+		db:           db,
+		jwtSecretEnv: jwtSecret,
 	}
 }
 

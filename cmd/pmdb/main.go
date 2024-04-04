@@ -14,6 +14,7 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/home"
 	"github.com/wipdev-tech/pmdb/internal/movies"
 	"github.com/wipdev-tech/pmdb/internal/nowplaying"
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
 func main() {
@@ -31,9 +32,10 @@ func main() {
 	dbConn := database.New(db)
 
 	authService := auth.NewService(dbConn, env.jwtSecret)
-	nowPlayingService := nowplaying.NewService()
-	homeService := home.NewService(authService, dbConn)
-	movieService := movies.NewService(authService, dbConn)
+	tmdbService := tmdbapi.NewService(env.tmdbToken)
+	nowPlayingService := nowplaying.NewService(tmdbService)
+	homeService := home.NewService(authService, tmdbService, dbConn)
+	movieService := movies.NewService(authService, tmdbService, dbConn)
 
 	r := http.NewServeMux()
 	fs := http.FileServer(http.Dir("static"))

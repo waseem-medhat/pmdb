@@ -14,12 +14,14 @@ import (
 
 type Service struct {
 	auth *auth.Service
+	tmdb *tmdbapi.Service
 	db   *database.Queries
 }
 
-func NewService(auth *auth.Service, db *database.Queries) *Service {
+func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries) *Service {
 	return &Service{
 		auth: auth,
+		tmdb: tmdb,
 		db:   db,
 	}
 }
@@ -41,7 +43,7 @@ func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
 	}
 	loggedIn := err == nil
 
-	nowPlaying, err := tmdbapi.GetNowPlaying(5)
+	nowPlaying, err := s.tmdb.GetNowPlaying(5)
 	if err != nil {
 		fmt.Println(err)
 		errors.Render(w, http.StatusInternalServerError)
@@ -59,7 +61,7 @@ func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
 		LoggedIn:   loggedIn,
 		User:       dbUser,
 		NowPlaying: nowPlaying,
-		Reviews:    tmdbapi.GetReviewMovieDetails(reviews),
+		Reviews:    s.tmdb.GetReviewMovieDetails(reviews),
 	}
 
 	err = IndexPage(templData).Render(r.Context(), w)

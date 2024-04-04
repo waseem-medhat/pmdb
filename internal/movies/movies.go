@@ -17,12 +17,14 @@ import (
 
 type Service struct {
 	auth *auth.Service
+	tmdb *tmdbapi.Service
 	db   *database.Queries
 }
 
-func NewService(auth *auth.Service, db *database.Queries) *Service {
+func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries) *Service {
 	return &Service{
 		auth: auth,
+		tmdb: tmdb,
 		db:   db,
 	}
 }
@@ -46,7 +48,7 @@ func (s *Service) handleMoviesGet(w http.ResponseWriter, r *http.Request) {
 
 	var fetchErr error
 	go func() {
-		movieDetails, err := tmdbapi.GetMovieDetails(movieID)
+		movieDetails, err := s.tmdb.GetMovieDetails(movieID)
 		if err != nil {
 			fetchErr = err
 		}
@@ -55,7 +57,7 @@ func (s *Service) handleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	go func() {
-		movieCast, err := tmdbapi.GetMovieCast(movieID)
+		movieCast, err := s.tmdb.GetMovieCast(movieID)
 		if err != nil {
 			fetchErr = err
 		}
@@ -88,7 +90,7 @@ func (s *Service) HandleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ 
 		return
 	}
 
-	movieDetails, err := tmdbapi.GetMovieDetails(movieID)
+	movieDetails, err := s.tmdb.GetMovieDetails(movieID)
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 		return

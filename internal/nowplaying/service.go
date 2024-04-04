@@ -9,10 +9,13 @@ import (
 )
 
 type Service struct {
+	tmdb *tmdbapi.Service
 }
 
-func NewService() *Service {
-	return &Service{}
+func NewService(tmdb *tmdbapi.Service) *Service {
+	return &Service{
+		tmdb: tmdb,
+	}
 }
 
 func (s *Service) NewRouter() *http.ServeMux {
@@ -24,7 +27,7 @@ func (s *Service) NewRouter() *http.ServeMux {
 }
 
 func (s *Service) handleNowPlayingGet(w http.ResponseWriter, r *http.Request) {
-	nowPlaying, err := tmdbapi.GetNowPlaying(-1)
+	nowPlaying, err := s.tmdb.GetNowPlaying(-1)
 	if err != nil {
 		errors.Render(w, http.StatusInternalServerError)
 		return

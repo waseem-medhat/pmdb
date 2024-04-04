@@ -84,9 +84,9 @@ type MovieCast struct {
 }
 
 // GetMovieDetails makes the call to the Movie Details API
-func GetMovieDetails(movieID string) (MovieDetails, error) {
+func (s *Service) GetMovieDetails(movieID string) (MovieDetails, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s?language=en-US", movieID)
-	responseBody, err := callAPI(url)
+	responseBody, err := s.callAPI(url)
 	if IsNotFound(err) {
 		return MovieDetails{}, err
 	}
@@ -103,9 +103,9 @@ func GetMovieDetails(movieID string) (MovieDetails, error) {
 }
 
 // GetMovieCast makes the call to the Movie Credits API
-func GetMovieCast(movieID string) ([]MovieCast, error) {
+func (s *Service) GetMovieCast(movieID string) ([]MovieCast, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s/credits", movieID)
-	responseBody, err := callAPI(url)
+	responseBody, err := s.callAPI(url)
 	if IsNotFound(err) {
 		return []MovieCast{}, err
 	}

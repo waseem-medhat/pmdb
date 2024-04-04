@@ -16,14 +16,14 @@ import (
 )
 
 type Service struct {
-	Auth *auth.Service
-	DB   *database.Queries
+	auth *auth.Service
+	db   *database.Queries
 }
 
 func NewService(auth *auth.Service, db *database.Queries) *Service {
 	return &Service{
-		Auth: auth,
-		DB:   db,
+		auth: auth,
+		db:   db,
 	}
 }
 
@@ -31,8 +31,8 @@ func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /{movieID}", logger.Middleware(s.handleMoviesGet, "Movies (GET) handler"))
-	mux.HandleFunc("GET /{movieID}/reviews/new", s.Auth.MiddlewareAuth(s.HandleReviewsNewGet))
-	mux.HandleFunc("POST /{movieID}/reviews/new", s.Auth.MiddlewareAuth(s.HandleReviewsNewPost))
+	mux.HandleFunc("GET /{movieID}/reviews/new", s.auth.MiddlewareAuth(s.HandleReviewsNewGet))
+	mux.HandleFunc("POST /{movieID}/reviews/new", s.auth.MiddlewareAuth(s.HandleReviewsNewPost))
 
 	return mux
 }
@@ -122,7 +122,7 @@ func (s *Service) HandleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		publicReview = 1
 	}
 
-	_, err = s.DB.CreateReview(r.Context(), database.CreateReviewParams{
+	_, err = s.db.CreateReview(r.Context(), database.CreateReviewParams{
 		ID:           uuid.NewString(),
 		CreatedAt:    time.Now().Format(timeLayout),
 		UpdatedAt:    time.Now().Format(timeLayout),

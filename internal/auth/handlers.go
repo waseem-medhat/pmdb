@@ -23,7 +23,7 @@ func (s *Service) handleLoginPost(w http.ResponseWriter, r *http.Request) {
 	userName := r.FormValue("user-name")
 	password := r.FormValue("password")
 
-	dbUser, err := s.DB.GetUserForLogin(r.Context(), userName)
+	dbUser, err := s.db.GetUserForLogin(r.Context(), userName)
 	if err == sql.ErrNoRows {
 		err := ErrorAlert(LoginPageData{LoginError: true}).Render(r.Context(), w)
 		if err != nil {
@@ -99,7 +99,7 @@ func (s *Service) HandleRegisterPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbUser, err := s.DB.CreateUser(r.Context(), database.CreateUserParams{
+	dbUser, err := s.db.CreateUser(r.Context(), database.CreateUserParams{
 		ID:          uuid.NewString(),
 		UserName:    userName,
 		DisplayName: displayName,
@@ -125,7 +125,7 @@ func (s *Service) HandleRegisterValidate(w http.ResponseWriter, r *http.Request)
 		errorMsgs = append(errorMsgs, "Full name shouldn't be empty.")
 	}
 
-	dbUsers, err := s.DB.ListUsers(r.Context())
+	dbUsers, err := s.db.ListUsers(r.Context())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -159,7 +159,7 @@ func (s *Service) HandleRegisterValidate(w http.ResponseWriter, r *http.Request)
 
 func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
 	userName := r.PathValue("userName")
-	dbUser, err := s.DB.GetUser(r.Context(), userName)
+	dbUser, err := s.db.GetUser(r.Context(), userName)
 	if err == sql.ErrNoRows {
 		errors.Render(w, http.StatusNotFound)
 		return

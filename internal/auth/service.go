@@ -8,12 +8,12 @@ import (
 )
 
 type Service struct {
-	DB *database.Queries
+	db *database.Queries
 }
 
 func NewService(db *database.Queries) *Service {
 	return &Service{
-		DB: db,
+		db: db,
 	}
 }
 

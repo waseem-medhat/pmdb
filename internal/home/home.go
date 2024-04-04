@@ -13,14 +13,14 @@ import (
 )
 
 type Service struct {
-	Auth *auth.Service
-	DB   *database.Queries
+	auth *auth.Service
+	db   *database.Queries
 }
 
 func NewService(auth *auth.Service, db *database.Queries) *Service {
 	return &Service{
-		Auth: auth,
-		DB:   db,
+		auth: auth,
+		db:   db,
 	}
 }
 
@@ -34,7 +34,7 @@ func (s *Service) NewRouter() *http.ServeMux {
 
 // HandleHome is the handler for the home route ("/")
 func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
-	dbUser, err := s.Auth.AuthJWTCookie(r)
+	dbUser, err := s.auth.AuthJWTCookie(r)
 	if err != nil && err != http.ErrNoCookie && err != sql.ErrNoRows {
 		errors.Render(w, http.StatusInternalServerError)
 		return
@@ -48,7 +48,7 @@ func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reviews, err := s.DB.GetReviews(r.Context())
+	reviews, err := s.db.GetReviews(r.Context())
 	if err != nil {
 		fmt.Println(err)
 		errors.Render(w, http.StatusInternalServerError)

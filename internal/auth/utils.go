@@ -72,7 +72,7 @@ func (s *Service) AuthJWTCookie(r *http.Request) (database.GetUserRow, error) {
 		return dbUser, fmt.Errorf("couldn't get jwt subject - %v", err)
 	}
 
-	dbUser, err = s.DB.GetUser(r.Context(), userName)
+	dbUser, err = s.db.GetUser(r.Context(), userName)
 	if err == sql.ErrNoRows {
 		return dbUser, err
 	}

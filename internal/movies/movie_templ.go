@@ -164,7 +164,7 @@ func MoviePage(data MoviePageData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var10 templ.SafeURL = t.URL(fmt.Sprintf("/reviews/new?movieId=%v", data.Details.ID))
+			var templ_7745c5c3_Var10 templ.SafeURL = t.URL(fmt.Sprintf("/movies/%v/reviews/new", data.Details.ID))
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var10)))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

@@ -34,7 +34,7 @@ func main() {
 	authService := auth.NewService(dbConn)
 	nowPlayingService := nowplaying.NewService()
 	homeService := home.NewService(authService, dbConn)
-	movieService := movies.NewService()
+	movieService := movies.NewService(authService, dbConn)
 
 	r := http.NewServeMux()
 	fs := http.FileServer(http.Dir("static"))

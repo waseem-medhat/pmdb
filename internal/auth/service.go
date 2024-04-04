@@ -32,3 +32,17 @@ func (s *Service) NewRouter() *http.ServeMux {
 
 	return mux
 }
+
+func (s *Service) MiddlewareAuth(h func(http.ResponseWriter, *http.Request, database.GetUserRow)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		dbUser, err := s.AuthJWTCookie(r)
+		if err != nil {
+			cookie := createCookie("pmdb-requested-url", r.RequestURI, "/users/login", 3600)
+			http.SetCookie(w, cookie)
+			http.Redirect(w, r, "/users/login", http.StatusSeeOther)
+			return
+		}
+
+		h(w, r, dbUser)
+	}
+}

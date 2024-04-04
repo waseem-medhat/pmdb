@@ -61,7 +61,7 @@ func (s *Service) handleLoginPost(w http.ResponseWriter, r *http.Request) {
 		redirectTo = redirectCookie.Value
 	}
 
-	newRedirectCookie := createCookie("pmdb-requested-url", "", "/login", -1)
+	newRedirectCookie := createCookie("pmdb-requested-url", "", "/users/login", -1)
 	http.SetCookie(w, newRedirectCookie)
 	w.Header().Set("HX-Redirect", redirectTo)
 	w.WriteHeader(http.StatusFound)

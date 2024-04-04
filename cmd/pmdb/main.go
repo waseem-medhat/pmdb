@@ -13,6 +13,7 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/auth"
 	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/home"
+	"github.com/wipdev-tech/pmdb/internal/movies"
 	"github.com/wipdev-tech/pmdb/internal/nowplaying"
 )
 
@@ -33,6 +34,7 @@ func main() {
 	authService := auth.NewService(dbConn)
 	nowPlayingService := nowplaying.NewService()
 	homeService := home.NewService(authService, dbConn)
+	movieService := movies.NewService()
 
 	r := http.NewServeMux()
 	fs := http.FileServer(http.Dir("static"))
@@ -40,6 +42,7 @@ func main() {
 	r.Handle("/", homeService.NewRouter())
 	r.Handle("/users/", http.StripPrefix("/users", authService.NewRouter()))
 	r.Handle("/now-playing/", http.StripPrefix("/now-playing", nowPlayingService.NewRouter()))
+	r.Handle("/movies/", http.StripPrefix("/movies", movieService.NewRouter()))
 
 	server := &http.Server{
 		Handler:           r,

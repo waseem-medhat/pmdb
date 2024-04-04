@@ -9,12 +9,6 @@ import (
 func New(s *service.Service) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	fs := http.FileServer(http.Dir("static"))
-	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
-	mux.HandleFunc("GET /{$}", s.HandleHome)
-
-	mux.HandleFunc("GET /movies/{movieID}", s.HandleMoviesGet)
-
 	mux.HandleFunc("GET /reviews/new", s.MiddlewareAuth(s.HandleReviewsNewGet))
 	mux.HandleFunc("POST /reviews/new", s.MiddlewareAuth(s.HandleReviewsNewPost))
 

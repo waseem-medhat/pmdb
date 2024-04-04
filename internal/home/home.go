@@ -27,7 +27,7 @@ func NewService(auth *auth.Service, db *database.Queries) *Service {
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /{$}", logger.Middleware(s.handleHomeGet, "Now Playing (GET) handler"))
+	mux.HandleFunc("GET /{$}", logger.Middleware(s.handleHomeGet, "Home (GET) handler"))
 
 	return mux
 }

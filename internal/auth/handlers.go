@@ -75,14 +75,14 @@ func (s *Service) handleLogoutPost(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusFound)
 }
 
-func (s *Service) HandleRegisterGet(w http.ResponseWriter, r *http.Request) {
+func (s *Service) handleRegisterGet(w http.ResponseWriter, r *http.Request) {
 	err := Register(RegisterData{ErrorMsgs: []string{}}).Render(r.Context(), w)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func (s *Service) HandleRegisterPost(w http.ResponseWriter, r *http.Request) {
+func (s *Service) handleRegisterPost(w http.ResponseWriter, r *http.Request) {
 	displayName := r.PostFormValue("display-name")
 	userName := r.PostFormValue("user-name")
 	password := r.PostFormValue("password")
@@ -117,7 +117,7 @@ func (s *Service) HandleRegisterPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Service) HandleRegisterValidate(w http.ResponseWriter, r *http.Request) {
+func (s *Service) handleRegisterValidate(w http.ResponseWriter, r *http.Request) {
 	errorMsgs := []string{}
 
 	inDisplayName := r.PostFormValue("display-name")
@@ -157,7 +157,7 @@ func (s *Service) HandleRegisterValidate(w http.ResponseWriter, r *http.Request)
 	}
 }
 
-func (s *Service) HandleProfilesGet(w http.ResponseWriter, r *http.Request) {
+func (s *Service) handleProfilesGet(w http.ResponseWriter, r *http.Request) {
 	userName := r.PathValue("userName")
 	dbUser, err := s.db.GetUser(r.Context(), userName)
 	if err == sql.ErrNoRows {

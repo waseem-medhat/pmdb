@@ -11,7 +11,7 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
-type Env struct {
+type environment struct {
 	dev       bool
 	dbURL     string
 	dbToken   string
@@ -20,8 +20,8 @@ type Env struct {
 	port      string
 }
 
-func loadEnv() (Env, error) {
-	var env Env
+func loadEnv() (environment, error) {
+	var env environment
 	err := godotenv.Load()
 
 	// In the Render prod deployment there is no .env by design

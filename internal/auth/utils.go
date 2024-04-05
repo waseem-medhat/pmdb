@@ -49,7 +49,7 @@ func createCookie(name, val, path string, maxAgeSec int) *http.Cookie {
 func (s *Service) AuthJWTCookie(r *http.Request) (database.GetUserRow, error) {
 	dbUser := database.GetUserRow{}
 	claims := &jwt.RegisteredClaims{}
-	keyfunc := func(toke *jwt.Token) (interface{}, error) {
+	keyfunc := func(_ *jwt.Token) (interface{}, error) {
 		return []byte(s.jwtSecretEnv), nil
 	}
 

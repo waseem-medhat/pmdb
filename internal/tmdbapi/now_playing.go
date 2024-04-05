@@ -24,7 +24,7 @@ type NowPlayingMovie struct {
 	ReleaseDate string  `json:"release_date"`
 	Title       string  `json:"title"`
 	Overview    string  `json:"overview"`
-	GenreIds    []int   `json:"genre_ids"`
+	GenreIDs    []int   `json:"genre_ids"`
 	// Adult        bool   `json:"adult"`
 	// BackdropPath string `json:"backdrop_path"`
 	// OriginalLanguage string `json:"original_language"`

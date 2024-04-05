@@ -50,6 +50,7 @@ type MovieDetails struct {
 	// VoteCount   int     `json:"vote_count"`
 }
 
+// MovieCredits represents the cast data received from the TMDB API
 type MovieCredits struct {
 	ID   int         `json:"id"`
 	Cast []MovieCast `json:"cast"`
@@ -68,6 +69,7 @@ type MovieCredits struct {
 	// } `json:"crew"`
 }
 
+// MovieCast represents data for a single cast as received from the TMDB API
 type MovieCast struct {
 	ID           int     `json:"id"`
 	Name         string  `json:"name"`

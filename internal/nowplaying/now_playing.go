@@ -1,3 +1,5 @@
+// Package nowplaying defines the service used for the now playing page,
+// including related routes, handlers, and templates.
 package nowplaying
 
 import (
@@ -8,16 +10,20 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
+// Service holds the router, handlers, and functions related to the now playing
+// page. Fields should be private to prevent access by other services.
 type Service struct {
 	tmdb *tmdbapi.Service
 }
 
+// NewService is the constructor function for creating the now playing service.
 func NewService(tmdb *tmdbapi.Service) *Service {
 	return &Service{
 		tmdb: tmdb,
 	}
 }
 
+// NewRouter creates a http.Handler with the route for the now playing page.
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 

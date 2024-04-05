@@ -1,3 +1,5 @@
+// Package tmdbapi defines the service used for interacting with the TMDB API
+// for retrieving movie data.
 package tmdbapi
 
 import (
@@ -9,18 +11,21 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
+// Service holds the functions needed to consume the TMDB API. Fields should be
+// private to prevent access by other services.
 type Service struct {
 	tmdbTokenEnv string
 }
 
-// Review is a type  that extends the DB review data by adding the external
-// TMDB API data needed before rendering.
+// Review is a type that extends the DB review data by adding the external TMDB
+// API data needed before rendering.
 type Review struct {
 	database.GetReviewsRow
 	Title      string
 	PosterPath string
 }
 
+// NewService is the constructor function for creating the TMDB API service.
 func NewService(tmdbToken string) *Service {
 	return &Service{
 		tmdbTokenEnv: tmdbToken,
@@ -52,6 +57,8 @@ var GenreMap = map[int]string{
 	37:    "Western",
 }
 
+// IsNotFound checks if the error returned form a TMDB API call is a "not
+// found" error
 func IsNotFound(err error) bool {
 	return err != nil && err.Error() == "not found"
 }

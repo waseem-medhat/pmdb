@@ -1,3 +1,5 @@
+// Package home defines the service used for the home page, including related
+// routes, handlers, and templates.
 package home
 
 import (
@@ -12,18 +14,24 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
+// Service holds the router, handlers, and functions related to the home page.
+// Fields should be private to prevent access by other services.
 type Service struct {
 	auth *auth.Service
+	tmdb *tmdbapi.Service
 	db   *database.Queries
 }
 
-func NewService(auth *auth.Service, db *database.Queries) *Service {
+// NewService is the constructor function for creating the home page service.
+func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries) *Service {
 	return &Service{
 		auth: auth,
+		tmdb: tmdb,
 		db:   db,
 	}
 }
 
+// NewRouter creates a http.Handler with the route for the home page.
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
@@ -41,7 +49,7 @@ func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
 	}
 	loggedIn := err == nil
 
-	nowPlaying, err := tmdbapi.GetNowPlaying(5)
+	nowPlaying, err := s.tmdb.GetNowPlaying(5)
 	if err != nil {
 		fmt.Println(err)
 		errors.Render(w, http.StatusInternalServerError)
@@ -59,7 +67,7 @@ func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
 		LoggedIn:   loggedIn,
 		User:       dbUser,
 		NowPlaying: nowPlaying,
-		Reviews:    tmdbapi.GetReviewMovieDetails(reviews),
+		Reviews:    s.tmdb.GetReviewMovieDetails(reviews),
 	}
 
 	err = IndexPage(templData).Render(r.Context(), w)

@@ -39,7 +39,7 @@ templ nowPlayingCard(movie tmdbapi.NowPlayingMovie) {
 				<div class="mb-8">
 					<h1 class="text-5xl font-semibold mb-4">{ movie.Title }</h1>
 					<ul class="flex gap-2">
-						for _, genreId := range movie.GenreIds {
+						for _, genreId := range movie.GenreIDs {
 							<li class="px-2 border border-primary text-primary rounded-lg text-sm">
 								{ tmdbapi.GenreMap[genreId] }
 							</li>

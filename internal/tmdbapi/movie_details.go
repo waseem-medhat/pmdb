@@ -50,6 +50,7 @@ type MovieDetails struct {
 	// VoteCount   int     `json:"vote_count"`
 }
 
+// MovieCredits represents the cast data received from the TMDB API
 type MovieCredits struct {
 	ID   int         `json:"id"`
 	Cast []MovieCast `json:"cast"`
@@ -68,6 +69,7 @@ type MovieCredits struct {
 	// } `json:"crew"`
 }
 
+// MovieCast represents data for a single cast as received from the TMDB API
 type MovieCast struct {
 	ID           int     `json:"id"`
 	Name         string  `json:"name"`
@@ -84,9 +86,9 @@ type MovieCast struct {
 }
 
 // GetMovieDetails makes the call to the Movie Details API
-func GetMovieDetails(movieID string) (MovieDetails, error) {
+func (s *Service) GetMovieDetails(movieID string) (MovieDetails, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s?language=en-US", movieID)
-	responseBody, err := callAPI(url)
+	responseBody, err := s.callAPI(url)
 	if IsNotFound(err) {
 		return MovieDetails{}, err
 	}
@@ -103,9 +105,9 @@ func GetMovieDetails(movieID string) (MovieDetails, error) {
 }
 
 // GetMovieCast makes the call to the Movie Credits API
-func GetMovieCast(movieID string) ([]MovieCast, error) {
+func (s *Service) GetMovieCast(movieID string) ([]MovieCast, error) {
 	url := fmt.Sprintf("https://api.themoviedb.org/3/movie/%s/credits", movieID)
-	responseBody, err := callAPI(url)
+	responseBody, err := s.callAPI(url)
 	if IsNotFound(err) {
 		return []MovieCast{}, err
 	}

@@ -1,3 +1,5 @@
+// Package tmdbapi defines the service used for interacting with the TMDB API
+// for retrieving movie data.
 package tmdbapi
 
 import (
@@ -5,17 +7,29 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
-// Review is a type  that extends the DB review data by adding the external
-// TMDB API data needed before rendering.
+// Service holds the functions needed to consume the TMDB API. Fields should be
+// private to prevent access by other services.
+type Service struct {
+	tmdbTokenEnv string
+}
+
+// Review is a type that extends the DB review data by adding the external TMDB
+// API data needed before rendering.
 type Review struct {
 	database.GetReviewsRow
 	Title      string
 	PosterPath string
+}
+
+// NewService is the constructor function for creating the TMDB API service.
+func NewService(tmdbToken string) *Service {
+	return &Service{
+		tmdbTokenEnv: tmdbToken,
+	}
 }
 
 // GenreMap maps from genre ID to genre name. This was hard-coded based on a
@@ -43,16 +57,18 @@ var GenreMap = map[int]string{
 	37:    "Western",
 }
 
+// IsNotFound checks if the error returned form a TMDB API call is a "not
+// found" error
 func IsNotFound(err error) bool {
 	return err != nil && err.Error() == "not found"
 }
 
 // callAPI wraps around the boilerplate needed to make an HTTP call to the TMDB
 // api, including the addition of auth headers and error handling
-func callAPI(url string) ([]byte, error) {
+func (s *Service) callAPI(url string) ([]byte, error) {
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("accept", "application/json")
-	req.Header.Add("Authorization", "Bearer "+os.Getenv("TMDB_TOKEN"))
+	req.Header.Add("Authorization", "Bearer "+s.tmdbTokenEnv)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -85,7 +101,7 @@ func sortByPopularity(a, b NowPlayingMovie) int {
 
 // GetReviewMovieDetails takes a slice of DB reviews and attached the TMDB data
 // to them.
-func GetReviewMovieDetails(reviews []database.GetReviewsRow) []Review {
+func (s *Service) GetReviewMovieDetails(reviews []database.GetReviewsRow) []Review {
 	type newDetails struct {
 		title      string
 		posterPath string
@@ -97,7 +113,7 @@ func GetReviewMovieDetails(reviews []database.GetReviewsRow) []Review {
 			continue
 		}
 
-		details, err := GetMovieDetails(r.MovieTmdbID)
+		details, err := s.GetMovieDetails(r.MovieTmdbID)
 		if err != nil {
 			log.Fatal(err)
 		}

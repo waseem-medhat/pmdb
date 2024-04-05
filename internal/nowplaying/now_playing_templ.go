@@ -136,7 +136,7 @@ func nowPlayingCard(movie tmdbapi.NowPlayingMovie) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, genreId := range movie.GenreIds {
+		for _, genreId := range movie.GenreIDs {
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"px-2 border border-primary text-primary rounded-lg text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

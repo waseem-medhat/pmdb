@@ -24,7 +24,7 @@ type NowPlayingMovie struct {
 	ReleaseDate string  `json:"release_date"`
 	Title       string  `json:"title"`
 	Overview    string  `json:"overview"`
-	GenreIds    []int   `json:"genre_ids"`
+	GenreIDs    []int   `json:"genre_ids"`
 	// Adult        bool   `json:"adult"`
 	// BackdropPath string `json:"backdrop_path"`
 	// OriginalLanguage string `json:"original_language"`
@@ -36,9 +36,9 @@ type NowPlayingMovie struct {
 
 // GetNowPlaying makes the call to the Now Playing API endpoint and sorts them
 // by descending popularity
-func GetNowPlaying(n int) ([]NowPlayingMovie, error) {
+func (s *Service) GetNowPlaying(n int) ([]NowPlayingMovie, error) {
 	url := "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
-	responseBody, err := callAPI(url)
+	responseBody, err := s.callAPI(url)
 	if err != nil {
 		return []NowPlayingMovie{}, fmt.Errorf("error calling API - %v", err)
 	}

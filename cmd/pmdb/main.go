@@ -2,39 +2,30 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
-	_ "github.com/tursodatabase/libsql-client-go/libsql"
 	"github.com/wipdev-tech/pmdb/internal/auth"
-	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/home"
 	"github.com/wipdev-tech/pmdb/internal/movies"
 	"github.com/wipdev-tech/pmdb/internal/nowplaying"
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
 func main() {
-	dbURL, dbToken, err := getDBEnv()
+	env, err := loadEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	connURL := fmt.Sprintf("%s?authToken=%s", dbURL, dbToken)
-	db, err := sql.Open("libsql", connURL)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dbConn := database.New(db)
-
-	authService := auth.NewService(dbConn)
-	nowPlayingService := nowplaying.NewService()
-	homeService := home.NewService(authService, dbConn)
-	movieService := movies.NewService(authService, dbConn)
+	dbConn := initDB(env.dbURL, env.dbToken)
+	authService := auth.NewService(dbConn, env.jwtSecret)
+	tmdbService := tmdbapi.NewService(env.tmdbToken)
+	nowPlayingService := nowplaying.NewService(tmdbService)
+	homeService := home.NewService(authService, tmdbService, dbConn)
+	movieService := movies.NewService(authService, tmdbService, dbConn)
 
 	r := http.NewServeMux()
 	fs := http.FileServer(http.Dir("static"))
@@ -50,12 +41,12 @@ func main() {
 	}
 
 	fmt.Println("PMDb server let's Go! ")
-	if os.Getenv("ENV") == "dev" {
-		fmt.Println("Dev server started and running at http://localhost:8080")
-		server.Addr = "localhost:8080"
+	if env.dev {
+		fmt.Println("Dev server started and running at http://localhost:" + env.port)
+		server.Addr = "localhost:" + env.port
 	} else {
 		fmt.Println("Server started and running")
-		server.Addr = "0.0.0.0:" + os.Getenv("PORT")
+		server.Addr = "0.0.0.0:" + env.port
 	}
 	log.Fatal(server.ListenAndServe())
 }

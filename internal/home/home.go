@@ -1,3 +1,5 @@
+// Package home defines the service used for the home page, including related
+// routes, handlers, and templates.
 package home
 
 import (
@@ -12,12 +14,15 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
+// Service holds the router, handlers, and functions related to the home page.
+// Fields should be private to prevent access by other services.
 type Service struct {
 	auth *auth.Service
 	tmdb *tmdbapi.Service
 	db   *database.Queries
 }
 
+// NewService is the constructor function for creating the home page service.
 func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries) *Service {
 	return &Service{
 		auth: auth,
@@ -26,6 +31,7 @@ func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries)
 	}
 }
 
+// NewRouter creates a http.Handler with the route for the home page.
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 

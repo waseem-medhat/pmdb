@@ -16,9 +16,9 @@ RETURNING *;
 SELECT
     r.id,
     r.user_id,
+    u.display_name as user_name,
     r.created_at,
     r.updated_at,
-    u.display_name as user_name,
     r.movie_tmdb_id,
     r.rating,
     r.review 
@@ -28,3 +28,18 @@ ON u.id = r.user_id
 WHERE public_review = 1
 ORDER BY r.created_at DESC
 LIMIT 5;
+
+-- name: GetReviewsForMovie :many
+SELECT
+    r.id,
+    r.user_id,
+    u.display_name as user_name,
+    r.created_at,
+    r.updated_at,
+    r.movie_tmdb_id,
+    r.rating,
+    r.review 
+FROM reviews r
+JOIN users u
+ON u.id = r.user_id
+WHERE movie_tmdb_id = ? AND public_review = 1;

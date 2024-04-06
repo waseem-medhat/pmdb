@@ -64,9 +64,9 @@ const getReviews = `-- name: GetReviews :many
 SELECT
     r.id,
     r.user_id,
+    u.display_name as user_name,
     r.created_at,
     r.updated_at,
-    u.display_name as user_name,
     r.movie_tmdb_id,
     r.rating,
     r.review 
@@ -81,9 +81,9 @@ LIMIT 5
 type GetReviewsRow struct {
 	ID          string
 	UserID      string
+	UserName    string
 	CreatedAt   string
 	UpdatedAt   string
-	UserName    string
 	MovieTmdbID string
 	Rating      int64
 	Review      string
@@ -101,9 +101,68 @@ func (q *Queries) GetReviews(ctx context.Context) ([]GetReviewsRow, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
+			&i.UserName,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.MovieTmdbID,
+			&i.Rating,
+			&i.Review,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getReviewsForMovie = `-- name: GetReviewsForMovie :many
+SELECT
+    r.id,
+    r.user_id,
+    u.display_name as user_name,
+    r.created_at,
+    r.updated_at,
+    r.movie_tmdb_id,
+    r.rating,
+    r.review 
+FROM reviews r
+JOIN users u
+ON u.id = r.user_id
+WHERE movie_tmdb_id = ? AND public_review = 1
+`
+
+type GetReviewsForMovieRow struct {
+	ID          string
+	UserID      string
+	UserName    string
+	CreatedAt   string
+	UpdatedAt   string
+	MovieTmdbID string
+	Rating      int64
+	Review      string
+}
+
+func (q *Queries) GetReviewsForMovie(ctx context.Context, movieTmdbID string) ([]GetReviewsForMovieRow, error) {
+	rows, err := q.db.QueryContext(ctx, getReviewsForMovie, movieTmdbID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetReviewsForMovieRow
+	for rows.Next() {
+		var i GetReviewsForMovieRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
 			&i.UserName,
+			&i.CreatedAt,
+			&i.UpdatedAt,
 			&i.MovieTmdbID,
 			&i.Rating,
 			&i.Review,

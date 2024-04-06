@@ -50,7 +50,7 @@ func (s *Service) handleMoviesGet(w http.ResponseWriter, r *http.Request) {
 	templData := MoviePageData{}
 
 	wg := &sync.WaitGroup{}
-	wg.Add(2)
+	wg.Add(3)
 
 	var fetchErr error
 	go func() {
@@ -68,6 +68,15 @@ func (s *Service) handleMoviesGet(w http.ResponseWriter, r *http.Request) {
 			fetchErr = err
 		}
 		templData.Cast = movieCast
+		wg.Done()
+	}()
+
+	go func() {
+		reviews, err := s.db.GetReviewsForMovie(r.Context(), movieID)
+		if err != nil {
+			fetchErr = err
+		}
+		templData.Reviews = reviews
 		wg.Done()
 	}()
 

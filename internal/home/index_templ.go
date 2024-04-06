@@ -135,7 +135,7 @@ func indexWelcomeMessage(data IndexPageData) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if data.LoggedIn {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button hx-get=\"/logout\" hx-confirm=\"Are you sure to log out?\" class=\"text-blue-500 hover:text-blue-400\">Log Out</button>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button hx-get=\"/users/logout\" hx-confirm=\"Are you sure to log out?\" class=\"text-blue-500 hover:text-blue-400\">Log Out</button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -220,7 +220,7 @@ func latestReviewCard(r tmdbapi.Review) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><li class=\"rounded-lg bg-white bg-opacity-10 hover:bg-opacity-15 transition p-5 flex gap-5 items-center h-48\"><div class=\"w-24\"><img class=\"rounded\" src=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><li class=\"rounded-lg bg-white bg-opacity-10 hover:bg-opacity-15 transition p-5 flex gap-5 items-center h-64\"><div class=\"w-36\"><img class=\"rounded\" src=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -233,7 +233,7 @@ func latestReviewCard(r tmdbapi.Review) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></div><div class=\"w-48 h-full\"><p class=\"text-2xl font-bold\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></div><div class=\"w-60 h-full flex flex-col\"><p class=\"text-2xl font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -259,14 +259,14 @@ func latestReviewCard(r tmdbapi.Review) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><span>/10</span></p><i class=\"line-clamp-2\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><span>/10</span></p><i class=\"line-clamp-2 flex-grow\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(r.Review))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/home/index.templ`, Line: 93, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/home/index.templ`, Line: 93, Col: 60}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {

@@ -59,7 +59,7 @@ air
 
 ## Tech Stack
 
-Application code:
+### Technologies:
 
 - **Go**: backend
 - **Templ**: templating
@@ -70,11 +70,38 @@ Application code:
 - **SQLC**: SQL-to-Go code generation tool
 - **Air**: live reloading
 
-External resources:
+### External resources:
 
 - [**Icônes**](https://icones.js.org/): SVG icons
 - [**TMDB**](https://developer.themoviedb.org/docs/getting-started): API for
 movie information
+
+### Architectural Design
+
+The backend is built as a set of loosely coupled services as displayed in this chart.
+
+```mermaid
+flowchart TD
+    fe(["Frontend"]) --- movies
+    fe --- home
+    fe --- nowplaying
+
+    subgraph Services
+    nowplaying --- tmdbapi
+    
+    home --- auth
+    home --- tmdbapi
+
+    movies --- auth
+    movies --- tmdbapi
+    end
+    
+    auth --- db(["DB layer (SQLC-generated)"])
+    tmdbapi --- api(["fa:fa-network-wired TMDB API"])
+    home --- db
+    movies --- db
+    db --- database(["fa:fa-database Turso Database"])
+```
 
 ## Contributing
 

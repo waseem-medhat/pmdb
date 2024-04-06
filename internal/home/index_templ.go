@@ -259,20 +259,20 @@ func latestReviewCard(r tmdbapi.Review) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><span>/10</span></p><i class=\"line-clamp-2 flex-grow\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span><span>/10</span></p><div class=\"flex-grow\"><i class=\"line-clamp-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(r.Review))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/home/index.templ`, Line: 93, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/home/index.templ`, Line: 93, Col: 73}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</i><p class=\"text-gray-500 mt-5 text-right\">~ ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</i></div><p class=\"text-gray-500 mt-5 text-right\">~ ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

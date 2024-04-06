@@ -111,7 +111,7 @@ func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ 
 }
 
 func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, dbUser database.GetUserRow) {
-	var timeLayout = "2 Jan 2006 - 03:04 PM"
+	var dbTimeLayout = "2006-01-02 15:04"
 
 	movieID := r.PathValue("movieID")
 	if movieID == "" {
@@ -132,8 +132,8 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 
 	_, err = s.db.CreateReview(r.Context(), database.CreateReviewParams{
 		ID:           uuid.NewString(),
-		CreatedAt:    time.Now().Format(timeLayout),
-		UpdatedAt:    time.Now().Format(timeLayout),
+		CreatedAt:    time.Now().Format(dbTimeLayout),
+		UpdatedAt:    time.Now().Format(dbTimeLayout),
 		UserID:       dbUser.ID,
 		MovieTmdbID:  movieID,
 		Rating:       int64(rating),

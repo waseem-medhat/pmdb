@@ -74,6 +74,7 @@ FROM reviews r
 JOIN users u
 ON u.id = r.user_id
 WHERE public_review = 1
+ORDER BY r.created_at DESC
 LIMIT 5
 `
 

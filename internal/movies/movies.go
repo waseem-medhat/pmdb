@@ -145,5 +145,6 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	w.Header().Set("HX-Redirect", "/")
+	w.WriteHeader(http.StatusFound)
 }

@@ -1,57 +1,31 @@
 package movies
 
 import (
+	"fmt"
+	t "github.com/a-h/templ"
+
+	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
-	t "github.com/a-h/templ"
-	"fmt"
 )
 
 type MoviePageData struct {
 	Details tmdbapi.MovieDetails
 	Cast    []tmdbapi.MovieCast
+	Reviews []database.GetReviewsForMovieRow
 }
 
 templ MoviePage(data MoviePageData) {
 	@templs.Page(data.Details.Title) {
-		<div class="grid grid-cols-[1fr_2fr] gap-10 my-10">
-			<section>
-				<img
-					class="w-full"
-					src={ templs.BuildPosterURL(data.Details.PosterPath) }
-					alt={ data.Details.Title }
-				/>
-			</section>
-			<section>
-				<h1 class="text-5xl font-bold mb-3 text-primary">{ data.Details.Title }</h1>
-				<ul class="flex gap-2">
-					for _, genre := range data.Details.Genres {
-						<li class="px-2 border border-primary text-primary rounded-lg text-sm">{ genre.Name }</li>
-					}
-				</ul>
-				<p class="my-8">{ data.Details.Overview }</p>
-				<h1 class="text-3xl font-semibold mb-3">Top Cast</h1>
-				<ul class="space-y-2">
-					for _, cast := range data.Cast {
-						<li>
-							<span class="text-primary font-bold">{ cast.Name }</span> &mdash;
-							{ cast.Character }
-						</li>
-					}
-				</ul>
-			</section>
-		</div>
+		@detailsSection(data)
 		<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
 			<div class="flex gap-2 items-center">
 				@templs.IconReview()
 				PMDb Reviews
 			</div>
 		</h3>
-		<p class="h-48">
-			None (yet).
-		</p>
 		<a
-			href={ t.URL(fmt.Sprintf("/movies/%v/reviews/new", data.Details.ID)) }
+			href={ t.URL(fmt.Sprintf("/reviews/new?movieID=%v", data.Details.ID)) }
 			class="rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max"
 		>
 			<div class="flex gap-2 items-center">
@@ -59,5 +33,53 @@ templ MoviePage(data MoviePageData) {
 				Add a Review for { data.Details.Title }
 			</div>
 		</a>
+		@reviewsSection(data.Reviews)
 	}
+}
+
+templ detailsSection(data MoviePageData) {
+	<div class="grid grid-cols-[1fr_2fr] gap-10 my-10">
+		<section>
+			<img
+				class="w-full"
+				src={ templs.BuildPosterURL(data.Details.PosterPath) }
+				alt={ data.Details.Title }
+			/>
+		</section>
+		<section>
+			<h1 class="text-5xl font-bold mb-3 text-primary">{ data.Details.Title }</h1>
+			<ul class="flex gap-2">
+				for _, genre := range data.Details.Genres {
+					<li class="px-2 border border-primary text-primary rounded-lg text-sm">{ genre.Name }</li>
+				}
+			</ul>
+			<p class="my-8">{ data.Details.Overview }</p>
+			<h1 class="text-3xl font-semibold mb-3">Top Cast</h1>
+			<ul class="space-y-2">
+				for _, cast := range data.Cast {
+					<li>
+						<span class="text-primary font-bold">{ cast.Name }</span> &mdash;
+						{ cast.Character }
+					</li>
+				}
+			</ul>
+		</section>
+	</div>
+}
+
+templ reviewsSection(reviews []database.GetReviewsForMovieRow) {
+	<section class="space-y-5">
+		for _, r := range reviews {
+			<blockquote class="border-l-4 border-primary p-3">
+				<div class="flex items-center gap-3">
+					<h4 class="text-lg">{ r.UserName }</h4>
+					<p class="text-gray-500">{ r.CreatedAt }</p>
+				</div>
+				<p>
+					<span class="text-primary font-bold text-2xl">{ fmt.Sprint(r.Rating) }</span><span>/10</span>
+				</p>
+				<p class="mt-5">{ r.Review }</p>
+			</blockquote>
+		}
+	</section>
 }

@@ -1,6 +1,7 @@
 package reviews
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -9,6 +10,24 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/errors"
 )
+
+func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request) {
+	reviews, err := s.db.GetReviews(r.Context())
+	if err != nil {
+		fmt.Println(err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+
+	templData := ReviewsPageData{Reviews: s.tmdb.GetReviewMovieDetails(reviews)}
+
+	err = ReviewsPage(templData).Render(r.Context(), w)
+	if err != nil {
+		fmt.Println(err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+}
 
 func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ database.GetUserRow) {
 	movieID := r.URL.Query().Get("movieID")

@@ -31,6 +31,7 @@ func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries)
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("GET /", s.handleReviewsGet)
 	mux.HandleFunc("GET /new", s.auth.MiddlewareAuth(s.handleReviewsNewGet))
 	mux.HandleFunc("POST /new", s.auth.MiddlewareAuth(s.handleReviewsNewPost))
 

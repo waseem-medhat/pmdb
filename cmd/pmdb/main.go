@@ -11,6 +11,7 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/home"
 	"github.com/wipdev-tech/pmdb/internal/movies"
 	"github.com/wipdev-tech/pmdb/internal/nowplaying"
+	"github.com/wipdev-tech/pmdb/internal/reviews"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
@@ -26,6 +27,7 @@ func main() {
 	nowPlayingService := nowplaying.NewService(tmdbService)
 	homeService := home.NewService(authService, tmdbService, dbConn)
 	movieService := movies.NewService(authService, tmdbService, dbConn)
+	reviewService := reviews.NewService(authService, tmdbService, dbConn)
 
 	r := http.NewServeMux()
 	fs := http.FileServer(http.Dir("static"))
@@ -34,6 +36,7 @@ func main() {
 	r.Handle("/users/", http.StripPrefix("/users", authService.NewRouter()))
 	r.Handle("/now-playing/", http.StripPrefix("/now-playing", nowPlayingService.NewRouter()))
 	r.Handle("/movies/", http.StripPrefix("/movies", movieService.NewRouter()))
+	r.Handle("/reviews/", http.StripPrefix("/reviews", reviewService.NewRouter()))
 
 	server := &http.Server{
 		Handler:           r,

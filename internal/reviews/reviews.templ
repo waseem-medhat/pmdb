@@ -1,4 +1,4 @@
-package movies
+package reviews
 
 import (
 	t "github.com/a-h/templ"
@@ -30,7 +30,7 @@ templ NewReviewPage(data NewReviewPageData) {
 				</a>
 			</div>
 		</div>
-		<form hx-post={ fmt.Sprintf("/movies/%v/reviews/new", data.Movie.ID) } hx-swap="none">
+		<form hx-post={ fmt.Sprintf("/reviews/new?movieID=%v", data.Movie.ID) } hx-swap="none">
 			<div class="flex flex-col gap-2">
 				<label>How was the movie?</label>
 				<div class="text-2xl font-bold text-primary">

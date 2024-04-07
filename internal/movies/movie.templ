@@ -25,7 +25,7 @@ templ MoviePage(data MoviePageData) {
 			</div>
 		</h3>
 		<a
-			href={ t.URL(fmt.Sprintf("/movies/%v/reviews/new", data.Details.ID)) }
+			href={ t.URL(fmt.Sprintf("/reviews/new?movieID=%v", data.Details.ID)) }
 			class="rounded px-3 py-2 bg-blue-600 hover:bg-blue-500 flex gap-2 items-center my-5 w-max"
 		>
 			<div class="flex gap-2 items-center">

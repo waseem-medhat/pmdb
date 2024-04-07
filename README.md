@@ -80,7 +80,10 @@ movie information
 
 The backend is built as a set of loosely coupled services as displayed in this chart.
 
-```mermaid
+![chart](https://i.imgur.com/CrMGM6H.png)
+
+<!---
+```
 flowchart TD
     fe(["Frontend"]) --- movies
     fe --- home
@@ -102,6 +105,7 @@ flowchart TD
     movies --- db
     db --- database(["fa:fa-database Turso Database"])
 ```
+-->
 
 ## Contributing
 

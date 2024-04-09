@@ -24,7 +24,7 @@ func main() {
 	dbConn := initDB(env.dbURL, env.dbToken)
 	authService := auth.NewService(dbConn, env.jwtSecret)
 	tmdbService := tmdbapi.NewService(env.tmdbToken)
-	nowPlayingService := nowplaying.NewService(tmdbService)
+	nowPlayingService := nowplaying.NewService(authService, tmdbService)
 	homeService := home.NewService(authService, tmdbService, dbConn)
 	movieService := movies.NewService(authService, tmdbService, dbConn)
 	reviewService := reviews.NewService(authService, tmdbService, dbConn)

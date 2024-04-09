@@ -31,6 +31,6 @@ func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries)
 // NewRouter creates a http.Handler with the routes for the movies pages.
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /{movieID}", logger.Middleware(s.handleMoviesGet, "Movies (GET) handler"))
+	mux.HandleFunc("GET /{movieID}", logger.Middleware(s.auth.Middleware(s.handleMoviesGet), "Movies (GET) handler"))
 	return mux
 }

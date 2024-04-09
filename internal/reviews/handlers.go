@@ -11,7 +11,7 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/errors"
 )
 
-func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request) {
+func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
 	reviews, err := s.db.GetReviews(r.Context())
 	if err != nil {
 		fmt.Println(err)
@@ -19,7 +19,10 @@ func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templData := ReviewsPageData{Reviews: s.tmdb.GetReviewMovieDetails(reviews)}
+	templData := ReviewsPageData{
+		Reviews: s.tmdb.GetReviewMovieDetails(reviews),
+		User:    user,
+	}
 
 	err = ReviewsPage(templData).Render(r.Context(), w)
 	if err != nil {
@@ -29,7 +32,14 @@ func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ database.GetUserRow) {
+func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
+	if user.UserName == "guest" {
+		cookie := s.auth.CreateCookie("pmdb-requested-url", r.RequestURI, "/users/login", 3600)
+		http.SetCookie(w, cookie)
+		http.Redirect(w, r, "/users/login", http.StatusSeeOther)
+		return
+	}
+
 	movieID := r.URL.Query().Get("movieID")
 	if movieID == "" {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
@@ -51,6 +61,13 @@ func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ 
 }
 
 func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, dbUser database.GetUserRow) {
+	if dbUser.UserName == "guest" {
+		cookie := s.auth.CreateCookie("pmdb-requested-url", r.RequestURI, "/users/login", 3600)
+		http.SetCookie(w, cookie)
+		http.Redirect(w, r, "/users/login", http.StatusSeeOther)
+		return
+	}
+
 	var dbTimeLayout = "2006-01-02 15:04"
 
 	movieID := r.URL.Query().Get("movieID")

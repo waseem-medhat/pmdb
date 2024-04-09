@@ -3,6 +3,7 @@ package templs
 import (
 	t "github.com/a-h/templ"
 	"fmt"
+	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
 func BuildPosterURL(posterPath string) string {
@@ -10,7 +11,7 @@ func BuildPosterURL(posterPath string) string {
 	return string(url)
 }
 
-templ Page(title string) {
+templ Page(title string, user database.GetUserRow) {
 	<!DOCTYPE html>
 	<html lang="en" class="h-full">
 		<head>
@@ -27,11 +28,18 @@ templ Page(title string) {
 			/>
 		</head>
 		<body class="bg-gray-950 text-gray-100 p-14 pb-2 max-w-7xl mx-auto font-body min-h-full flex flex-col">
-			<a href="/" class="flex flex-col md:flex-row md:items-end gap-3 text-primary mb-8">
-				@iconClapperboard()
-				<h1 class="font-title text-5xl">PMDb</h1>
-				<h2 class="font-title text-2xl">Your Personal Movie Database</h2>
-			</a>
+			<header class="flex items-center justify-center">
+				<a href="/" class="flex flex-col md:flex-row md:items-end gap-3 text-primary mb-8">
+					@iconClapperboard()
+					<h1 class="font-title text-5xl">PMDb</h1>
+					<h2 class="font-title text-2xl">Your Personal Movie Database</h2>
+				</a>
+				<div>
+					if user.UserName != "" {
+						<p>{ user.UserName }</p>
+					}
+				</div>
+			</header>
 			<main class="flex-grow">
 				{ children... }
 			</main>
@@ -54,7 +62,6 @@ templ iconClapperboard() {
 	</svg>
 }
 
-
 templ IconReview() {
 	<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
 		<path
@@ -63,7 +70,6 @@ templ IconReview() {
 		></path>
 	</svg>
 }
-
 
 templ IconAddReview() {
 	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">

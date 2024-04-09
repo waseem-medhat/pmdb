@@ -10,13 +10,14 @@ import (
 )
 
 type MoviePageData struct {
+	User    database.GetUserRow
 	Details tmdbapi.MovieDetails
 	Cast    []tmdbapi.MovieCast
 	Reviews []database.GetReviewsForMovieRow
 }
 
 templ MoviePage(data MoviePageData) {
-	@templs.Page(data.Details.Title) {
+	@templs.Page(data.Details.Title, data.User) {
 		@detailsSection(data)
 		<h3 class="border border-primary text-primary px-4 py-3 text-3xl rounded-xl font-semibold mb-5 flex gap-2 items-center justify-between">
 			<div class="flex gap-2 items-center">

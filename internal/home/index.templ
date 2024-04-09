@@ -16,7 +16,7 @@ type IndexPageData struct {
 }
 
 templ IndexPage(data IndexPageData) {
-	@templs.Page("Home") {
+	@templs.Page("Home", data.User) {
 		@indexWelcomeMessage(data)
 		@indexLatestReviews(data.Reviews)
 		@indexNowPlaying(data.NowPlaying)

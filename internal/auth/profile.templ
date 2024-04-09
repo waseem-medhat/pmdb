@@ -6,11 +6,12 @@ import (
 )
 
 type ProfileData struct {
+    LoggedInUser database.GetUserRow
 	User database.GetUserRow
 }
 
 templ Profile(data ProfileData) {
-	@templs.Page(data.User.DisplayName) {
+	@templs.Page(data.User.DisplayName, data.LoggedInUser) {
 		<div class="flex gap-4 items-end">
 			<h1 class="text-4xl font-title font-semibold mb-1">{ data.User.DisplayName }</h1>
 			<h2 class="text-2xl mb-1">{ data.User.UserName }</h2>

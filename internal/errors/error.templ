@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/wipdev-tech/pmdb/internal/templs"
+	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
 templ ErrorPage(statusCode int) {
-	@templs.Page("Error") {
+	@templs.Page("Error", database.GetUserRow{}) {
 		<h1 class="flex gap-2 items-center text-2xl font-semibold">
 			Error
 			@iconSad()

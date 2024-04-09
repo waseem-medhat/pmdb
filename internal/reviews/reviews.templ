@@ -5,18 +5,21 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/templs"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 	"fmt"
+	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
 type ReviewsPageData struct {
+	User    database.GetUserRow
 	Reviews []tmdbapi.Review
 }
 
 type NewReviewPageData struct {
+	User    database.GetUserRow
 	Movie tmdbapi.MovieDetails
 }
 
 templ ReviewsPage(data ReviewsPageData) {
-	@templs.Page("Review Feed") {
+	@templs.Page("Review Feed", data.User) {
 		for _, r := range data.Reviews {
 			<a href={ t.SafeURL(fmt.Sprintf("/reviews/%v", r.ID)) }>
 				<li class="rounded-lg bg-white bg-opacity-10 hover:bg-opacity-15 transition p-5 flex gap-5 items-center h-64 my-5">
@@ -39,7 +42,7 @@ templ ReviewsPage(data ReviewsPageData) {
 }
 
 templ NewReviewPage(data NewReviewPageData) {
-	@templs.Page("New Review") {
+	@templs.Page("New Review", data.User) {
 		<h3 class="text-2xl font-semibold mb-1">Add a Review</h3>
 		<div class="h-28 flex gap-5 items-center my-10">
 			<img

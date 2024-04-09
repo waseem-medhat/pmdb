@@ -35,10 +35,12 @@ templ Page(title string, user database.GetUserRow) {
 					<h2 class="font-title text-2xl">Your Personal Movie Database</h2>
 				</a>
 				<div class="flex items-center gap-5">
-					<p class="flex items-center gap-1">
-						@iconUser()
-						{ user.UserName }
-					</p>
+					if user.UserName != "" {
+						<p class="flex items-center gap-1">
+							@iconUser()
+							{ user.UserName }
+						</p>
+					}
 					if user.UserName != "guest" && user.UserName != "" {
 						<button hx-get="/users/logout" hx-confirm="Are you sure to log out?" class="text-blue-500 hover:text-blue-400">
 							Log Out

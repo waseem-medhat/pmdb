@@ -1,7 +1,6 @@
 package auth
 
 import "github.com/wipdev-tech/pmdb/internal/templs"
-import "github.com/wipdev-tech/pmdb/internal/database"
 
 type RegisterData struct {
 	ErrorMsgs []string
@@ -12,7 +11,7 @@ type RegisterSuccessData struct {
 }
 
 templ Register(data RegisterData) {
-	@templs.Page("Register", database.GetUserRow{}) {
+	@templs.Page("Register") {
 		<form
 			id="register"
 			hx-post="/users/register"

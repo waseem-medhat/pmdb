@@ -50,7 +50,7 @@ func (s *Service) handleLoginPost(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	cookie := s.CreateCookie("pmdb-jwt-access", access, "/", 3600)
+	cookie := createCookie("pmdb-jwt-access", access, "/", 3600)
 	http.SetCookie(w, cookie)
 
 	redirectCookie, err := r.Cookie("pmdb-requested-url")
@@ -61,14 +61,14 @@ func (s *Service) handleLoginPost(w http.ResponseWriter, r *http.Request) {
 		redirectTo = redirectCookie.Value
 	}
 
-	newRedirectCookie := s.CreateCookie("pmdb-requested-url", "", "/users/login", -1)
+	newRedirectCookie := createCookie("pmdb-requested-url", "", "/users/login", -1)
 	http.SetCookie(w, newRedirectCookie)
 	w.Header().Set("HX-Redirect", redirectTo)
 	w.WriteHeader(http.StatusFound)
 }
 
 func (s *Service) handleLogoutPost(w http.ResponseWriter, _ *http.Request) {
-	cookie := s.CreateCookie("pmdb-jwt-access", "", "/", -1)
+	cookie := createCookie("pmdb-jwt-access", "", "/", -1)
 	http.SetCookie(w, cookie)
 
 	w.Header().Set("HX-Redirect", "/")

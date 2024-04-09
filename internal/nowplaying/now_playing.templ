@@ -6,16 +6,14 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 	t "github.com/a-h/templ"
 	"fmt"
-	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
 type NowPlayingData struct {
-	User    database.GetUserRow
 	NowPlaying []tmdbapi.NowPlayingMovie
 }
 
 templ NowPlaying(data NowPlayingData) {
-	@templs.Page("Now Playing", data.User) {
+	@templs.Page("Now Playing") {
 		<ul class="flex flex-col gap-8">
 			for _, movie := range data.NowPlaying {
 				@nowPlayingCard(movie)

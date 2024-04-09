@@ -29,7 +29,14 @@ func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ database.GetUserRow) {
+func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
+	if user.UserName == "guest" {
+		cookie := s.auth.CreateCookie("pmdb-requested-url", r.RequestURI, "/users/login", 3600)
+		http.SetCookie(w, cookie)
+		http.Redirect(w, r, "/users/login", http.StatusSeeOther)
+		return
+	}
+
 	movieID := r.URL.Query().Get("movieID")
 	if movieID == "" {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
@@ -51,6 +58,13 @@ func (s *Service) handleReviewsNewGet(w http.ResponseWriter, r *http.Request, _ 
 }
 
 func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, dbUser database.GetUserRow) {
+	if dbUser.UserName == "guest" {
+		cookie := s.auth.CreateCookie("pmdb-requested-url", r.RequestURI, "/users/login", 3600)
+		http.SetCookie(w, cookie)
+		http.Redirect(w, r, "/users/login", http.StatusSeeOther)
+		return
+	}
+
 	var dbTimeLayout = "2006-01-02 15:04"
 
 	movieID := r.URL.Query().Get("movieID")

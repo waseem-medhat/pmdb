@@ -29,10 +29,10 @@ func (s *Service) generateJWTAccess(userName string) (string, error) {
 	return accessStr, err
 }
 
-// createCookie is a wrapper that makes it easier and more concise to create a
+// CreateCookie is a wrapper that makes it easier and more concise to create a
 // *http.Cookie. Some cookie attributes are pre-set to make it secure,
 // HTTP-only, with a "Strict" same-site mode.
-func createCookie(name, val, path string, maxAgeSec int) *http.Cookie {
+func (s *Service) CreateCookie(name, val, path string, maxAgeSec int) *http.Cookie {
 	return &http.Cookie{
 		Name:     name,
 		Value:    val,

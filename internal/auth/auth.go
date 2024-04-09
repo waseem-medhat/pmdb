@@ -42,10 +42,10 @@ func (s *Service) NewRouter() *http.ServeMux {
 	return mux
 }
 
-// MiddlewareAuth wraps around special handlers that have the database user as
-// an extra parameter. If authentication failed, a "guest" user is passed into
-// the inner handler function.
-func (s *Service) MiddlewareAuth(h func(http.ResponseWriter, *http.Request, database.GetUserRow)) http.HandlerFunc {
+// Middleware wraps around special handlers that have the database user as an
+// extra parameter. If authentication failed, a "guest" user is passed into the
+// inner handler function.
+func (s *Service) Middleware(h func(http.ResponseWriter, *http.Request, database.GetUserRow)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		dbUser, err := s.AuthJWTCookie(r)
 		if err != nil {

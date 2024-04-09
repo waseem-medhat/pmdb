@@ -11,7 +11,7 @@ import (
 	"github.com/wipdev-tech/pmdb/internal/errors"
 )
 
-func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request) {
+func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
 	reviews, err := s.db.GetReviews(r.Context())
 	if err != nil {
 		fmt.Println(err)
@@ -19,7 +19,10 @@ func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templData := ReviewsPageData{Reviews: s.tmdb.GetReviewMovieDetails(reviews)}
+	templData := ReviewsPageData{
+		Reviews: s.tmdb.GetReviewMovieDetails(reviews),
+		User:    user,
+	}
 
 	err = ReviewsPage(templData).Render(r.Context(), w)
 	if err != nil {

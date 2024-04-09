@@ -3,7 +3,6 @@
 package home
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -35,19 +34,14 @@ func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries)
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /{$}", logger.Middleware(s.handleHomeGet, "Home (GET) handler"))
+	mux.HandleFunc("GET /{$}", logger.Middleware(s.auth.Middleware(s.handleHomeGet), "Home (GET) handler"))
 
 	return mux
 }
 
 // HandleHome is the handler for the home route ("/")
-func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
-	dbUser, err := s.auth.AuthJWTCookie(r)
-	if err != nil && err != http.ErrNoCookie && err != sql.ErrNoRows {
-		errors.Render(w, http.StatusInternalServerError)
-		return
-	}
-	loggedIn := err == nil
+func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
+	loggedIn := user.UserName != "guest"
 
 	nowPlaying, err := s.tmdb.GetNowPlaying(5)
 	if err != nil {
@@ -65,7 +59,7 @@ func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request) {
 
 	templData := IndexPageData{
 		LoggedIn:   loggedIn,
-		User:       dbUser,
+		User:       user,
 		NowPlaying: nowPlaying,
 		Reviews:    s.tmdb.GetReviewMovieDetails(reviews),
 	}

@@ -5,13 +5,16 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/errors"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
-func (s *Service) handleMoviesGet(w http.ResponseWriter, r *http.Request) {
+func (s *Service) handleMoviesGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
 	movieID := r.PathValue("movieID")
-	templData := MoviePageData{}
+	templData := MoviePageData{
+		User: user,
+	}
 
 	wg := &sync.WaitGroup{}
 	wg.Add(3)

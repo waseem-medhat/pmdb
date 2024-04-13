@@ -5,6 +5,7 @@ package home
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/wipdev-tech/pmdb/internal/auth"
 	"github.com/wipdev-tech/pmdb/internal/database"
@@ -57,11 +58,17 @@ func (s *Service) handleHomeGet(w http.ResponseWriter, r *http.Request, user dat
 		return
 	}
 
+	reviewsCleaned := make([]database.GetReviewsRow, 0, len(reviews))
+	for _, r := range reviews {
+		r.Review = strings.ReplaceAll(r.Review, "\\n", "\n")
+		reviewsCleaned = append(reviewsCleaned, r)
+	}
+
 	templData := IndexPageData{
 		LoggedIn:   loggedIn,
 		User:       user,
 		NowPlaying: nowPlaying,
-		Reviews:    s.tmdb.GetReviewMovieDetails(reviews),
+		Reviews:    s.tmdb.GetReviewMovieDetails(reviewsCleaned),
 	}
 
 	err = IndexPage(templData).Render(r.Context(), w)

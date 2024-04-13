@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,6 +46,8 @@ func (s *Service) handleReviewsGetByID(w http.ResponseWriter, r *http.Request, u
 		errors.Render(w, http.StatusNotFound)
 		return
 	}
+
+	review.Review = strings.ReplaceAll(review.Review, "\\n", "\n")
 
 	if err != nil {
 		fmt.Println(err)
@@ -123,6 +126,8 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		publicReview = 1
 	}
 
+	review := strings.ReplaceAll(r.FormValue("review"), "\n", "\\n")
+
 	_, err = s.db.CreateReview(r.Context(), database.CreateReviewParams{
 		ID:           uuid.NewString(),
 		CreatedAt:    time.Now().Format(dbTimeLayout),
@@ -130,7 +135,7 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		UserID:       dbUser.ID,
 		MovieTmdbID:  movieID,
 		Rating:       int64(rating),
-		Review:       r.FormValue("review"),
+		Review:       review,
 		PublicReview: publicReview,
 	})
 	if err != nil {

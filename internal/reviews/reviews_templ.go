@@ -242,7 +242,7 @@ func ReviewPage(data ReviewPageData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span> / 10</div><p class=\"border border-primary rounded px-3 py-2 text-gray-50 min-h-48 bg-transparent\" id=\"review\" name=\"review\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span> / 10</div><p class=\"border border-primary rounded px-3 py-2 text-gray-50 min-h-48 bg-transparent whitespace-pre-wrap\" id=\"review\" name=\"review\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

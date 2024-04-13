@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/errors"
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
 func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
@@ -56,6 +57,15 @@ func (s *Service) handleReviewsGetByID(w http.ResponseWriter, r *http.Request, u
 	}
 
 	movieDetails, err := s.tmdb.GetMovieDetails(review.MovieTmdbID)
+	if tmdbapi.IsNotFound(err) {
+		errors.Render(w, http.StatusNotFound)
+		return
+	}
+
+	if err != nil {
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
 
 	templData := ReviewPageData{
 		User:   user,

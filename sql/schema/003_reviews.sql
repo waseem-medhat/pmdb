@@ -8,9 +8,9 @@ CREATE TABLE reviews (
     rating INTEGER NOT NULL CHECK (rating >= 0 AND rating <= 10),
     review TEXT NOT NULL,
     public_review INTEGER NOT NULL CHECK (public_review IN (0, 1)),
+    UNIQUE(user_id, movie_tmdb_id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
 
 -- +goose Down
 DROP TABLE reviews;

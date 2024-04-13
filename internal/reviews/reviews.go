@@ -7,6 +7,7 @@ import (
 
 	"github.com/wipdev-tech/pmdb/internal/auth"
 	"github.com/wipdev-tech/pmdb/internal/database"
+	"github.com/wipdev-tech/pmdb/internal/logger"
 	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
@@ -31,7 +32,8 @@ func NewService(auth *auth.Service, tmdb *tmdbapi.Service, db *database.Queries)
 func (s *Service) NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /", s.auth.Middleware(s.handleReviewsGet))
+	mux.HandleFunc("GET /{$}", logger.Middleware(s.auth.Middleware(s.handleReviewsGet), "Feed handler"))
+	mux.HandleFunc("GET /{reviewID}", logger.Middleware(s.auth.Middleware(s.handleReviewsGetByID), "Review handler"))
 	mux.HandleFunc("GET /new", s.auth.Middleware(s.handleReviewsNewGet))
 	mux.HandleFunc("POST /new", s.auth.Middleware(s.handleReviewsNewPost))
 

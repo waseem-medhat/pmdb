@@ -1,14 +1,17 @@
 package reviews
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/wipdev-tech/pmdb/internal/database"
 	"github.com/wipdev-tech/pmdb/internal/errors"
+	"github.com/wipdev-tech/pmdb/internal/tmdbapi"
 )
 
 func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
@@ -25,6 +28,52 @@ func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request, user 
 	}
 
 	err = ReviewsPage(templData).Render(r.Context(), w)
+	if err != nil {
+		fmt.Println(err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+}
+
+func (s *Service) handleReviewsGetByID(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
+	reviewID := r.PathValue("reviewID")
+	if reviewID == "" {
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+	}
+
+	review, err := s.db.GetReviewByID(r.Context(), reviewID)
+	if err == sql.ErrNoRows {
+		fmt.Println(err)
+		errors.Render(w, http.StatusNotFound)
+		return
+	}
+
+	review.Review = strings.ReplaceAll(review.Review, "\\n", "\n")
+
+	if err != nil {
+		fmt.Println(err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+
+	movieDetails, err := s.tmdb.GetMovieDetails(review.MovieTmdbID)
+	if tmdbapi.IsNotFound(err) {
+		errors.Render(w, http.StatusNotFound)
+		return
+	}
+
+	if err != nil {
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+
+	templData := ReviewPageData{
+		User:   user,
+		Review: review,
+		Movie:  movieDetails,
+	}
+
+	err = ReviewPage(templData).Render(r.Context(), w)
 	if err != nil {
 		fmt.Println(err)
 		errors.Render(w, http.StatusInternalServerError)
@@ -87,6 +136,8 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		publicReview = 1
 	}
 
+	review := strings.ReplaceAll(r.FormValue("review"), "\n", "\\n")
+
 	_, err = s.db.CreateReview(r.Context(), database.CreateReviewParams{
 		ID:           uuid.NewString(),
 		CreatedAt:    time.Now().Format(dbTimeLayout),
@@ -94,7 +145,7 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		UserID:       dbUser.ID,
 		MovieTmdbID:  movieID,
 		Rating:       int64(rating),
-		Review:       r.FormValue("review"),
+		Review:       review,
 		PublicReview: publicReview,
 	})
 	if err != nil {

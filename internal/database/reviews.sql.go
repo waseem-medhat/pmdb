@@ -60,6 +60,49 @@ func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Rev
 	return i, err
 }
 
+const getReviewByID = `-- name: GetReviewByID :one
+SELECT
+    r.id,
+    r.user_id,
+    u.display_name as user_name,
+    r.created_at,
+    r.updated_at,
+    r.movie_tmdb_id,
+    r.rating,
+    r.review 
+FROM reviews r
+JOIN users u
+ON u.id = r.user_id
+WHERE r.id = ?
+`
+
+type GetReviewByIDRow struct {
+	ID          string
+	UserID      string
+	UserName    string
+	CreatedAt   string
+	UpdatedAt   string
+	MovieTmdbID string
+	Rating      int64
+	Review      string
+}
+
+func (q *Queries) GetReviewByID(ctx context.Context, id string) (GetReviewByIDRow, error) {
+	row := q.db.QueryRowContext(ctx, getReviewByID, id)
+	var i GetReviewByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.UserName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.MovieTmdbID,
+		&i.Rating,
+		&i.Review,
+	)
+	return i, err
+}
+
 const getReviews = `-- name: GetReviews :many
 SELECT
     r.id,

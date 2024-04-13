@@ -1,6 +1,7 @@
 package reviews
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -25,6 +26,41 @@ func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request, user 
 	}
 
 	err = ReviewsPage(templData).Render(r.Context(), w)
+	if err != nil {
+		fmt.Println(err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+}
+
+func (s *Service) handleReviewsGetByID(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
+	reviewID := r.PathValue("reviewID")
+	if reviewID == "" {
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+	}
+
+	review, err := s.db.GetReviewByID(r.Context(), reviewID)
+	if err == sql.ErrNoRows {
+		fmt.Println(err)
+		errors.Render(w, http.StatusNotFound)
+		return
+	}
+
+	if err != nil {
+		fmt.Println(err)
+		errors.Render(w, http.StatusInternalServerError)
+		return
+	}
+
+	movieDetails, err := s.tmdb.GetMovieDetails(review.MovieTmdbID)
+
+	templData := ReviewPageData{
+		User:   user,
+		Review: review,
+		Movie:  movieDetails,
+	}
+
+	err = ReviewPage(templData).Render(r.Context(), w)
 	if err != nil {
 		fmt.Println(err)
 		errors.Render(w, http.StatusInternalServerError)

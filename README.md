@@ -1,6 +1,6 @@
 # PMDb (work in progress)
 
-![PMDb banner](https://i.imgur.com/TLD2Sty.png)
+![PMDb banner](https://i.imgur.com/DB0RFdF.png)
 
 **Personal Movie Database**
 

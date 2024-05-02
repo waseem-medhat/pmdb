@@ -1,4 +1,4 @@
-# PMDb (work in progress)
+# PMDb
 
 ![PMDb banner](https://i.imgur.com/DB0RFdF.png)
 

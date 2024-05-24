@@ -10,9 +10,9 @@ type Review struct {
 	UpdatedAt    string
 	UserID       string
 	MovieTmdbID  string
-	Rating       int64
+	Rating       int32
 	Review       string
-	PublicReview int64
+	PublicReview int32
 }
 
 type User struct {

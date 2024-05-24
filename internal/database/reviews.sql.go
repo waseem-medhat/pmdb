@@ -20,7 +20,7 @@ INSERT INTO reviews (
     review,
     public_review
 )
-VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )
+VALUES ( $1, $2, $3, $4, $5, $6, $7, $8 )
 RETURNING id, created_at, updated_at, user_id, movie_tmdb_id, rating, review, public_review
 `
 
@@ -30,9 +30,9 @@ type CreateReviewParams struct {
 	UpdatedAt    string
 	UserID       string
 	MovieTmdbID  string
-	Rating       int64
+	Rating       int32
 	Review       string
-	PublicReview int64
+	PublicReview int32
 }
 
 func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Review, error) {
@@ -73,7 +73,7 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE r.id = ?
+WHERE r.id = $1
 `
 
 type GetReviewByIDRow struct {
@@ -83,7 +83,7 @@ type GetReviewByIDRow struct {
 	CreatedAt   string
 	UpdatedAt   string
 	MovieTmdbID string
-	Rating      int64
+	Rating      int32
 	Review      string
 }
 
@@ -128,7 +128,7 @@ type GetReviewsRow struct {
 	CreatedAt   string
 	UpdatedAt   string
 	MovieTmdbID string
-	Rating      int64
+	Rating      int32
 	Review      string
 }
 
@@ -177,7 +177,7 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE movie_tmdb_id = ? AND public_review = 1
+WHERE movie_tmdb_id = $1 AND public_review = 1
 `
 
 type GetReviewsForMovieRow struct {
@@ -187,7 +187,7 @@ type GetReviewsForMovieRow struct {
 	CreatedAt   string
 	UpdatedAt   string
 	MovieTmdbID string
-	Rating      int64
+	Rating      int32
 	Review      string
 }
 

@@ -9,7 +9,7 @@ INSERT INTO reviews (
     review,
     public_review
 )
-VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )
+VALUES ( $1, $2, $3, $4, $5, $6, $7, $8 )
 RETURNING *;
 
 -- name: GetReviews :many
@@ -42,7 +42,7 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE movie_tmdb_id = ? AND public_review = 1;
+WHERE movie_tmdb_id = $1 AND public_review = 1;
 
 -- name: GetReviewByID :one
 SELECT
@@ -57,5 +57,5 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE r.id = ?;
+WHERE r.id = $1;
 

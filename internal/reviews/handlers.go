@@ -131,7 +131,7 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		return
 	}
 
-	var publicReview int64
+	var publicReview int32
 	if r.FormValue("public-review") == "on" {
 		publicReview = 1
 	}
@@ -144,7 +144,7 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		UpdatedAt:    time.Now().Format(dbTimeLayout),
 		UserID:       dbUser.ID,
 		MovieTmdbID:  movieID,
-		Rating:       int64(rating),
+		Rating:       int32(rating),
 		Review:       review,
 		PublicReview: publicReview,
 	})

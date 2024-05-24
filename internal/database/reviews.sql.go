@@ -7,6 +7,9 @@ package database
 
 import (
 	"context"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 const createReview = `-- name: CreateReview :one
@@ -25,10 +28,10 @@ RETURNING id, created_at, updated_at, user_id, movie_tmdb_id, rating, review, pu
 `
 
 type CreateReviewParams struct {
-	ID           string
-	CreatedAt    string
-	UpdatedAt    string
-	UserID       string
+	ID           uuid.UUID
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	UserID       uuid.UUID
 	MovieTmdbID  string
 	Rating       int32
 	Review       string
@@ -77,17 +80,17 @@ WHERE r.id = $1
 `
 
 type GetReviewByIDRow struct {
-	ID          string
-	UserID      string
+	ID          uuid.UUID
+	UserID      uuid.UUID
 	UserName    string
-	CreatedAt   string
-	UpdatedAt   string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	MovieTmdbID string
 	Rating      int32
 	Review      string
 }
 
-func (q *Queries) GetReviewByID(ctx context.Context, id string) (GetReviewByIDRow, error) {
+func (q *Queries) GetReviewByID(ctx context.Context, id uuid.UUID) (GetReviewByIDRow, error) {
 	row := q.db.QueryRowContext(ctx, getReviewByID, id)
 	var i GetReviewByIDRow
 	err := row.Scan(
@@ -122,11 +125,11 @@ LIMIT 5
 `
 
 type GetReviewsRow struct {
-	ID          string
-	UserID      string
+	ID          uuid.UUID
+	UserID      uuid.UUID
 	UserName    string
-	CreatedAt   string
-	UpdatedAt   string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	MovieTmdbID string
 	Rating      int32
 	Review      string
@@ -181,11 +184,11 @@ WHERE movie_tmdb_id = $1 AND public_review = 1
 `
 
 type GetReviewsForMovieRow struct {
-	ID          string
-	UserID      string
+	ID          uuid.UUID
+	UserID      uuid.UUID
 	UserName    string
-	CreatedAt   string
-	UpdatedAt   string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	MovieTmdbID string
 	Rating      int32
 	Review      string

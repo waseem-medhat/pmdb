@@ -39,7 +39,7 @@ templ ReviewsPage(data ReviewsPageData) {
 						</p>
 						<div class="flex-grow"><i class="line-clamp-2">{ fmt.Sprint(r.Review) }</i></div>
 						<p class="text-gray-500 mt-5 text-right">~ { r.UserName }</p>
-						<p class="text-gray-500 text-right">{ r.CreatedAt }</p>
+						<p class="text-gray-500 text-right">{ fmt.Sprint(r.CreatedAt) }</p>
 					</div>
 				</li>
 			</a>
@@ -78,8 +78,8 @@ templ ReviewPage(data ReviewPageData) {
 				id="review"
 				name="review"
 			>
-            { data.Review.Review }
-            </p>
+				{ data.Review.Review }
+			</p>
 		</div>
 	}
 }

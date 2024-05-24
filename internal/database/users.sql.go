@@ -7,6 +7,8 @@ package database
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -16,7 +18,7 @@ RETURNING id, user_name, display_name, password, bio
 `
 
 type CreateUserParams struct {
-	ID          string
+	ID          uuid.UUID
 	UserName    string
 	DisplayName string
 	Password    string
@@ -45,7 +47,7 @@ DELETE FROM users
 WHERE id = $1
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id string) error {
+func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	_, err := q.db.ExecContext(ctx, deleteUser, id)
 	return err
 }
@@ -56,7 +58,7 @@ WHERE user_name = $1 LIMIT 1
 `
 
 type GetUserRow struct {
-	ID          string
+	ID          uuid.UUID
 	DisplayName string
 	UserName    string
 	Bio         string

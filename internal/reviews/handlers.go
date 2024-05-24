@@ -134,10 +134,7 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		return
 	}
 
-	var publicReview int32
-	if r.FormValue("public-review") == "on" {
-		publicReview = 1
-	}
+	publicReview := r.FormValue("public-review") == "on"
 
 	review := strings.ReplaceAll(r.FormValue("review"), "\n", "\\n")
 

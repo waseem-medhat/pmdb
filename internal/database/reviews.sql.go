@@ -35,7 +35,7 @@ type CreateReviewParams struct {
 	MovieTmdbID  string
 	Rating       int32
 	Review       string
-	PublicReview int32
+	PublicReview bool
 }
 
 func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Review, error) {

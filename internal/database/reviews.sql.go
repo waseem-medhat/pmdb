@@ -119,7 +119,7 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE public_review = 1
+WHERE public_review
 ORDER BY r.created_at DESC
 LIMIT 5
 `
@@ -180,7 +180,7 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE movie_tmdb_id = $1 AND public_review = 1
+WHERE movie_tmdb_id = $1 AND public_review
 `
 
 type GetReviewsForMovieRow struct {

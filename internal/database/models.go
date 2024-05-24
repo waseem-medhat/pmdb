@@ -4,19 +4,25 @@
 
 package database
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type Review struct {
-	ID           string
-	CreatedAt    string
-	UpdatedAt    string
-	UserID       string
+	ID           uuid.UUID
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	UserID       uuid.UUID
 	MovieTmdbID  string
-	Rating       int64
+	Rating       int32
 	Review       string
-	PublicReview int64
+	PublicReview bool
 }
 
 type User struct {
-	ID          string
+	ID          uuid.UUID
 	UserName    string
 	DisplayName string
 	Password    string

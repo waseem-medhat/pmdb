@@ -49,7 +49,6 @@ func (s *Service) Middleware(h func(http.ResponseWriter, *http.Request, database
 	return func(w http.ResponseWriter, r *http.Request) {
 		dbUser, err := s.AuthJWTCookie(r)
 		if err != nil {
-			dbUser.ID = "guest"
 			dbUser.UserName = "guest"
 			dbUser.DisplayName = "guest"
 		}

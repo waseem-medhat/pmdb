@@ -21,7 +21,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dbConn := initDB(env.dbURL, env.dbToken)
+	dbConn := initDB(env.dbURL)
 	authService := auth.NewService(dbConn, env.jwtSecret)
 	tmdbService := tmdbapi.NewService(env.tmdbToken)
 	nowPlayingService := nowplaying.NewService(authService, tmdbService)

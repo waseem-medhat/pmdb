@@ -36,8 +36,13 @@ func (s *Service) handleReviewsGet(w http.ResponseWriter, r *http.Request, user 
 }
 
 func (s *Service) handleReviewsGetByID(w http.ResponseWriter, r *http.Request, user database.GetUserRow) {
-	reviewID := r.PathValue("reviewID")
-	if reviewID == "" {
+	reviewIDStr := r.PathValue("reviewID")
+	if reviewIDStr == "" {
+		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
+	}
+
+	reviewID, err := uuid.Parse(reviewIDStr)
+	if err != nil {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 	}
 
@@ -117,34 +122,29 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		return
 	}
 
-	var dbTimeLayout = "2006-01-02 15:04"
-
 	movieID := r.URL.Query().Get("movieID")
 	if movieID == "" {
 		http.Redirect(w, r, "/", http.StatusPermanentRedirect)
 		return
 	}
 
-	rating, err := strconv.Atoi(r.FormValue("rating"))
-	if err != nil {
+	rating, err := strconv.ParseInt(r.FormValue("rating"), 0, 32)
+	if err != nil || rating < 0 || rating > 10 {
 		errors.Render(w, http.StatusBadRequest)
 		return
 	}
 
-	var publicReview int64
-	if r.FormValue("public-review") == "on" {
-		publicReview = 1
-	}
+	publicReview := r.FormValue("public-review") == "on"
 
 	review := strings.ReplaceAll(r.FormValue("review"), "\n", "\\n")
 
 	_, err = s.db.CreateReview(r.Context(), database.CreateReviewParams{
-		ID:           uuid.NewString(),
-		CreatedAt:    time.Now().Format(dbTimeLayout),
-		UpdatedAt:    time.Now().Format(dbTimeLayout),
+		ID:           uuid.New(),
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 		UserID:       dbUser.ID,
 		MovieTmdbID:  movieID,
-		Rating:       int64(rating),
+		Rating:       int32(rating), // #nosec G109
 		Review:       review,
 		PublicReview: publicReview,
 	})

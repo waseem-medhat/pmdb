@@ -7,14 +7,13 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	_ "github.com/tursodatabase/libsql-client-go/libsql"
+	_ "github.com/lib/pq"
 	"github.com/wipdev-tech/pmdb/internal/database"
 )
 
 type environment struct {
 	dev       bool
 	dbURL     string
-	dbToken   string
 	jwtSecret string
 	tmdbToken string
 	port      string
@@ -38,12 +37,6 @@ func loadEnv() (environment, error) {
 		return env, err
 	}
 
-	env.dbToken = os.Getenv("DBTOKEN")
-	if env.dbToken == "" {
-		err = fmt.Errorf("DBTOKEN environment variable is not set")
-		return env, err
-	}
-
 	env.jwtSecret = os.Getenv("JWT_SECRET")
 	if env.jwtSecret == "" {
 		err = fmt.Errorf("JWT_SECRET environment variable is not set")
@@ -64,11 +57,15 @@ func loadEnv() (environment, error) {
 	return env, err
 }
 
-func initDB(dbURL, dbToken string) *database.Queries {
-	connURL := fmt.Sprintf("%s?authToken=%s", dbURL, dbToken)
-	db, err := sql.Open("libsql", connURL)
+func initDB(dbURL string) *database.Queries {
+	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("error opening db connection ", err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("error pinging db ", err)
 	}
 
 	return database.New(db)

@@ -7,6 +7,9 @@ package database
 
 import (
 	"context"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 const createReview = `-- name: CreateReview :one
@@ -20,19 +23,19 @@ INSERT INTO reviews (
     review,
     public_review
 )
-VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )
+VALUES ( $1, $2, $3, $4, $5, $6, $7, $8 )
 RETURNING id, created_at, updated_at, user_id, movie_tmdb_id, rating, review, public_review
 `
 
 type CreateReviewParams struct {
-	ID           string
-	CreatedAt    string
-	UpdatedAt    string
-	UserID       string
+	ID           uuid.UUID
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	UserID       uuid.UUID
 	MovieTmdbID  string
-	Rating       int64
+	Rating       int32
 	Review       string
-	PublicReview int64
+	PublicReview bool
 }
 
 func (q *Queries) CreateReview(ctx context.Context, arg CreateReviewParams) (Review, error) {
@@ -73,21 +76,21 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE r.id = ?
+WHERE r.id = $1
 `
 
 type GetReviewByIDRow struct {
-	ID          string
-	UserID      string
+	ID          uuid.UUID
+	UserID      uuid.UUID
 	UserName    string
-	CreatedAt   string
-	UpdatedAt   string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	MovieTmdbID string
-	Rating      int64
+	Rating      int32
 	Review      string
 }
 
-func (q *Queries) GetReviewByID(ctx context.Context, id string) (GetReviewByIDRow, error) {
+func (q *Queries) GetReviewByID(ctx context.Context, id uuid.UUID) (GetReviewByIDRow, error) {
 	row := q.db.QueryRowContext(ctx, getReviewByID, id)
 	var i GetReviewByIDRow
 	err := row.Scan(
@@ -116,19 +119,19 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE public_review = 1
+WHERE public_review
 ORDER BY r.created_at DESC
 LIMIT 5
 `
 
 type GetReviewsRow struct {
-	ID          string
-	UserID      string
+	ID          uuid.UUID
+	UserID      uuid.UUID
 	UserName    string
-	CreatedAt   string
-	UpdatedAt   string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	MovieTmdbID string
-	Rating      int64
+	Rating      int32
 	Review      string
 }
 
@@ -177,17 +180,17 @@ SELECT
 FROM reviews r
 JOIN users u
 ON u.id = r.user_id
-WHERE movie_tmdb_id = ? AND public_review = 1
+WHERE movie_tmdb_id = $1 AND public_review
 `
 
 type GetReviewsForMovieRow struct {
-	ID          string
-	UserID      string
+	ID          uuid.UUID
+	UserID      uuid.UUID
 	UserName    string
-	CreatedAt   string
-	UpdatedAt   string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 	MovieTmdbID string
-	Rating      int64
+	Rating      int32
 	Review      string
 }
 

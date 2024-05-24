@@ -1,13 +1,13 @@
 include .env
 
 gup:
-	cd sql/schema && goose turso ${DBURL}?authToken=${DBTOKEN} up
+	cd sql/schema && goose postgres ${DBURL} up
 
 gdown:
-	cd sql/schema && goose turso ${DBURL}?authToken=${DBTOKEN} down
+	cd sql/schema && goose postgres ${DBURL} down
 
 gstatus:
-	cd sql/schema && goose turso ${DBURL}?authToken=${DBTOKEN} status
+	cd sql/schema && goose postgres ${DBURL} status
 
 sqlc:
 	sqlc generate

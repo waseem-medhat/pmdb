@@ -100,7 +100,7 @@ func (s *Service) handleRegisterPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dbUser, err := s.db.CreateUser(r.Context(), database.CreateUserParams{
-		ID:          uuid.NewString(),
+		ID:          uuid.New(),
 		UserName:    userName,
 		DisplayName: displayName,
 		Password:    string(hPassword),

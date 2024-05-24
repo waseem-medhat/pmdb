@@ -128,8 +128,8 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		return
 	}
 
-	rating, err := strconv.Atoi(r.FormValue("rating"))
-	if err != nil {
+	rating, err := strconv.ParseInt(r.FormValue("rating"), 0, 32)
+	if err != nil || rating < 0 || rating > 10 {
 		errors.Render(w, http.StatusBadRequest)
 		return
 	}
@@ -147,7 +147,7 @@ func (s *Service) handleReviewsNewPost(w http.ResponseWriter, r *http.Request, d
 		UpdatedAt:    time.Now(),
 		UserID:       dbUser.ID,
 		MovieTmdbID:  movieID,
-		Rating:       int32(rating),
+		Rating:       int32(rating), // #nosec G109
 		Review:       review,
 		PublicReview: publicReview,
 	})
